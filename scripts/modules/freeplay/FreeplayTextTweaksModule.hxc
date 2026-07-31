@@ -8,6 +8,7 @@ import funkin.util.DateUtil;
 import flixel.text.FlxText;
 import flixel.FlxSprite;
 import funkin.graphics.FunkinSprite;
+import funkin.ui.freeplay.SongMenuItem;
 import flixel.group.FlxSpriteGroup;
 
 class FreeplayTextTweaksModule extends Module
@@ -25,7 +26,9 @@ class FreeplayTextTweaksModule extends Module
   {
     super.onSubStateOpenEnd(event);
     if (!(event.targetState is FreeplayState)) return;
+    
     starSprites = new FunkinSprite().loadGraphic(Paths.image('freeplay/diffOverride/question-marks-stars'));
+    starSprites.visible = false;
     starSprites.x = event.targetState.albumRoll.difficultyStars.x + 83;
     starSprites.y = event.targetState.albumRoll.difficultyStars.y + 12;
     event.targetState.albumRoll.add(starSprites);
@@ -35,14 +38,15 @@ class FreeplayTextTweaksModule extends Module
   override public function onDifficultySwitch(event)
   {
     super.onDifficultySwitch(event);
-    var capsule = FlxG.state.subState.grpCapsules.members[FlxG.state.subState.curSelected];
-    var data = capsule.freeplayData;
-    var id = (data != null) ? data.levelId : null;
+
+    var sub = FlxG.state.subState;
+    if (sub == null || sub.grpCapsules == null) return;
 
     // thanks mighty and comedy for helping me figure this out
-    for (cap in FlxG.state.subState?.grpCapsules?.members)
+    for (cap in sub.grpCapsules.members)
     {
       if (cap.freeplayData == null || cap.freeplayData.data == null) continue;
+      
       if (cap.freeplayData.data.id == "obliterated" && cap.freeplayData.curVariation == "erect")
       {
         hideDifficulty(cap);
@@ -73,42 +77,64 @@ class FreeplayTextTweaksModule extends Module
     super.onUpdate(event);
 
     var sub = FlxG.state.subState;
-    if (!(sub is FreeplayState))
-    {
-      return;
-    }
+    if (!(sub is FreeplayState)) return;
 
     @:privateAccess
-    var capsule = FlxG.state.subState.currentCapsule;
+    var capsule = sub.currentCapsule;
+    if (capsule == null || capsule.freeplayData == null || capsule.freeplayData.data == null) return;
+    
     var data = capsule.freeplayData;
-    var id = (data != null) ? data.levelId : null;
+    var songId = data.data.id;
+    var isObliteratedErect = (songId == "obliterated" && data.curVariation == "erect");
 
-    if (capsule?.freeplayData?.data?.id == "obliterated" && capsule?.freeplayData?.curVariation == "erect")
+    if (starSprites != null) starSprites.visible = isObliteratedErect;
+
+    if (isObliteratedErect)
     {
-      sub.albumRoll.difficultyStars.stars.visible = false;
-      for (member in sub.albumRoll.difficultyStars.flames.members)
-      {
-        member.visible = false;
-      }
-      starSprites?.visible = true;
+        sub.albumRoll.difficultyStars.stars.visible = false;
+        for (member in sub.albumRoll.difficultyStars.flames.members) member.visible = false;
     }
     else
     {
-      sub.albumRoll.difficultyStars.stars.visible = true;
-      sub.albumRoll.difficultyStars.flameCheck();
-      starSprites?.visible = false;
+        sub.albumRoll.difficultyStars.stars.visible = true;
+        sub.albumRoll.difficultyStars.flameCheck();
     }
 
     if (sub.instSelectMenu != null)
     {
       var label = sub.instSelectMenu.members[3];
-      if (data != null && data.data != null && data.data.id == "obliterated" && label.text == "INSTRUMENTAL")
+      if (label != null)
       {
-        label.text = "VOICE TRACK";
-        sub.instSelectMenu.instrumentalIds = ["", "Revox"]; // Revox is current, "" is Legacy, its old! - Gerson Deltarune
-        sub.instSelectMenu.currentInstrumentalIndex = 1;
-        sub.instSelectMenu.currentInstrumental.text = sub.instSelectMenu.instrumentalIds[sub.instSelectMenu.currentInstrumentalIndex];
-        sub.instSelectMenu.onConfirm = (targetInstId:String) -> sub.capsuleOnConfirmDefault(sub.currentCapsule, targetInstId == "Revox" ? "" : "legacy");
+        var isObliteratedDefault = (songId == "obliterated" && (data.curVariation == "default" || data.curVariation == null || data.curVariation == ""));
+        
+        if (isObliteratedDefault)
+        {
+          if (label.text == "INSTRUMENTAL")
+          {
+            label.text = "VOICE TRACK";
+            sub.instSelectMenu.instrumentalIds = ["", "Revox"]; // Revox is current, "" is Legacy, its old! - Gerson Deltarune
+            sub.instSelectMenu.currentInstrumentalIndex = 1;
+            sub.instSelectMenu.currentInstrumental.text = sub.instSelectMenu.instrumentalIds[1];
+            
+            sub.instSelectMenu.onConfirm = (targetInstId:String) -> {
+                @:privateAccess {
+                    sub.capsuleOnConfirmDefault(capsule, targetInstId == "Revox" ? "" : "legacy");
+                }
+            };
+          }
+        }
+        else
+        {
+          if (label.text == "VOICE TRACK")
+          {
+            label.text = "INSTRUMENTAL";
+            sub.instSelectMenu.onConfirm = (targetInstId:String) -> {
+                @:privateAccess {
+                    sub.capsuleOnConfirmDefault(capsule, targetInstId);
+                }
+            };
+          }
+        }
       }
     }
   }
@@ -125,21 +151,20 @@ class FreeplayTextTweaksModule extends Module
   public function onCapsuleSelected(event:CapsuleScriptEvent):Void
   {
     if (event.capsule.freeplayData == null) return;
+
     if (event.capsule.freeplayData?.data?.id == 'obliterated' && event.variationId == 'erect')
     {
       hideDifficulty(event.capsule);
     }
+
     if (areWeFunny() && event?.capsule.freeplayData?.data.id.toLowerCase().indexOf("blissful") != -1 && event.variationId == "default")
     {
       var cap = event.capsule;
       cap.freeplayData.data.id = "blissful";
-
       cap.pixelIcon.setCharacter("qt");
       cap.songText.text = "Blissful";
     }
   }
-
-  var expirationDate = "2026-04-02";
 
   public function onSongSelected(event:CapsuleScriptEvent):Void
   {
@@ -148,7 +173,6 @@ class FreeplayTextTweaksModule extends Module
     {
       var cap = event.capsule;
       cap.freeplayData.data.id = "blissful-2021"; // i got lazy so this is not a variation
-
       cap.pixelIcon.setCharacter("qt-legacy");
       cap.songText.text = "Blissful Legacy";
     }
