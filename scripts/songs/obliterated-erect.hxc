@@ -187,7 +187,9 @@ class ObliteratedErectSong extends Song
     camFade4Triggered = false;
 
     PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, false, null, true);
+    #if !mobile
     PlayState.instance.playerStrumline.x = (FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET) + ((FSSM.gameCutoutSize / 2.5) / 2.0);
+    #end
   }
 
   function onGameOver(event:ScriptEvent)
@@ -405,6 +407,9 @@ class ObliteratedErectSong extends Song
 
   function centerPlayerStrumline()
   {
+    #if mobile
+    return
+    #end
     if (Preferences.controlsScheme == "Arrows" && !ControlsHandler.usingExternalInputDevice) return;
 
     var playerStrumline = PlayState.instance.playerStrumline;
@@ -416,6 +421,9 @@ class ObliteratedErectSong extends Song
 
   function hideOpponentStrumline()
   {
+    #if mobile
+    return
+    #end
     var opponentStrumline = PlayState.instance.opponentStrumline;
     if (opponentStrumline != null)
     {
