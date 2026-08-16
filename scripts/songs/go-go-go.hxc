@@ -14,7 +14,7 @@ class GoGoGoSong extends Song
     super.onSongRetry(event);
     
     var stage:Dynamic = PlayState.instance.currentStage;
-    if (stage != null && stage.id == 'recordingStudio')
+    if (stage?.id == 'recordingStudio')
     {
       stage.disableDarkness();
       stage.setLightHueInstant(0, 0);
@@ -27,7 +27,7 @@ class GoGoGoSong extends Song
 
     var stage:Dynamic = PlayState.instance.currentStage;
     
-    if (stage == null || stage.id != 'recordingStudio') return;
+    if (stage?.id != 'recordingStudio') return;
     
     // erm... actually :nerd:
     // stage.enableDarkness()
