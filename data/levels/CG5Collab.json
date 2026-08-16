@@ -1,0 +1,10 @@
+{
+    "version": "1.0.0",
+    "name": "",
+    "titleAsset": "storymenu/titles/week1",
+    "props": [ ],
+    "background": "#ffffff",
+    "songs": [
+        "go-go-go"
+    ]
+}

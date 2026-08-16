@@ -1,0 +1,38 @@
+{
+ "version": "2.2.4",
+ "songName": "GO GO GO (feat. Ironmouse)",
+ "artist": "",
+ "offsets": { },
+ "playData": {
+  "difficulties": [
+   "easy",
+   "normal",
+   "hard"
+  ],
+  "characters": {
+   "player": "qt-playable",
+   "girlfriend": "ironmouse-collab",
+   "opponent": "cg5-collab",
+   "playerVocals": [
+    "qt-playable"
+   ]
+  },
+  "stage": "recordingStudio",
+  "noteStyle": "funkin",
+  "ratings": {
+   "hard": 0
+  },
+  "album": "volume1",
+  "stickerPack": "default",
+  "previewEnd": 0
+ },
+ "generatedBy": "Friday Night Funkin' - v0.8.6",
+ "timeChanges": [
+  {
+   "t": 0,
+   "b": 0,
+   "bpm": 127,
+   "bt": [4, 4, 4, 4]
+  }
+ ]
+}

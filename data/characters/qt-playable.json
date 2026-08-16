@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "renderType": "multianimateatlas",
+  "offsets": [-15, 3.5],
+  "danceEvery": 1,
+  "applyStageMatrix": false,
+  "scale": 1,
+  "name": "QT (Playable)",
+  "flipX": true,
+  "cameraOffsets": [8, 12],
+  "startingAnimation": "idle",
+  "singTime": 8,
+  "isPixel": false,
+  "assetPath": "shared:characters/QT_assets/qt-playable",
+  "healthIcon": {
+    "offsets": [0, 0],
+    "isPixel": false,
+    "scale": 1,
+    "flipX": false,
+    "id": "QT"
+  },
+  "atlasSettings": {
+    "applyStageMatrix": false,
+    "swfMode": true,
+    "useRenderTexture": false,
+    "cacheOnLoad": false,
+    "filterQuality": 1
+  },
+  "animations": [
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "idle",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "idle"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "left",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singLEFT"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "down",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singDOWN"
+    },
+    {
+      "flipY": false,
+      "offsets": [0, 0],
+      "frameRate": 24,
+      "prefix": "up",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singUP"
+    },
+    {
+      "flipY": false,
+      "offsets": [20, 0],
+      "frameRate": 24,
+      "prefix": "right",
+      "animType": "framelabel",
+      "flipX": false,
+      "looped": false,
+      "name": "singRIGHT"
+    }
+  ]
+}

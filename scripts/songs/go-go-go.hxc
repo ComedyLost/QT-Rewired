@@ -1,0 +1,52 @@
+import funkin.play.song.Song;
+import funkin.play.PlayState;
+import flixel.tweens.FlxTween;
+
+class GoGoGoSong extends Song
+{
+  public function new()
+  {
+    super('go-go-go'); 
+  }
+
+  override public function onSongRetry(event)
+  {
+    super.onSongRetry(event);
+    
+    var stage:Dynamic = PlayState.instance.currentStage;
+    if (stage != null && stage.id == 'recordingStudio')
+    {
+      stage.disableDarkness();
+      stage.setLightHueInstant(0, 0);
+    }
+  }
+
+  public override function onBeatHit(event)
+  {
+    super.onBeatHit(event);
+
+    var stage:Dynamic = PlayState.instance.currentStage;
+    
+    if (stage == null || stage.id != 'recordingStudio') return;
+    
+    // erm... actually :nerd:
+    // stage.enableDarkness()
+    // stage.disableDarkness()
+    // stage.setLightHueLinear(hue, sec)
+    // stage.setLightHueInstant(hue, sec)
+
+    switch (event.beat)
+    {
+      case 0:
+        stage.enableDarkness();
+      case 6:
+        stage.enableDarkness();
+      case 8:
+        stage.setLightHueLinear(83, 2.0);
+      case 16:
+        stage.setLightHueInstant(0, 2.0);
+      case 24:
+        stage.disableDarkness();
+    }
+  }
+}
