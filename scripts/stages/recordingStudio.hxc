@@ -15,7 +15,7 @@ class RecordingStudio extends Stage
   private var lightShader:AdjustColorShader;
   private var hasHidden:Bool = false;
 
-  private var darkProps:Array<String> = [
+  private final darkProps:Array<String> = [
     'foregroundChairDark', 'deskDark', 'couchDark', 'chairDark', 
     'overlayGlowDark', 'lightDark', 'wallsDark'
   ];
