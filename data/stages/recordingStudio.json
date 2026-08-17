@@ -6,7 +6,7 @@
       "assetPath": "recordingStudio/dark/foregroundChair",
       "name": "foregroundChairDark",
       "alpha": 0,
-      "position": [-1480, -477],
+      "position": [-1520, -477],
       "scroll": [1.2, 1.2],
       "scale": [1, 1],
       "zIndex": 410
@@ -14,7 +14,7 @@
     {
       "assetPath": "recordingStudio/foregroundChair",
       "name": "foregroundChair",
-      "position": [-1480, -477],
+      "position": [-1520, -477],
       "scroll": [1.2, 1.2],
       "scale": [1, 1],
       "zIndex": 400
@@ -136,7 +136,7 @@
       "zIndex": 200
     },
     "gf": {
-      "cameraOffsets": [-106, 19],
+      "cameraOffsets": [-115, 19],
       "position": [-32, -60],
       "zIndex": 100
     }
