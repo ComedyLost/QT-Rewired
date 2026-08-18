@@ -1,0 +1,32 @@
+package rewired.notekinds;
+
+import funkin.play.notes.notekind.NoteKind;
+import funkin.play.PlayState;
+
+class IronmouseSingNoteKind extends NoteKind
+{
+  public function new()
+  {
+    super('ironmouse-sing-go', 'Ironmouse Sings (Go Go Go)', 'rewired-go-go-go-cg5', [], true);
+  }
+
+  final DIRECTIONS_SUFFIX:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
+
+  override public function onNoteHit(event)
+  {
+    if(PlayState?.instance?.currentStage == null) return;
+    
+    var gf = PlayState.instance.currentStage.getGirlfriend();
+
+    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction];
+
+    if(event.note.isHoldNote)
+    {
+      animName += Constants.ANIMATION_HOLD_SUFFIX;
+    }
+
+    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
+
+    gf.playAnimation(animName);
+  }
+}
