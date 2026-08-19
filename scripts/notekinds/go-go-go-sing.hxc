@@ -2,10 +2,158 @@ package rewired.notekinds;
 
 import funkin.play.notes.notekind.NoteKind;
 import funkin.play.PlayState;
+import funkin.modding.events.ScriptEventDispatcher;
+import funkin.play.character.CharacterType;
 
+class QtRewiredCollabGoGoGoNoteKind extends NoteKind
+{
+  // 0 - no, 1- sings normally, 2 - alts
+  var goParams:Dynamic = [
+    {
+      name : "cg5Sing",
+      description : "Cg5 Sings",
+      type : "Int",
+      data : {
+        min : 0,
+        max : 2,
+        step : 1,
+        precision : 1,
+        defaultValue : 1
+      }
+    },
+    {
+      name : "ironSing",
+      description : "Ironmouse Sings",
+      type : "Int",
+      data : {
+        min : 0,
+        max : 2,
+        step : 1,
+        precision : 1,
+        defaultValue : 1
+      }
+    },
+    {
+      name : "qtSing",
+      description : "QT Sings",
+      type : "Int",
+      data : {
+        min : 0,
+        max : 2,
+        step : 1,
+        precision : 1,
+        defaultValue : 1
+      }
+    }
+  ];
+  public function new()
+  {
+    super('qt-go-go-go-note', 'Character Sings (Go Go Go)', 'funkin', goParams , true);
+  }
+  
+  override public function onNoteHit(ev)
+  {
+    trace("ASS");
+    // char, note
+    if (ev.note.noteData.getMustHitNote())
+    {
+      var toSing = [];
+      var toUnhook = [];
+
+      trace(ev.note.getParam("cg5Sing"), ev.note.getParam("ironSing"), ev.note.getParam("qtSing"));
+      
+      if (ev.note.getParam("cg5Sing") > 0)
+        toSing.push([cg5, ev.note.getParam("cg5Sing")]);
+      else toUnhook.push(cg5);
+
+      if (ev.note.getParam("ironSing") > 0)
+        toSing.push([irmouse, ev.note.getParam("ironSing")]);
+      else toUnhook.push(irmouse);
+
+      if (ev.note.getParam("qtSing") > 0)
+        toSing.push([qt, ev.note.getParam("qtSing")]);
+      else toUnhook.push(qt);
+
+      for (s in toSing)
+      {
+        hookChar(s[0], false, ev.note, s[1] == 2);
+      }
+
+      for (s in toUnhook)
+      {
+        unHookChar(s);
+      }
+    } else {
+      if (ev.note.getParam("cg5Sing") > 0)
+        hookChar(cg5, false, ev.note, ev.note.getParam("cg5Sing"), false);
+
+      if (ev.note.getParam("ironSing") > 0)
+        hookChar(irmouse, false, ev.note, ev.note.getParam("ironSing"), false);
+
+      if (ev.note.getParam("qtSing") > 0)
+        hookChar(qt, false, ev.note, ev.note.getParam("qtSing"), false);
+    }
+
+  
+    //qt.playSingAnimation(ev.note.noteData.getDirection(), false);
+    //qt.holdTimer = 0;
+    /*ScriptEventDispatcher.callEvent(cg5, ev);
+    ScriptEventDispatcher.callEvent(irmouse, ev);
+    ScriptEventDispatcher.callEvent(qt, ev);*/
+     // ScriptEventDispatcher.callEvent(character, event);
+  }
+
+  override public function onNoteMiss(ev)
+  {
+    trace("ASS2");
+  }
+
+  override public function onNoteHoldDrop(ev)
+  {
+    trace("ASS3");
+  }
+
+
+
+
+  var cg5(get, never):Dynamic;
+  function get_cg5()
+  {
+    return PlayState.instance.currentStage.getDad();
+  }
+
+  var irmouse(get, never):Dynamic;
+  function get_irmouse()
+  {
+    return PlayState.instance.currentStage.getGirlfriend();
+  }
+
+  var qt(get, never):Dynamic;
+  function get_qt()
+  {
+    return PlayState.instance.currentStage.getBoyfriend();
+  }
+
+  // i will move it into separated event cro
+  function hookChar(char, miss, note, alt, ?doPlayer:Bool = true)
+  {
+    doPlayer ??= true;
+    char.characterType = doPlayer ? CharacterType.BF : CharacterType.DAD;
+
+    var suff = (alt && !miss) ? "alt" : "";
+    char.playSingAnimation(note.noteData.getDirection(), miss, suff);
+    char.holdTimer = 0;
+  }
+
+  function unHookChar(char)
+  {
+    char.characterType = CharacterType.DAD;
+  }
+}
+
+/*
 class GoGoGoNoteKind extends NoteKind
 {
-
   var PS(get, never):PlayState;
 
   private function get_PS()
@@ -270,3 +418,4 @@ class BothSingGoGoGoNoteKind extends NoteKind
     opp.holdTimer = 0;
   }
 }
+*/

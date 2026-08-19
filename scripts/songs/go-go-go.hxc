@@ -1,6 +1,7 @@
 import funkin.play.song.Song;
 import funkin.play.PlayState;
 import flixel.tweens.FlxTween;
+import funkin.play.character.CharacterType;
 
 class GoGoGoSong extends Song
 {
@@ -9,7 +10,17 @@ class GoGoGoSong extends Song
     super('go-go-go'); 
   }
 
-  override public function onSongRetry(event)
+  override function onCreate(e)
+  {
+    super.onCreate(e);
+    if (PlayState.instance == null || PlayState.instance.currentStage == null)
+      return;
+
+    //PlayState.instance.currentStage.getDad().characterType = CharacterType.BF;
+   // PlayState.instance.currentStage.getGirlfriend().characterType = CharacterType.BF;
+  }
+
+  override function onSongRetry(event)
   {
     super.onSongRetry(event);
     
@@ -21,7 +32,7 @@ class GoGoGoSong extends Song
     }
   }
 
-  public override function onBeatHit(event)
+  override function onBeatHit(event)
   {
     super.onBeatHit(event);
 

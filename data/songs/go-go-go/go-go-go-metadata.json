@@ -10,11 +10,14 @@
    "hard"
   ],
   "characters": {
-   "player": "qt-playable",
-   "girlfriend": "ironmouse-collab",
-   "opponent": "cg5-collab",
+   "player": "collab/cg5/qt-playable-collab",
+   "girlfriend": "collab/cg5/ironmouse-collab",
+   "opponent": "collab/cg5/cg5-collab",
+   "opponentVocals": [
+    "cg5"
+   ],
    "playerVocals": [
-    "qt-playable"
+    "qt"
    ]
   },
   "stage": "recordingStudio",

@@ -45,7 +45,7 @@
       "animType": "framelabel",
       "flipX": false,
       "looped": false,
-      "name": "singLEFT-beautiful"
+      "name": "singLEFT-alt"
     },
     {
       "flipY": false,
@@ -55,7 +55,7 @@
       "animType": "framelabel",
       "flipX": false,
       "looped": false,
-      "name": "singDOWN-beautiful"
+      "name": "singDOWN-alt"
     },
     {
       "flipY": false,
@@ -65,7 +65,7 @@
       "animType": "framelabel",
       "flipX": false,
       "looped": false,
-      "name": "singUP-beautiful"
+      "name": "singUP-alt"
     },
     {
       "flipY": false,
@@ -75,7 +75,7 @@
       "animType": "framelabel",
       "flipX": false,
       "looped": false,
-      "name": "singRIGHT-beautiful"
+      "name": "singRIGHT-alt"
     },
     {
       "flipY": false,
