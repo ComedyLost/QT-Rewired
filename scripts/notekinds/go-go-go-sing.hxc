@@ -3,6 +3,120 @@ package rewired.notekinds;
 import funkin.play.notes.notekind.NoteKind;
 import funkin.play.PlayState;
 
+class GoGoGoNoteKind extends NoteKind
+{
+
+  var PS(get, never):PlayState;
+
+  private function get_PS()
+  {
+    return PlayState.instance;
+  }
+
+  //anon structures <3
+  var goParams:Dynamic = [
+    {
+      name : "Singer",
+      description : "Singer", //takes "cg5", "ironmouse", or "both". Any other input results in an error.
+      type : "String"
+    },
+    {
+      name : "Alt Anims (Ironmouse)",
+      description : "Alt Anims(Ironmouse)",
+      type : "Int",
+      data : {
+        min : 0,
+        max : 1,
+        step : 1,
+        precision : null,
+        defaultValue : 0
+      }
+    }
+  ];
+
+
+  public function new()
+  {
+    super('go-go-go-note', 'Character Sings (Go Go Go)', 'rewired-go-go-go', goParams, true);
+  }
+
+  final DIRECTIONS_SUFFIX:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
+
+  override public function onNoteHit(ev:Dynamic)
+  {
+    var singer:String = ev.note.getParam("Singer");
+
+    if(!['cg5', 'ironmouse', 'both'].contains(singer))
+    {
+      throw new haxe.Exception("Invalid parameter passed to `singer` field of Go Go Go notekind.");
+      return;
+    }
+
+    var alt:Bool = ev.note.getParam("Alt Anims (Ironmouse)") == 1;
+    var animName = "sing" + DIRECTIONS_SUFFIX[ev.note.direction];
+    var gf = PS.currentStage.getGirlfriend();
+    var dad = PS.currentStage.getDad();
+
+    switch(singer)
+    {
+      case 'cg5':
+          dad.playAnimation(animName, !ev.note.isHoldNote);
+          dad.holdTimer = 0;
+          return;
+      case 'ironmouse':
+          if(alt) animName += "-beautiful";
+          gf.playAnimation(animName, !ev.note.isHoldNote);
+          return;
+      case 'both':
+          var ironAnim = animName;
+          if(alt) ironAnim += "-beautiful";
+          gf.playAnimation(ironAnim, !ev.note.isHoldNote);
+          dad.playAnimation(animName, !ev.note.isHoldNote);
+          return;
+      default:
+        throw new haxe.Exception("A fatal error has occured with the Go Go Go notetype. \n Please report ASAP to https://github.com/RewiredCrew/QT-Rewired");
+        return;
+    }
+  }
+
+  override public function onNoteMiss(ev:Dynamic)
+  {
+    var singer:String = ev.note.getParam("Singer");
+
+    if(!['cg5', 'ironmouse', 'both'].contains(singer))
+    {
+      throw new haxe.Exception("Invalid parameter passed to `singer` field of Go Go Go notekind.");
+      return;
+    }
+
+    var alt:Bool = ev.note.getParam("Alt Anims (Ironmouse)") == 1;
+    var animName = "sing" + DIRECTIONS_SUFFIX[ev.note.direction] + "miss";
+    var gf = PS.currentStage.getGirlfriend();
+    var dad = PS.currentStage.getDad();
+
+    switch(singer)
+    {
+      case 'cg5':
+          dad.playAnimation(animName, !ev.note.isHoldNote);
+          dad.holdTimer = 0;
+          return;
+      case 'ironmouse':
+          if(alt) animName += "-beautiful";
+          gf.playAnimation(animName, !ev.note.isHoldNote);
+          return;
+      case 'both':
+          var ironAnim = animName;
+          if(alt) ironAnim += "-beautiful";
+          gf.playAnimation(ironAnim, !ev.note.isHoldNote);
+          dad.playAnimation(animName, !ev.note.isHoldNote);
+          return;
+      default:
+        throw new haxe.Exception("A fatal error has occured with the Go Go Go notetype. \n Please report ASAP to https://github.com/RewiredCrew/QT-Rewired");
+        return;
+    }
+  }
+}
+
 class IronmouseSingNoteKind extends NoteKind
 {
   public function new()
