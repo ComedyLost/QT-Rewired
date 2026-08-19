@@ -1,0 +1,158 @@
+package rewired.notekinds;
+
+import funkin.play.notes.notekind.NoteKind;
+import funkin.play.PlayState;
+
+class IronmouseSingNoteKind extends NoteKind
+{
+  public function new()
+  {
+    super('ironmouse-sing-go', 'Ironmouse Sings (Go Go Go)', 'rewired-go-go-go-cg5', [], true);
+  }
+
+  final DIRECTIONS_SUFFIX:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
+
+  override public function onNoteHit(event)
+  {
+    if(PlayState?.instance?.currentStage == null) return;
+    
+    var gf = PlayState.instance.currentStage.getGirlfriend();
+    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction];
+
+    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
+
+    gf.playAnimation(animName, !event.note.isHoldNote);
+    gf.holdTimer = 0;
+  }
+
+  override public function onNoteMiss(event)
+  {
+    if(PlayState?.instance?.currentStage == null) return;
+    
+    var gf = PlayState.instance.currentStage.getGirlfriend();
+    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction] + "miss";
+
+    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
+
+    gf.playAnimation(animName, true);
+    gf.holdTimer = 0;
+  }
+}
+
+class CG5SingNoteKind extends NoteKind
+{
+  public function new()
+  {
+    super('cg5-sing-go', 'CG5 Sings (Go Go Go)', 'rewired-go-go-go-cg5', [], true);
+  }
+
+  final DIRECTIONS_SUFFIX:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
+
+  override public function onNoteHit(event)
+  {
+    if(PlayState?.instance?.currentStage == null) return;
+    
+    var opp = PlayState.instance.currentStage.getDad();
+    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction];
+
+    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
+
+    opp.playAnimation(animName, !event.note.isHoldNote);
+    opp.holdTimer = 0;
+  }
+
+  override public function onNoteMiss(event)
+  {
+    if(PlayState?.instance?.currentStage == null) return;
+    
+    var opp = PlayState.instance.currentStage.getDad();
+    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction] + "miss";
+
+    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
+
+    opp.playAnimation(animName, true);
+    opp.holdTimer = 0;
+  }
+}
+
+class IronmouseBeautifulSingNoteKind extends NoteKind
+{
+  public function new()
+  {
+    super('ironmouse-beautiful-sing-go', 'Ironmouse Sings (Beautiful) (Go Go Go)', 'rewired-go-go-go-cg5', [], true);
+  }
+
+  final DIRECTIONS_SUFFIX:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
+
+  override public function onNoteHit(event)
+  {
+    if(PlayState?.instance?.currentStage == null) return;
+    
+    var gf = PlayState.instance.currentStage.getGirlfriend();
+    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction] + "-beautiful";
+
+    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
+
+    gf.playAnimation(animName, !event.note.isHoldNote);
+    gf.holdTimer = 0;
+  }
+
+  override public function onNoteMiss(event)
+  {
+    if(PlayState?.instance?.currentStage == null) return;
+    
+    var gf = PlayState.instance.currentStage.getGirlfriend();
+    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction] + "miss";
+
+    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
+
+    gf.playAnimation(animName, true);
+    gf.holdTimer = 0;
+  }
+}
+
+class BothSingGoGoGoNoteKind extends NoteKind
+{
+  public function new()
+  {
+    super('both-sing-go', 'CG5 & Ironmouse Sings (Go Go Go)', 'rewired-go-go-go-cg5', [], true);
+  }
+
+  final DIRECTIONS_SUFFIX:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
+
+  override public function onNoteHit(event)
+  {
+    if(PlayState?.instance?.currentStage == null) return;
+    
+    var gf = PlayState.instance.currentStage.getGirlfriend();
+    var opp = PlayState.instance.currentStage.getDad();
+
+    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction];
+
+    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
+
+    gf.playAnimation(animName, !event.note.isHoldNote);
+    gf.holdTimer = 0;
+    
+    opp.playAnimation(animName, !event.note.isHoldNote);
+    opp.holdTimer = 0;
+  }
+
+  override public function onNoteMiss(event)
+  {
+    if(PlayState?.instance?.currentStage == null) return;
+    
+    var gf = PlayState.instance.currentStage.getGirlfriend();
+    var opp = PlayState.instance.currentStage.getDad();
+
+    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction] + "miss";
+
+    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
+
+    gf.playAnimation(animName, true);
+    gf.holdTimer = 0;
+    
+    opp.playAnimation(animName, true);
+    opp.holdTimer = 0;
+  }
+}
