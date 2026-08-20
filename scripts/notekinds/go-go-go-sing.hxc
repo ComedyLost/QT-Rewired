@@ -2,166 +2,142 @@ package rewired.notekinds;
 
 import funkin.play.notes.notekind.NoteKind;
 import funkin.play.PlayState;
-import funkin.modding.events.ScriptEventDispatcher;
 import funkin.play.character.CharacterType;
 
 class QtRewiredCollabGoGoGoNoteKind extends NoteKind
 {
-  // 0 - no, 1- sings normally, 2 - alts
+  // 0 - no, 1 - sings normally, 2 - alt
   var goParams:Dynamic = [
     {
-      name : "cg5Sing",
-      description : "Cg5 Sings",
-      type : "Int",
-      data : {
-        min : 0,
-        max : 2,
-        step : 1,
-        precision : 1,
-        defaultValue : 1
+      name: "cg5Sing",
+      description: "Cg5 Sings",
+      type: "Int",
+      data: {
+        min: 0,
+        max: 2,
+        step: 1,
+        precision: 1,
+        defaultValue: 1
       }
     },
     {
-      name : "ironSing",
-      description : "Ironmouse Sings",
-      type : "Int",
-      data : {
-        min : 0,
-        max : 2,
-        step : 1,
-        precision : 1,
-        defaultValue : 1
+      name: "ironSing",
+      description: "Ironmouse Sings",
+      type: "Int",
+      data: {
+        min: 0,
+        max: 2,
+        step: 1,
+        precision: 1,
+        defaultValue: 1
       }
     },
     {
-      name : "qtSing",
-      description : "QT Sings",
-      type : "Int",
-      data : {
-        min : 0,
-        max : 2,
-        step : 1,
-        precision : 1,
-        defaultValue : 1
+      name: "qtSing",
+      description: "QT Sings",
+      type: "Int",
+      data: {
+        min: 0,
+        max: 2,
+        step: 1,
+        precision: 1,
+        defaultValue: 1
       }
     }
   ];
+
   public function new()
   {
-    super('qt-go-go-go-note', 'Character Sings (Go Go Go)', 'funkin', goParams , true);
+    super('qt-go-go-go-note', 'Character Sings (Go Go Go)', 'funkin', goParams, true);
   }
-  
+
   override public function onNoteHit(ev)
   {
-    trace("ASS");
-    // char, note
-    if (ev.note.noteData.getMustHitNote())
-    {
-      var toSing = [];
-      var toUnhook = [];
-
-      trace(ev.note.getParam("cg5Sing"), ev.note.getParam("ironSing"), ev.note.getParam("qtSing"));
-      
-      if (ev.note.getParam("cg5Sing") > 0)
-        toSing.push([cg5, ev.note.getParam("cg5Sing")]);
-      else toUnhook.push(cg5);
-
-      if (ev.note.getParam("ironSing") > 0)
-        toSing.push([irmouse, ev.note.getParam("ironSing")]);
-      else toUnhook.push(irmouse);
-
-      if (ev.note.getParam("qtSing") > 0)
-        toSing.push([qt, ev.note.getParam("qtSing")]);
-      else toUnhook.push(qt);
-
-      for (s in toSing)
-      {
-        hookChar(s[0], false, ev.note, s[1] == 2);
-      }
-
-      for (s in toUnhook)
-      {
-        unHookChar(s);
-      }
-    } else {
-      if (ev.note.getParam("cg5Sing") > 0)
-        hookChar(cg5, false, ev.note, ev.note.getParam("cg5Sing"), false);
-
-      if (ev.note.getParam("ironSing") > 0)
-        hookChar(irmouse, false, ev.note, ev.note.getParam("ironSing"), false);
-
-      if (ev.note.getParam("qtSing") > 0)
-        hookChar(qt, false, ev.note, ev.note.getParam("qtSing"), false);
-    }
+    processNoteSings(ev.note, false, ev.note.noteData.getMustHitNote());
   }
 
   override public function onNoteMiss(ev)
   {
     if (ev.note.noteData.getMustHitNote())
     {
-      var toSing = [];
-      var toUnhook = [];
-
-      trace(ev.note.getParam("cg5Sing"), ev.note.getParam("ironSing"), ev.note.getParam("qtSing"));
-      
-      if (ev.note.getParam("cg5Sing") > 0)
-        toSing.push([cg5, ev.note.getParam("cg5Sing")]);
-      else toUnhook.push(cg5);
-
-      if (ev.note.getParam("ironSing") > 0)
-        toSing.push([irmouse, ev.note.getParam("ironSing")]);
-      else toUnhook.push(irmouse);
-
-      if (ev.note.getParam("qtSing") > 0)
-        toSing.push([qt, ev.note.getParam("qtSing")]);
-      else toUnhook.push(qt);
-
-      for (s in toSing)
-      {
-        hookChar(s[0], true, ev.note, s[1] == 2);
-      }
-
-      for (s in toUnhook)
-      {
-        unHookChar(s);
-      }
-    } 
+      processNoteSings(ev.note, true, true);
+    }
   }
 
   override public function onNoteHoldDrop(ev)
   {
   }
 
+  function processNoteSings(note, miss:Bool, isPlayer:Bool):Void
+  {
+    final cg5Sing:Int = getSingParam(note, "cg5Sing");
+    final ironSing:Int = getSingParam(note, "ironSing");
+    final qtSing:Int = getSingParam(note, "qtSing");
+
+    processCharacter(cg5, cg5Sing, note, miss, isPlayer);
+    processCharacter(irmouse, ironSing, note, miss, isPlayer);
+    processCharacter(qt, qtSing, note, miss, isPlayer);
+  }
+
+  function processCharacter(char:Dynamic, singType:Int, note:Dynamic, miss:Bool, isPlayer:Bool):Void
+  {
+    if (char == null)
+      return;
+
+    if (singType <= 0)
+    {
+      //On both hit and miss, a character with 0
+      //must stop being hooked
+      if (isPlayer)
+        unHookChar(char);
+
+      return;
+    }
+
+    hookChar(char, miss, note, singType == 2, isPlayer);
+  }
+
+  function getSingParam(note:Dynamic, name:String):Int
+  {
+    final value:Dynamic = note.getParam(name);
+
+    if (value == null)
+      return 0;
+
+    return Std.int(value);
+  }
+
   var cg5(get, never):Dynamic;
-  function get_cg5()
+  function get_cg5():Dynamic
   {
     return PlayState.instance.currentStage.getDad();
   }
 
   var irmouse(get, never):Dynamic;
-  function get_irmouse()
+  function get_irmouse():Dynamic
   {
     return PlayState.instance.currentStage.getGirlfriend();
   }
 
   var qt(get, never):Dynamic;
-  function get_qt()
+  function get_qt():Dynamic
   {
     return PlayState.instance.currentStage.getBoyfriend();
   }
 
-  function hookChar(char, miss, note, alt, ?doPlayer:Bool = true)
+  function hookChar(char:Dynamic, miss:Bool, note:Dynamic, alt:Bool, doPlayer:Bool = true):Void
   {
-    doPlayer ??= true;
     char.characterType = doPlayer ? CharacterType.BF : CharacterType.DAD;
-
-    var suff = (alt && !miss) ? "alt" : "";
-    char.playSingAnimation(note.noteData.getDirection(), miss, suff);
+    final suffix:String = (alt && !miss) ? "alt" : "";
+    char.playSingAnimation(note.noteData.getDirection(), miss, suffix);
     char.holdTimer = 0;
   }
 
-  function unHookChar(char)
+  function unHookChar(char:Dynamic):Void
   {
+    if (char == null)
+      return;
+
     char.characterType = CharacterType.DAD;
   }
 }
