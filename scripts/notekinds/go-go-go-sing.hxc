@@ -93,28 +93,44 @@ class QtRewiredCollabGoGoGoNoteKind extends NoteKind
       if (ev.note.getParam("qtSing") > 0)
         hookChar(qt, false, ev.note, ev.note.getParam("qtSing"), false);
     }
-
-  
-    //qt.playSingAnimation(ev.note.noteData.getDirection(), false);
-    //qt.holdTimer = 0;
-    /*ScriptEventDispatcher.callEvent(cg5, ev);
-    ScriptEventDispatcher.callEvent(irmouse, ev);
-    ScriptEventDispatcher.callEvent(qt, ev);*/
-     // ScriptEventDispatcher.callEvent(character, event);
   }
 
   override public function onNoteMiss(ev)
   {
-    trace("ASS2");
+    if (ev.note.noteData.getMustHitNote())
+    {
+      var toSing = [];
+      var toUnhook = [];
+
+      trace(ev.note.getParam("cg5Sing"), ev.note.getParam("ironSing"), ev.note.getParam("qtSing"));
+      
+      if (ev.note.getParam("cg5Sing") > 0)
+        toSing.push([cg5, ev.note.getParam("cg5Sing")]);
+      else toUnhook.push(cg5);
+
+      if (ev.note.getParam("ironSing") > 0)
+        toSing.push([irmouse, ev.note.getParam("ironSing")]);
+      else toUnhook.push(irmouse);
+
+      if (ev.note.getParam("qtSing") > 0)
+        toSing.push([qt, ev.note.getParam("qtSing")]);
+      else toUnhook.push(qt);
+
+      for (s in toSing)
+      {
+        hookChar(s[0], true, ev.note, s[1] == 2);
+      }
+
+      for (s in toUnhook)
+      {
+        unHookChar(s);
+      }
+    } 
   }
 
   override public function onNoteHoldDrop(ev)
   {
-    trace("ASS3");
   }
-
-
-
 
   var cg5(get, never):Dynamic;
   function get_cg5()
@@ -134,7 +150,6 @@ class QtRewiredCollabGoGoGoNoteKind extends NoteKind
     return PlayState.instance.currentStage.getBoyfriend();
   }
 
-  // i will move it into separated event cro
   function hookChar(char, miss, note, alt, ?doPlayer:Bool = true)
   {
     doPlayer ??= true;
@@ -150,272 +165,3 @@ class QtRewiredCollabGoGoGoNoteKind extends NoteKind
     char.characterType = CharacterType.DAD;
   }
 }
-
-/*
-class GoGoGoNoteKind extends NoteKind
-{
-  var PS(get, never):PlayState;
-
-  private function get_PS()
-  {
-    return PlayState.instance;
-  }
-
-  //anon structures <3
-  var goParams:Dynamic = [
-    {
-      name : "Singer",
-      description : "Singer", //takes "cg5", "ironmouse", or "both". Any other input results in an error.
-      type : "String"
-    },
-    {
-      name : "Alt Anims (Ironmouse)",
-      description : "Alt Anims(Ironmouse)",
-      type : "Int",
-      data : {
-        min : 0,
-        max : 1,
-        step : 1,
-        precision : null,
-        defaultValue : 0
-      }
-    }
-  ];
-
-
-  public function new()
-  {
-    super('go-go-go-note', 'Character Sings (Go Go Go)', 'rewired-go-go-go', goParams, true);
-  }
-
-  final DIRECTIONS_SUFFIX:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
-
-  override public function onNoteHit(ev:Dynamic)
-  {
-    var singer:String = ev.note.getParam("Singer");
-
-    if(!['cg5', 'ironmouse', 'both'].contains(singer))
-    {
-      throw new haxe.Exception("Invalid parameter passed to `singer` field of Go Go Go notekind.");
-      return;
-    }
-
-    var alt:Bool = ev.note.getParam("Alt Anims (Ironmouse)") == 1;
-    var animName = "sing" + DIRECTIONS_SUFFIX[ev.note.direction];
-    var gf = PS.currentStage.getGirlfriend();
-    var dad = PS.currentStage.getDad();
-
-    switch(singer)
-    {
-      case 'cg5':
-          dad.playAnimation(animName, !ev.note.isHoldNote);
-          dad.holdTimer = 0;
-          return;
-      case 'ironmouse':
-          if(alt) animName += "-beautiful";
-          gf.playAnimation(animName, !ev.note.isHoldNote);
-          return;
-      case 'both':
-          var ironAnim = animName;
-          if(alt) ironAnim += "-beautiful";
-          gf.playAnimation(ironAnim, !ev.note.isHoldNote);
-          dad.playAnimation(animName, !ev.note.isHoldNote);
-          return;
-      default:
-        throw new haxe.Exception("A fatal error has occured with the Go Go Go notetype. \n Please report ASAP to https://github.com/RewiredCrew/QT-Rewired");
-        return;
-    }
-  }
-
-  override public function onNoteMiss(ev:Dynamic)
-  {
-    var singer:String = ev.note.getParam("Singer");
-
-    if(!['cg5', 'ironmouse', 'both'].contains(singer))
-    {
-      throw new haxe.Exception("Invalid parameter passed to `singer` field of Go Go Go notekind.");
-      return;
-    }
-
-    var alt:Bool = ev.note.getParam("Alt Anims (Ironmouse)") == 1;
-    var animName = "sing" + DIRECTIONS_SUFFIX[ev.note.direction] + "miss";
-    var gf = PS.currentStage.getGirlfriend();
-    var dad = PS.currentStage.getDad();
-
-    switch(singer)
-    {
-      case 'cg5':
-          dad.playAnimation(animName, !ev.note.isHoldNote);
-          dad.holdTimer = 0;
-          return;
-      case 'ironmouse':
-          if(alt) animName += "-beautiful";
-          gf.playAnimation(animName, !ev.note.isHoldNote);
-          return;
-      case 'both':
-          var ironAnim = animName;
-          if(alt) ironAnim += "-beautiful";
-          gf.playAnimation(ironAnim, !ev.note.isHoldNote);
-          dad.playAnimation(animName, !ev.note.isHoldNote);
-          return;
-      default:
-        throw new haxe.Exception("A fatal error has occured with the Go Go Go notetype. \n Please report ASAP to https://github.com/RewiredCrew/QT-Rewired");
-        return;
-    }
-  }
-}
-
-class IronmouseSingNoteKind extends NoteKind
-{
-  public function new()
-  {
-    super('ironmouse-sing-go', 'Ironmouse Sings (Go Go Go)', 'rewired-go-go-go-cg5', [], true);
-  }
-
-  final DIRECTIONS_SUFFIX:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
-
-  override public function onNoteHit(event)
-  {
-    if(PlayState?.instance?.currentStage == null) return;
-    
-    var gf = PlayState.instance.currentStage.getGirlfriend();
-    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction];
-
-    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
-
-    gf.playAnimation(animName, !event.note.isHoldNote);
-    gf.holdTimer = 0;
-  }
-
-  override public function onNoteMiss(event)
-  {
-    if(PlayState?.instance?.currentStage == null) return;
-    
-    var gf = PlayState.instance.currentStage.getGirlfriend();
-    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction] + "miss";
-
-    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
-
-    gf.playAnimation(animName, true);
-    gf.holdTimer = 0;
-  }
-}
-
-class CG5SingNoteKind extends NoteKind
-{
-  public function new()
-  {
-    super('cg5-sing-go', 'CG5 Sings (Go Go Go)', 'rewired-go-go-go-cg5', [], true);
-  }
-
-  final DIRECTIONS_SUFFIX:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
-
-  override public function onNoteHit(event)
-  {
-    if(PlayState?.instance?.currentStage == null) return;
-    
-    var opp = PlayState.instance.currentStage.getDad();
-    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction];
-
-    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
-
-    opp.playAnimation(animName, !event.note.isHoldNote);
-    opp.holdTimer = 0;
-  }
-
-  override public function onNoteMiss(event)
-  {
-    if(PlayState?.instance?.currentStage == null) return;
-    
-    var opp = PlayState.instance.currentStage.getDad();
-    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction] + "miss";
-
-    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
-
-    opp.playAnimation(animName, true);
-    opp.holdTimer = 0;
-  }
-}
-
-class IronmouseBeautifulSingNoteKind extends NoteKind
-{
-  public function new()
-  {
-    super('ironmouse-beautiful-sing-go', 'Ironmouse Sings (Beautiful) (Go Go Go)', 'rewired-go-go-go-cg5', [], true);
-  }
-
-  final DIRECTIONS_SUFFIX:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
-
-  override public function onNoteHit(event)
-  {
-    if(PlayState?.instance?.currentStage == null) return;
-    
-    var gf = PlayState.instance.currentStage.getGirlfriend();
-    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction] + "-beautiful";
-
-    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
-
-    gf.playAnimation(animName, !event.note.isHoldNote);
-    gf.holdTimer = 0;
-  }
-
-  override public function onNoteMiss(event)
-  {
-    if(PlayState?.instance?.currentStage == null) return;
-    
-    var gf = PlayState.instance.currentStage.getGirlfriend();
-    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction] + "miss";
-
-    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
-
-    gf.playAnimation(animName, true);
-    gf.holdTimer = 0;
-  }
-}
-
-class BothSingGoGoGoNoteKind extends NoteKind
-{
-  public function new()
-  {
-    super('both-sing-go', 'CG5 & Ironmouse Sings (Go Go Go)', 'rewired-go-go-go-cg5', [], true);
-  }
-
-  final DIRECTIONS_SUFFIX:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
-
-  override public function onNoteHit(event)
-  {
-    if(PlayState?.instance?.currentStage == null) return;
-    
-    var gf = PlayState.instance.currentStage.getGirlfriend();
-    var opp = PlayState.instance.currentStage.getDad();
-
-    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction];
-
-    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
-
-    gf.playAnimation(animName, !event.note.isHoldNote);
-    gf.holdTimer = 0;
-    
-    opp.playAnimation(animName, !event.note.isHoldNote);
-    opp.holdTimer = 0;
-  }
-
-  override public function onNoteMiss(event)
-  {
-    if(PlayState?.instance?.currentStage == null) return;
-    
-    var gf = PlayState.instance.currentStage.getGirlfriend();
-    var opp = PlayState.instance.currentStage.getDad();
-
-    var animName:String = "sing" + DIRECTIONS_SUFFIX[event.note.direction] + "miss";
-
-    PlayState.instance.currentStage.getBoyfriend().playAnimation('idle');
-
-    gf.playAnimation(animName, true);
-    gf.holdTimer = 0;
-    
-    opp.playAnimation(animName, true);
-    opp.holdTimer = 0;
-  }
-}
-*/
