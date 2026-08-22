@@ -4,7 +4,7 @@ import funkin.play.notes.notekind.NoteKind;
 import funkin.play.PlayState;
 import funkin.play.character.CharacterType;
 
-class QtRewiredCollabGoGoGoNoteKind extends NoteKind
+class GoGoGoNoteKind extends NoteKind
 {
   // 0 - no, 1 - sings normally, 2 - alt
   var goParams:Dynamic = [
