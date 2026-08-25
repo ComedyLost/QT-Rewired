@@ -6,7 +6,10 @@ import funkin.play.character.CharacterType;
 
 class GoGoGoNoteKind extends NoteKind
 {
-  // 0 - no, 1 - sings normally, 2 - alt
+  // 0 - no
+  // 1 - normal
+  // 2 - alt
+  // 3 - alt2
   var goParams:Dynamic = [
     {
       name: "cg5Sing",
@@ -14,7 +17,7 @@ class GoGoGoNoteKind extends NoteKind
       type: "Int",
       data: {
         min: 0,
-        max: 2,
+        max: 3,
         step: 1,
         precision: 1,
         defaultValue: 1
@@ -26,7 +29,7 @@ class GoGoGoNoteKind extends NoteKind
       type: "Int",
       data: {
         min: 0,
-        max: 2,
+        max: 3,
         step: 1,
         precision: 1,
         defaultValue: 1
@@ -38,7 +41,7 @@ class GoGoGoNoteKind extends NoteKind
       type: "Int",
       data: {
         min: 0,
-        max: 2,
+        max: 3,
         step: 1,
         precision: 1,
         defaultValue: 1
@@ -48,7 +51,7 @@ class GoGoGoNoteKind extends NoteKind
 
   public function new()
   {
-    super('qt-go-go-go-note', 'Character Sings (Go Go Go)', 'funkin', goParams, true);
+    super('qt-go-go-go-note', 'Go Go Go Character Sings', 'funkin', goParams, true);
   }
 
   override public function onNoteHit(ev)
@@ -94,7 +97,7 @@ class GoGoGoNoteKind extends NoteKind
       return;
     }
 
-    hookChar(char, miss, note, singType == 2, isPlayer);
+    hookChar(char, miss, note, singType, isPlayer);
   }
 
   function getSingParam(note:Dynamic, name:String):Int
@@ -125,11 +128,33 @@ class GoGoGoNoteKind extends NoteKind
     return PlayState.instance.currentStage.getBoyfriend();
   }
 
-  function hookChar(char:Dynamic, miss:Bool, note:Dynamic, alt:Bool, doPlayer:Bool = true):Void
+  function hookChar(char:Dynamic, miss:Bool, note:Dynamic, singType:Int, doPlayer:Bool = true):Void
   {
     char.characterType = doPlayer ? CharacterType.BF : CharacterType.DAD;
-    final suffix:String = (alt && !miss) ? "alt" : "";
-    char.playSingAnimation(note.noteData.getDirection(), miss, suffix);
+
+    var suffixShit:String = "";
+
+    if (!miss)
+    {
+      /*switch (singType)
+      {
+        case 2:
+          suffix = "alt";
+
+        case 3:
+          suffix = "alt2";
+
+        default:
+          suffix = "";
+      }*/ //:rolling_eyes:
+
+      if (singType == 2)
+        suffixShit = "alt";
+
+      if (singType == 3)
+        suffixShit = "alt2";
+    }
+    char.playSingAnimation(note.noteData.getDirection(), miss, suffixShit);
     char.holdTimer = 0;
   }
 
