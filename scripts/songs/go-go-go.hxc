@@ -8,16 +8,39 @@ class GoGoGoSong extends Song
   public function new()
   {
     super('go-go-go'); 
+    hasHiddenStrums = false;
   }
 
+  var hasHiddenStrums = false;
   override function onCreate(e)
   {
     super.onCreate(e);
     if (PlayState.instance == null || PlayState.instance.currentStage == null)
       return;
 
-    //PlayState.instance.currentStage.getDad().characterType = CharacterType.BF;
-   // PlayState.instance.currentStage.getGirlfriend().characterType = CharacterType.BF;
+    hasHiddenStrums = false;
+  }
+
+  function onUpdate(event:UpdateScriptEvent):Void
+  {
+    super.onUpdate(event);
+    if (!this.hasHiddenStrums)
+    {
+      this.hasHiddenStrums = true;
+      hideOpponentStrumline();
+    }
+  }
+
+  function hideOpponentStrumline()
+  {
+    var opponentStrumline:FlxSprite = PlayState.instance.opponentStrumline;
+    if (opponentStrumline != null)
+    {
+      for (arrow in opponentStrumline.members)
+      {
+        arrow.visible = false;
+      }
+    }
   }
 
   override function onSongRetry(event)
@@ -77,5 +100,12 @@ class GoGoGoSong extends Song
       case 175:
       stage.disableDarkness();
     }
+  }
+
+  function onDestroy(event:ScriptEvent):Void
+  {
+    super.onDestroy(event);
+
+    this.hasHiddenStrums = false;
   }
 }
