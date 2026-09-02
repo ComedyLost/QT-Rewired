@@ -7,11 +7,11 @@
   "scale": 1,
   "name": "CG5 (GO GO GO)",
   "flipX": false,
-  "cameraOffsets": [0, 150],
+  "cameraOffsets": [0, 192],
   "startingAnimation": "idle",
   "singTime": 8,
   "isPixel": false,
-  "assetPath": "shared:characters/go-go-go/cg5_placeholder",
+  "assetPath": "shared:characters/go-go-go/cg5",
   "healthIcon": {
     "offsets": [0, 0],
     "isPixel": false,
@@ -28,94 +28,53 @@
   },
   "animations": [
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "idle",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "idle"
+      "name": "idle",
+      "prefix": "Idle",
+      "offsets": [0, 0]
+    },  
+    {
+      "name": "singLEFT",
+      "prefix": "Left",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "left",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singLEFT"
+      "name": "singDOWN",
+      "prefix": "Down",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "down",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singDOWN"
+      "name": "singUP",
+      "prefix": "Up",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "up",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singUP"
+      "name": "singRIGHT",
+      "prefix": "Right",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "right",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singRIGHT"
-    },
-    {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "assetPath": "shared:characters/go-go-go/cg5_placeholder",
+      "name": "singLEFTmiss",
       "prefix": "left miss",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singLEFTmiss"
+      "offsets": [17, -86]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "assetPath": "shared:characters/go-go-go/cg5_placeholder",
+      "name": "singDOWNmiss",
       "prefix": "down miss",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singDOWNmiss"
+      "offsets": [17, -86]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "assetPath": "shared:characters/go-go-go/cg5_placeholder",
+      "name": "singUPmiss",
       "prefix": "up miss",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singUPmiss"
+      "offsets": [17, -86]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "assetPath": "shared:characters/go-go-go/cg5_placeholder",
+      "name": "singRIGHTmiss",
       "prefix": "right miss",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singRIGHTmiss"
+      "offsets": [17, -86]
     }
   ]
 }

@@ -1,17 +1,21 @@
 import funkin.play.song.Song;
 import funkin.play.PlayState;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
 import funkin.play.character.CharacterType;
+import flixel.FlxSprite;
 
 class GoGoGoSong extends Song
 {
+  var introFadeDuration:Float = 6.8;
+  var hasHiddenStrums:Bool = false;
+
   public function new()
   {
     super('go-go-go'); 
     hasHiddenStrums = false;
   }
 
-  var hasHiddenStrums = false;
   override function onCreate(e)
   {
     super.onCreate(e);
@@ -19,9 +23,36 @@ class GoGoGoSong extends Song
       return;
 
     hasHiddenStrums = false;
+
   }
 
-  function onUpdate(event:UpdateScriptEvent):Void
+  override function onSongLoaded(event)
+  {
+    super.onSongLoaded(event);
+
+    var gf = PlayState.instance.currentStage?.getGirlfriend();
+    if (gf != null) gf.visible = false;
+
+    if (PlayState.instance.isChartingMode) return;
+
+    PlayState.instance.camGame.fade(FlxColor.BLACK, 0, false, null, true);
+  }
+
+  override function onCountdownStart(event)
+  {
+    super.onCountdownStart(event);
+  }
+
+  override function onSongStart(event)
+  {
+    super.onSongStart(event);
+
+    if (PlayState.instance.isChartingMode) return;
+
+    PlayState.instance.camGame.fade(FlxColor.BLACK, introFadeDuration, true, null, true);
+  }
+  
+  override function onUpdate(event)
   {
     super.onUpdate(event);
     if (!this.hasHiddenStrums)
@@ -47,17 +78,31 @@ class GoGoGoSong extends Song
   {
     super.onSongRetry(event);
     
+    var gf = PlayState.instance.currentStage?.getGirlfriend();
+    if (gf != null) gf.visible = false;
+    
     var stage:Dynamic = PlayState.instance.currentStage;
     if (stage?.id == 'recordingStudio')
     {
       stage.disableDarkness();
       stage.setLightHueInstant(0, 0);
+      stage.disableBlackScreen();
     }
   }
 
   override function onBeatHit(event)
   {
     super.onBeatHit(event);
+
+    var gf = PlayState.instance.currentStage?.getGirlfriend();
+    if (gf != null)
+    {
+      var shouldBeVisible:Bool = (event.beat >= 111);
+      if (gf.visible != shouldBeVisible)
+      {
+        gf.visible = shouldBeVisible;
+      }
+    }
 
     var stage:Dynamic = PlayState.instance.currentStage;
     
@@ -68,44 +113,64 @@ class GoGoGoSong extends Song
     // stage.disableDarkness()
     // stage.setLightHueLinear(hue, sec)
     // stage.setLightHueInstant(hue, sec)
+    // stage.enableBlackScreen()
+    // stage.disableBlackScreen()
+    // stage.whiteFlash(sec)
 
     switch (event.beat)
     {
+      case 0:
+       stage.enableDarkness();
+      case 7:
+       stage.setLightHueInstant(0, 2.0);
+      case 15:
+       stage.enableBlackScreen();
+      case 16:
+       stage.disableDarkness();
+       stage.disableBlackScreen();
+       stage.whiteFlash(6.0);
       case 111:
-        stage.enableDarkness();
+       stage.enableBlackScreen();
+       stage.enableDarkness();
       case 112:
-      stage.setLightHueInstant(75, 0.0);
+       stage.setLightHueInstant(75, 1.5);
+       stage.disableBlackScreen();
+       stage.whiteFlash(6.0);
       case 127:
-      stage.setLightHueInstant(-180, 1.5);
+       stage.setLightHueInstant(-180, 1.5);
       case 129:
-      stage.setLightHueInstant(-130, 1.5);
+       stage.setLightHueInstant(-130, 1.5);
       case 131:
-      stage.setLightHueInstant(-80, 1.5);
+       stage.setLightHueInstant(-80, 1.5);
       case 133:
-      stage.setLightHueInstant(-30, 1.5);
+       stage.setLightHueInstant(-30, 1.5);
       case 135:
-      stage.setLightHueInstant(20, 1.5);
+       stage.setLightHueInstant(20, 1.5);
       case 137:
-      stage.setLightHueInstant(70, 1.5);
+       stage.setLightHueInstant(70, 1.5);
       case 139:
-      stage.setLightHueInstant(120, 1.5);
+       stage.setLightHueInstant(120, 1.5);
       case 141:
-      stage.setLightHueInstant(170, 1.5);
+       stage.setLightHueInstant(170, 1.5);
       case 144:
-      stage.setLightHueInstant(75, 1.5);
+       stage.setLightHueInstant(75, 1.5);
       case 160:
-      stage.setLightHueInstant(100, 2.0);
-      case 164:
-      stage.setLightHueLinear(0, 4.0);
+       stage.setLightHueInstant(100, 2.0);
+       stage.setLightHueLinear(0, 6.0);
+      case 174:
+       stage.setLightHueInstant(0, 1.5);
       case 175:
-      stage.disableDarkness();
+       stage.enableBlackScreen();
+      case 176:
+       stage.disableDarkness();
+       stage.disableBlackScreen();
+       stage.whiteFlash(6.0);
     }
   }
 
-  function onDestroy(event:ScriptEvent):Void
+  override function onDestroy(event)
   {
     super.onDestroy(event);
-
     this.hasHiddenStrums = false;
   }
 }
