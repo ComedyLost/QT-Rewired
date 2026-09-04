@@ -1,31 +1,11 @@
 {
   "version": "1.0.0",
+  "name": "CG5 (GO GO GO)",
+  "assetPath": "shared:characters/go-go-go/cg5",
   "renderType": "multianimateatlas",
   "offsets": [10, 7],
-  "danceEvery": 1,
-  "applyStageMatrix": false,
-  "scale": 1,
-  "name": "CG5 (GO GO GO)",
-  "flipX": false,
   "cameraOffsets": [0, 192],
-  "startingAnimation": "idle",
-  "singTime": 8,
-  "isPixel": false,
-  "assetPath": "shared:characters/go-go-go/cg5",
-  "healthIcon": {
-    "offsets": [0, 0],
-    "isPixel": false,
-    "scale": 1,
-    "flipX": false,
-    "id": "cg5-collab"
-  },
-  "atlasSettings": {
-    "applyStageMatrix": false,
-    "swfMode": true,
-    "useRenderTexture": false,
-    "cacheOnLoad": false,
-    "filterQuality": 1
-  },
+  "scale": 1.04,
   "animations": [
     {
       "name": "idle",

@@ -1,31 +1,10 @@
 {
   "version": "1.0.0",
-  "renderType": "multianimateatlas",
-  "offsets": [28, 3],
-  "danceEvery": 1,
-  "applyStageMatrix": false,
-  "scale": 1,
   "name": "Ironmouse (GO GO GO)",
-  "flipX": false,
-  "cameraOffsets": [0, 0],
-  "startingAnimation": "idle",
-  "singTime": 8,
-  "isPixel": false,
   "assetPath": "shared:characters/go-go-go/ironmouse_placeholder",
-  "healthIcon": {
-    "offsets": [0, 0],
-    "isPixel": false,
-    "scale": 1,
-    "flipX": false,
-    "id": "ironmouse-collab"
-  },
-  "atlasSettings": {
-    "applyStageMatrix": false,
-    "swfMode": true,
-    "useRenderTexture": false,
-    "cacheOnLoad": false,
-    "filterQuality": 1
-  },
+  "renderType": "animateatlas",
+  "offsets": [28, 3],
+  "cameraOffsets": [0, 0],
   "animations": [
     {
       "flipY": false,
