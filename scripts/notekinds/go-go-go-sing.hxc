@@ -8,8 +8,9 @@ class GoGoGoNoteKind extends NoteKind
 {
   // 0 - no
   // 1 - normal
-  // 2 - alt
-  // 3 - alt2
+  // 2 - beautiful
+  // 3 - cool
+  // 4 - go
   var goParams:Dynamic = [
     {
       name: "cg5Sing",
@@ -29,7 +30,7 @@ class GoGoGoNoteKind extends NoteKind
       type: "Int",
       data: {
         min: 0,
-        max: 3,
+        max: 4,
         step: 1,
         precision: 1,
         defaultValue: 1
@@ -149,11 +150,17 @@ class GoGoGoNoteKind extends NoteKind
       }*/ //:rolling_eyes:
 
       if (singType == 2)
-        suffixShit = "alt";
+        suffixShit = "beautiful";
 
       if (singType == 3)
-        suffixShit = "alt2";
+        suffixShit = "cool";
+
+      if (singType == 4 && char == irmouse && note.noteData.getDirection() == 1)
+      {
+        suffixShit = "go";
+      }
     }
+    
     char.playSingAnimation(note.noteData.getDirection(), miss, suffixShit);
     char.holdTimer = 0;
   }

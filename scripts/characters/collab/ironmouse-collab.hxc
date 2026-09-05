@@ -1,0 +1,199 @@
+package rewired.characters;
+
+import funkin.play.character.MultiAnimateAtlasCharacter;
+import funkin.graphics.FunkinSprite;
+import funkin.play.PlayState;
+import flixel.system.FlxAssets.FlxShader;
+
+class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
+{
+  var tail:FunkinSprite;
+  var hasSetupTail:Bool = false;
+  var currentTailPrefix:String = "";
+  var currentShader:FlxShader = null;
+
+  var tailGlobalOffsetX:Float = -448;
+  var tailGlobalOffsetY:Float = -408;
+  
+  var tailBeatCounter:Int = 0;
+
+  public function new()
+  {
+    super('collab/cg5/ironmouse-collab'); 
+  }
+
+  public override function onCreate(event:ScriptEvent):Void
+  {
+    super.onCreate(event);
+    tail = FunkinSprite.createTextureAtlas(0, 0, "characters/go-go-go/ironmouse-tail", "shared");
+    
+    var prefixes:Array<String> = [
+      "Idle", "Left 1", "Down 1", "Up 1", "Right 1", 
+      "Transition", "Left 2", "Down 2", "Up 2", "Right 2"
+    ];
+    
+    for (prefix in prefixes)
+    {
+      tail.animation.addByPrefix(prefix, prefix, 24, false);
+    }
+    setIdleState('idle');
+  }
+
+  public override function onUpdate(event:UpdateScriptEvent):Void
+  {
+    super.onUpdate(event);
+    
+    synchronizeShader();
+
+    if (!hasSetupTail && currentStage != null)
+    {
+      setupTail();
+    }
+
+    if (tail != null)
+    {
+      tail.visible = this.visible && currentTailPrefix != "";
+      tail.x = this.x;
+      tail.y = this.y;
+      tail.zIndex = this.zIndex - 1; 
+    }
+  }
+
+  function setupTail():Void
+  {
+    tail.x = this.x;
+    tail.y = this.y;
+    tail.zIndex = this.zIndex - 1;
+
+    currentStage.add(tail);
+    currentStage.refresh();
+    hasSetupTail = true;
+  }
+
+  function synchronizeShader():Void
+  {
+    if (currentShader == this.shader) return;
+
+    currentShader = cast this.shader;
+    if (tail != null) tail.shader = currentShader;
+  }
+
+  public override function dance(forceRestart:Bool):Void
+  {
+    super.dance(forceRestart);
+    
+    tailBeatCounter++;
+    if (tailBeatCounter % 3 == 0)
+    {
+      if (tail != null && currentTailPrefix == "Idle")
+      {
+        tail.animation.play("Idle", true);
+      }
+    }
+  }
+
+  function getTailData(charAnim:String):Dynamic
+  {
+    switch (charAnim)
+    {
+      case "idle", "danceLeft-1", "danceRight-1", "danceLeft-2", "danceRight-2", "danceLeftCool-1", "danceRightCool-1", "danceLeftCool-2", "danceRightCool-2", "stayAnimation":
+        return {prefix: "Idle", offsetX: 0, offsetY: 0};
+        
+      case "singLEFT", "singLEFT-beautiful":
+        return {prefix: "Left 1", offsetX: 0, offsetY: 0};
+        
+      case "singDOWN", "singDOWN-beautiful":
+        return {prefix: "Down 1", offsetX: 0, offsetY: 0};
+        
+      case "singUP", "singUP-beautiful":
+        return {prefix: "Up 1", offsetX: 0, offsetY: 0};
+        
+      case "singRIGHT", "singRIGHT-beautiful":
+        return {prefix: "Right 1", offsetX: 0, offsetY: 0};
+        
+      case "mistakeAnimation": 
+        return {prefix: "Transition", offsetX: 0, offsetY: 0};
+        
+      case "singLEFT-cool":
+        return {prefix: "Left 2", offsetX: 0, offsetY: 0};
+        
+      case "singDOWN-cool", "singDOWN-go":
+        return {prefix: "Down 2", offsetX: 0, offsetY: 0};
+        
+      case "singUP-cool":
+        return {prefix: "Up 2", offsetX: 0, offsetY: 0};
+        
+      case "singRIGHT-cool":
+        return {prefix: "Right 2", offsetX: 0, offsetY: 0};
+        
+      default:
+        return null;
+    }
+  }
+
+  public override function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false):Void
+  {
+    super.playAnimation(name, restart, ignoreOther);
+    
+    if (tail == null) return;
+
+    var tailData:Dynamic = getTailData(name);
+    
+    if (tailData != null)
+    {
+      var isNewTail:Bool = currentTailPrefix != tailData.prefix;
+      var isRestartingPose:Bool = (tailData.prefix != "Idle" && restart);
+
+      if (isNewTail || isRestartingPose)
+      {
+        tail.animation.play(tailData.prefix, true);
+        tail.offset.set(tailData.offsetX + tailGlobalOffsetX, tailData.offsetY + tailGlobalOffsetY);
+        currentTailPrefix = tailData.prefix;
+      }
+    }
+    else
+    {
+      currentTailPrefix = "";
+    }
+  }
+
+  public function setIdleState(state:String):Void
+  {
+    switch (state)
+    {
+      case 'dance1':
+        this.shouldAlternate = true;
+        this.idleSuffix = '-1';
+        this.danceEvery = 1;
+        
+      case 'dance2':
+        this.shouldAlternate = true;
+        this.idleSuffix = '-2';
+        this.danceEvery = 1;
+        
+      case 'danceCool1':
+        this.shouldAlternate = true;
+        this.idleSuffix = 'Cool-1';
+        this.danceEvery = 1;
+        
+      case 'danceCool2':
+        this.shouldAlternate = true;
+        this.idleSuffix = 'Cool-2';
+        this.danceEvery = 1;
+        
+      default:
+        this.shouldAlternate = false;
+        this.idleSuffix = '';
+        this.danceEvery = 1;
+    }
+  }
+
+  public override function resetCharacter(resetCamera:Bool):Void
+  {
+    super.resetCharacter(resetCamera);
+    
+    tailBeatCounter = 0;
+    
+    setIdleState('idle');
+  }
+}

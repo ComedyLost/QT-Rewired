@@ -1,140 +1,156 @@
 {
   "version": "1.0.0",
   "name": "Ironmouse (GO GO GO)",
-  "assetPath": "shared:characters/go-go-go/ironmouse_placeholder",
-  "renderType": "animateatlas",
+  "assetPath": "shared:characters/go-go-go/ironmouse",
+  "renderType": "multianimateatlas",
   "offsets": [28, 3],
   "cameraOffsets": [0, 0],
   "animations": [
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "idle",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "idle"
+      "name": "idle",
+      "prefix": "Idle",
+      "offsets": [0, 0]
+    },  
+    {
+      "name": "singLEFT",
+      "prefix": "Left",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "left beatiful",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singLEFT-alt"
+      "name": "singDOWN",
+      "prefix": "Down",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "down beatiful",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singDOWN-alt"
+      "name": "singUP",
+      "prefix": "Up",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "up beatiful",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singUP-alt"
+      "name": "singRIGHT",
+      "prefix": "Right",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "right beatiful",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singRIGHT-alt"
+      "name": "singLEFT-beautiful",
+      "prefix": "Left Beautiful",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "left",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singLEFT"
+      "name": "singDOWN-beautiful",
+      "prefix": "Down Beautiful",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "down",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singDOWN"
+      "name": "singUP-beautiful",
+      "prefix": "Up Beautiful",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "up",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singUP"
+      "name": "singRIGHT-beautiful",
+      "prefix": "Right Beautiful",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
-      "prefix": "right",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singRIGHT"
+      "frameRate": 26,
+      "name": "mistakeAnimation",
+      "prefix": "For one more mistake",
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "name": "singLEFT-cool",
+      "prefix": "Left Cool",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singDOWN-cool",
+      "prefix": "Down Cool",
+      "offsets": [0, 0]
+    },  
+    {
+      "name": "singUP-cool",
+      "prefix": "Up Cool",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singRIGHT-cool",
+      "prefix": "Right Cool",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singDOWN-go",
+      "prefix": "Down Go",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "danceLeft-1",
+      "prefix": "Dance Left 1",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "danceRight-1",
+      "prefix": "Dance Right 1",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "danceLeft-2",
+      "prefix": "Dance Left 2",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "danceRight-2",
+      "prefix": "Dance Right 2",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "danceLeftCool-1",
+      "prefix": "Dance Left Cool 1",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "danceRightCool-1",
+      "prefix": "Dance Right Cool 1",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "danceLeftCool-2",
+      "prefix": "Dance Left Cool 2",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "danceRightCool-2",
+      "prefix": "Dance Right Cool 2",
+      "offsets": [0, 0]
+    },
+    {
+      "frameRate": 26,
+      "name": "stayAnimation",
+      "prefix": "You need to stay",
+      "offsets": [0, 0]
+    },
+    {
+      "assetPath": "shared:characters/go-go-go/ironmouse_placeholder",
+      "name": "singLEFTmiss",
       "prefix": "left miss",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singLEFTmiss"
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "assetPath": "shared:characters/go-go-go/ironmouse_placeholder",
+      "name": "singDOWNmiss",
       "prefix": "down miss",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singDOWNmiss"
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "assetPath": "shared:characters/go-go-go/ironmouse_placeholder",
+      "name": "singUPmiss",
       "prefix": "up miss",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singUPmiss"
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "assetPath": "shared:characters/go-go-go/ironmouse_placeholder",
+      "name": "singRIGHTmiss",
       "prefix": "right miss",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singRIGHTmiss"
+      "offsets": [0, 0]
     }
   ]
 }
