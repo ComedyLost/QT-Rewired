@@ -159,32 +159,28 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
 
   public function setIdleState(state:String):Void
   {
+    this.danceEvery = 1;
     switch (state)
     {
       case 'dance1':
         this.shouldAlternate = true;
         this.idleSuffix = '-1';
-        this.danceEvery = 1;
         
       case 'dance2':
         this.shouldAlternate = true;
         this.idleSuffix = '-2';
-        this.danceEvery = 1;
         
       case 'danceCool1':
         this.shouldAlternate = true;
         this.idleSuffix = 'Cool-1';
-        this.danceEvery = 1;
         
       case 'danceCool2':
         this.shouldAlternate = true;
         this.idleSuffix = 'Cool-2';
-        this.danceEvery = 1;
         
       default:
         this.shouldAlternate = false;
         this.idleSuffix = '';
-        this.danceEvery = 1;
     }
   }
 
