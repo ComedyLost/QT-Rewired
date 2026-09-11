@@ -58,6 +58,11 @@
       "offsets": [0, 0]
     },
     {
+      "name": "idle-cool",
+      "prefix": "Idle Cool",
+      "offsets": [0, 0]
+    },  
+    {
       "name": "singLEFT-cool",
       "prefix": "Left Cool",
       "offsets": [0, 0]

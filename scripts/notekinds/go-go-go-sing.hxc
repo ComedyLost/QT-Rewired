@@ -6,6 +6,10 @@ import funkin.play.character.CharacterType;
 
 class GoGoGoNoteKind extends NoteKind
 {
+  // 0 = no
+  // 1 = lipsync
+  // 2 = normal
+
   // 0 - no
   // 1 - normal
   // 2 - beautiful
@@ -149,15 +153,25 @@ class GoGoGoNoteKind extends NoteKind
           suffix = "";
       }*/ //:rolling_eyes:
 
-      if (singType == 2)
-        suffixShit = "beautiful";
+      if (char == cg5)
+      {
+        if (singType == 1)
+          suffixShit = "lipsync";
+        else if (singType == 2)
+          suffixShit = "";
+      }
+      else
+      {
+        if (singType == 2)
+          suffixShit = "beautiful";
 
       if (singType == 3)
         suffixShit = "cool";
 
-      if (singType == 4 && char == irmouse && note.noteData.getDirection() == 1)
-      {
-        suffixShit = "go";
+        if (singType == 4 && char == irmouse && note.noteData.getDirection() == 1)
+        {
+          suffixShit = "go";
+        }
       }
     }
     

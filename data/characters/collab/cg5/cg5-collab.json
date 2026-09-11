@@ -11,7 +11,27 @@
       "name": "idle",
       "prefix": "Idle",
       "offsets": [0, 0]
-    },  
+    },
+    {
+      "name": "singLEFT-lipsync",
+      "prefix": "Left Lip Sync",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singDOWN-lipsync",
+      "prefix": "Down Lip Sync",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singUP-lipsync",
+      "prefix": "Up Lip Sync",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singRIGHT-lipsync",
+      "prefix": "Right Lip Sync",
+      "offsets": [0, 0]
+    },
     {
       "name": "singLEFT",
       "prefix": "Left",
