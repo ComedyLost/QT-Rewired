@@ -196,11 +196,6 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
     if (lipSync != null) lipSync.shader = currentShader;
   }
 
-  public override function dance(forceRestart:Bool):Void
-  {
-    super.dance(forceRestart);
-  }
-
   public override function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false):Void
   {
     super.playAnimation(name, restart, ignoreOther, reversed);
