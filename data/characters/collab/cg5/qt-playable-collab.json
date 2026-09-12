@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "name": "QT (Playable)",
   "assetPath": "shared:characters/QT_assets/qt-playable",
-  "renderType": "animateatlas",
+  "renderType": "multianimateatlas",
   "offsets": [-15, 3.5],
   "cameraOffsets": [8, 12],
   "flipX": true,
@@ -59,6 +59,26 @@
       "flipX": false,
       "looped": false,
       "name": "singRIGHT"
+    },
+    {
+      "assetPath": "shared:characters/QT_assets/qt-playable/death",
+      "name": "firstDeath",
+      "prefix": "Intro",
+      "offsets": [22, 15]
+    },
+    {
+      "assetPath": "shared:characters/QT_assets/qt-playable/death",
+      "name": "deathLoop",
+      "prefix": "Loop",
+      "looped": true,
+      "offsets": [22, 15]
+    },
+    {
+      "assetPath": "shared:characters/QT_assets/qt-playable/death",
+      "name": "deathConfirm",
+      "prefix": "Confirm",
+      "looped": true,
+      "offsets": [22, 15]
     }
   ]
 }

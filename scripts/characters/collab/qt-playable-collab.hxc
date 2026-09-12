@@ -1,9 +1,9 @@
 package rewired.characters;
 
-import funkin.play.character.AnimateAtlasCharacter;
+import funkin.play.character.MultiAnimateAtlasCharacter;
 import funkin.play.GameOverSubState;
 
-class QtCollabPlayableCharacter extends AnimateAtlasCharacter
+class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
 {
   public function new()
   {
