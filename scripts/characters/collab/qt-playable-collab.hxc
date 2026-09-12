@@ -1,0 +1,20 @@
+package rewired.characters;
+
+import funkin.play.character.AnimateAtlasCharacter;
+import funkin.play.GameOverSubState;
+
+class QtCollabPlayableCharacter extends AnimateAtlasCharacter
+{
+  public function new()
+  {
+    super('collab/cg5/qt-playable-collab');
+  }
+
+  public override function onCreate(event)
+  {
+    super.onCreate(event);
+    
+    GameOverSubState.musicSuffix = '-qt';
+    GameOverSubState.blueBallSuffix = '-qt';
+  }
+}
