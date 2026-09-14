@@ -4,5 +4,6 @@
   "artists": ["CG5", "Ironmouse"],
   "albumOSTName": "COLLAB OST",
   "albumArtAsset": "freeplay/albumRoll/go_go_go",
-  "albumTitleAsset": "freeplay/albumRoll/expansion1-test"
+  "albumTitleAsset": "freeplay/albumRoll/go-go-go-text",
+  "albumTitleOffsets": [-12.5, 5]
 }

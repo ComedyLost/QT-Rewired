@@ -1,11 +1,12 @@
 {
   "version": "1.0.0",
      "name": "ROCKIN' THEM BEATS",
-  "capsule": {
+     "capsule":
+     {
      "name": "CG5 COLLAB"
-  },
-  "titleAsset": "storymenu/titles/week1",
-  "props": [ ],
-  "background": "#ffffff",
-  "songs": ["go-go-go"]
+     },
+     "titleAsset": "storymenu/titles/cg5-collab",
+     "props":[],
+     "background": "#ffffff",
+     "songs": ["go-go-go"]
 }
