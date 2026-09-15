@@ -4,11 +4,14 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import funkin.play.character.CharacterType;
 import flixel.FlxSprite;
+import funkin.graphics.FunkinSprite;
 
 class GoGoGoSong extends Song
 {
   var introFadeDuration:Float = 6.8;
   var hasHiddenStrums:Bool = false;
+  var coverScreen;
+  var horsePNG;
 
   public function new()
   {
@@ -77,6 +80,9 @@ class GoGoGoSong extends Song
   override function onSongRetry(event)
   {
     super.onSongRetry(event);
+
+    if(horsePNG != null) horsePNG.visible = false;
+    if(coverScreen !=null) coverScreen.visible = false;
     
     var gf = PlayState.instance.currentStage?.getGirlfriend();
     if (gf != null) gf.visible = false;
@@ -173,7 +179,24 @@ class GoGoGoSong extends Song
        if (gf != null) gf.setIdleState('danceCool1');
       case 241:
        if (gf != null) gf.setIdleState('danceCool2');
+      case 304:
+        doOutro();
     }
+  }
+
+  public function doOutro()
+  {
+    coverScreen = new FunkinSprite().makeSolidColor(FlxG.width, FlxG.height, FlxColor.BLACK);
+    coverScreen.cameras = [PlayState.instance.camHUD];
+    coverScreen.zIndex = 99999;
+    PlayState.instance.add(coverScreen);
+
+    //if you rename this variable you go to hell
+    horsePNG = new FunkinSprite().loadTexture('recordingStudio/placeholder');
+    horsePNG.cameras = [PlayState.instance.camHUD];
+    horsePNG.zIndex = coverScreen.zIndex + 1;
+    horsePNG.screenCenter();
+    PlayState.instance.add(horsePNG);
   }
 
   override function onDestroy(event)
