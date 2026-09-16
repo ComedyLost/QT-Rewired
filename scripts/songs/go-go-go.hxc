@@ -15,21 +15,20 @@ import funkin.Paths;
 class GoGoGoSong extends Song
 {
   var introFadeDuration:Float = 6.8;
-  var hasHiddenStrums:Bool = false;
+  var hasHiddenStrums:Bool;
   var coverScreen:FunkinSprite;
   var horsePNG:FunkinSprite;
   
   var outroTimer:FlxTimer;
   var outroFlashSpr:FunkinSprite;
 
-  var hasDoneOutro:Bool = false;
+  var hasDoneOutro:Bool;
 
   var misteriousWind:FlxText;
-  var misteriousWindMaxAlpha:Float = 0.25; 
+  final misteriousWindMaxAlpha:Float = 0.25; 
   public function new()
   {
-    super('go-go-go'); 
-    hasHiddenStrums = false;
+    super('go-go-go');
   }
 
   override function onCreate(e)
@@ -52,11 +51,6 @@ class GoGoGoSong extends Song
     if (PlayState.instance.isChartingMode) return;
 
     PlayState.instance.camGame.fade(FlxColor.BLACK, 0, false, null, true);
-  }
-
-  override function onCountdownStart(event)
-  {
-    super.onCountdownStart(event);
   }
 
   override function onSongStart(event)
@@ -238,6 +232,7 @@ class GoGoGoSong extends Song
     if (!hasDoneOutro)
     {
       event.cancel();
+      event.stopPropagation();
       hasDoneOutro = true;
       doOutro();
     }
@@ -276,7 +271,7 @@ class GoGoGoSong extends Song
     outroFlashSpr.blend = BlendMode.OVERLAY;
     PlayState.instance.add(outroFlashSpr);
 
-    misteriousWind = new FlxText(1, 1, 0, "www.youtube.com/watch?v=9T0EUSilikI", 20);
+    misteriousWind = new FlxText(1, 1, 0, "https://www.youtube.com/watch?v=9T0EUSilikI", 20);
     misteriousWind.setFormat(Paths.font('vcr.ttf'), 20, FlxColor.WHITE, "left");
     misteriousWind.cameras = [PlayState.instance.camCutscene];
     misteriousWind.zIndex = outroFlashSpr.zIndex + 2; 
