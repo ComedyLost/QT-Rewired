@@ -4,81 +4,76 @@
   "assetPath": "shared:characters/QT_assets/qt-playable",
   "renderType": "multianimateatlas",
   "offsets": [-15, 3.5],
-  "cameraOffsets": [8, 12],
+  "cameraOffsets": [8, 30],
   "flipX": true,
   "healthIcon": {
-    "id": "QT"
+    "id": "qt-player",
+    "offsets": [7.5, -8]
   },
   "animations": [
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "name": "idle",
       "prefix": "Idle",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "idle"
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "name": "singLEFT",
       "prefix": "Left",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singLEFT"
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "name": "singDOWN",
       "prefix": "Down",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singDOWN"
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "name": "singUP",
       "prefix": "Up",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singUP"
+      "offsets": [0, 0]
     },
     {
-      "flipY": false,
-      "offsets": [0, 0],
-      "frameRate": 24,
+      "name": "singRIGHT",
       "prefix": "Right",
-      "animType": "framelabel",
-      "flipX": false,
-      "looped": false,
-      "name": "singRIGHT"
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singLEFTmiss",
+      "prefix": "Left Miss",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singDOWNmiss",
+      "prefix": "Down Miss",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singUPmiss",
+      "prefix": "Up Miss",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singRIGHTmiss",
+      "prefix": "Right Miss",
+      "offsets": [0, 0]
     },
     {
       "assetPath": "shared:characters/QT_assets/qt-playable/death",
       "name": "firstDeath",
       "prefix": "Intro",
-      "offsets": [22, 15]
+      "offsets": [-60, 105]
     },
     {
       "assetPath": "shared:characters/QT_assets/qt-playable/death",
       "name": "deathLoop",
       "prefix": "Loop",
       "looped": true,
-      "offsets": [22, 15]
+      "offsets": [-60, 105]
     },
     {
       "assetPath": "shared:characters/QT_assets/qt-playable/death",
       "name": "deathConfirm",
       "prefix": "Confirm",
-      "looped": true,
-      "offsets": [22, 15]
+      "offsets": [-60, 105]
     }
   ]
 }

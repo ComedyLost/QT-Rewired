@@ -5,14 +5,27 @@ import flixel.util.FlxColor;
 import funkin.play.character.CharacterType;
 import flixel.FlxSprite;
 import funkin.graphics.FunkinSprite;
+import flixel.tweens.FlxEase;
+import flixel.util.FlxTimer;
+import flixel.FlxG;
+import openfl.display.BlendMode; 
+import flixel.text.FlxText;
+import funkin.Paths;
 
 class GoGoGoSong extends Song
 {
   var introFadeDuration:Float = 6.8;
   var hasHiddenStrums:Bool = false;
-  var coverScreen;
-  var horsePNG;
+  var coverScreen:FunkinSprite;
+  var horsePNG:FunkinSprite;
+  
+  var outroTimer:FlxTimer;
+  var outroFlashSpr:FunkinSprite;
 
+  var hasDoneOutro:Bool = false;
+
+  var misteriousWind:FlxText;
+  var misteriousWindMaxAlpha:Float = 0.25; 
   public function new()
   {
     super('go-go-go'); 
@@ -26,7 +39,7 @@ class GoGoGoSong extends Song
       return;
 
     hasHiddenStrums = false;
-
+    hasDoneOutro = false; 
   }
 
   override function onSongLoaded(event)
@@ -81,9 +94,42 @@ class GoGoGoSong extends Song
   {
     super.onSongRetry(event);
 
-    if(horsePNG != null) horsePNG.visible = false;
-    if(coverScreen !=null) coverScreen.visible = false;
+    hasDoneOutro = false;
+
+    if (outroTimer != null)
+    {
+      outroTimer.cancel();
+      outroTimer = null;
+    }
     
+    if (horsePNG != null)
+    {
+      FlxTween.cancelTweensOf(horsePNG);
+      horsePNG.visible = false;
+    }
+
+    if (coverScreen != null)
+    {
+      coverScreen.visible = false;
+    }
+
+    if (outroFlashSpr != null)
+    {
+      FlxTween.cancelTweensOf(outroFlashSpr);
+      outroFlashSpr.visible = false;
+    }
+
+    if (misteriousWind != null)
+    {
+      FlxTween.cancelTweensOf(misteriousWind);
+      misteriousWind.visible = false;
+    }
+    
+    PlayState.instance.camHUD.visible = true;
+    PlayState.instance.isInCutscene = false;
+    PlayState.instance.mayPauseGame = true;
+    PlayState.instance.togglePauseButton(true);
+
     var gf = PlayState.instance.currentStage?.getGirlfriend();
     if (gf != null) gf.visible = false;
     
@@ -93,6 +139,7 @@ class GoGoGoSong extends Song
       stage.disableDarkness();
       stage.setLightHueInstant(0, 0);
       stage.disableBlackScreen();
+      stage.stopOutroBuildup();
     }
   }
 
@@ -179,29 +226,114 @@ class GoGoGoSong extends Song
        if (gf != null) gf.setIdleState('danceCool1');
       case 241:
        if (gf != null) gf.setIdleState('danceCool2');
-      case 304:
-        doOutro();
+      case 300:
+       stage.startOutroBuildup(2.5);
+    }
+  }
+
+  override function onSongEnd(event)
+  {
+    super.onSongEnd(event);
+
+    if (!hasDoneOutro)
+    {
+      event.cancel();
+      hasDoneOutro = true;
+      doOutro();
     }
   }
 
   public function doOutro()
   {
+    var stage:Dynamic = PlayState.instance.currentStage;
+    if (stage != null && stage.id == 'recordingStudio')
+    {
+      stage.stopOutroBuildup();
+    }
+
+    PlayState.instance.camHUD.visible = false;
+    PlayState.instance.isInCutscene = true;
+    PlayState.instance.mayPauseGame = false;
+    PlayState.instance.togglePauseButton();
+
     coverScreen = new FunkinSprite().makeSolidColor(FlxG.width, FlxG.height, FlxColor.BLACK);
-    coverScreen.cameras = [PlayState.instance.camHUD];
+    coverScreen.cameras = [PlayState.instance.camCutscene];
     coverScreen.zIndex = 99999;
     PlayState.instance.add(coverScreen);
 
     //if you rename this variable you go to hell
     horsePNG = new FunkinSprite().loadTexture('recordingStudio/placeholder');
-    horsePNG.cameras = [PlayState.instance.camHUD];
+    horsePNG.cameras = [PlayState.instance.camCutscene];
     horsePNG.zIndex = coverScreen.zIndex + 1;
+    horsePNG.scale.set(1.4, 1.4);
+    horsePNG.updateHitbox();
     horsePNG.screenCenter();
     PlayState.instance.add(horsePNG);
+
+    outroFlashSpr = new FunkinSprite().makeSolidColor(FlxG.width, FlxG.height, FlxColor.WHITE);
+    outroFlashSpr.cameras = [PlayState.instance.camCutscene];
+    outroFlashSpr.zIndex = horsePNG.zIndex + 1;
+    outroFlashSpr.blend = BlendMode.OVERLAY;
+    PlayState.instance.add(outroFlashSpr);
+
+    misteriousWind = new FlxText(1, 1, 0, "www.youtube.com/watch?v=9T0EUSilikI", 20);
+    misteriousWind.setFormat(Paths.font('vcr.ttf'), 20, FlxColor.WHITE, "left");
+    misteriousWind.cameras = [PlayState.instance.camCutscene];
+    misteriousWind.zIndex = outroFlashSpr.zIndex + 2; 
+    misteriousWind.alpha = 0; 
+    PlayState.instance.add(misteriousWind);
+
+    FlxTween.tween(outroFlashSpr, {alpha: 0}, 1.0, {
+      onComplete: function(_) {
+        if (outroFlashSpr != null)
+        {
+          PlayState.instance.remove(outroFlashSpr);
+          outroFlashSpr.destroy();
+          outroFlashSpr = null;
+        }
+      }
+    });
+
+    FlxTween.tween(horsePNG.scale, {x: 0.6, y: 0.6}, 2.0, {ease: FlxEase.expoOut});
+    FlxTween.tween(horsePNG, {y: horsePNG.y + 500, alpha: 0}, 3.2, {ease: FlxEase.expoIn, startDelay: 1.8});
+
+    FlxTween.tween(misteriousWind, {alpha: misteriousWindMaxAlpha}, 1.0, {
+      startDelay: 4.0,
+      onComplete: function(_) {
+        FlxTween.tween(misteriousWind, {alpha: 0}, 1.0, {
+          startDelay: 1.0, 
+          onComplete: function(_) {
+            if (misteriousWind != null) {
+              PlayState.instance.remove(misteriousWind);
+              misteriousWind.destroy();
+              misteriousWind = null;
+            }
+          }
+        });
+      }
+    });
+
+    outroTimer = new FlxTimer().start(7.0, function(_) {
+      PlayState.instance.endSong();
+    });
   }
 
   override function onDestroy(event)
   {
     super.onDestroy(event);
     this.hasHiddenStrums = false;
+    this.hasDoneOutro = false; 
+    
+    if (outroTimer != null)
+    {
+      outroTimer.cancel();
+      outroTimer = null;
+    }
+
+    if (misteriousWind != null)
+    {
+      misteriousWind.destroy();
+      misteriousWind = null;
+    }
   }
 }
