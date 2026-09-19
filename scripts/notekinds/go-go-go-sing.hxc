@@ -139,7 +139,14 @@ class GoGoGoNoteKind extends NoteKind
 
     var suffixShit:String = "";
 
-    if (!miss)
+    if (char == cg5)
+    {
+      if (singType == 1)
+        suffixShit = "lipsync";
+      else if (singType == 2)
+        suffixShit = "";
+    }
+    else if (!miss)
     {
       /*switch (singType)
       {
@@ -153,25 +160,15 @@ class GoGoGoNoteKind extends NoteKind
           suffix = "";
       }*/ //:rolling_eyes:
 
-      if (char == cg5)
-      {
-        if (singType == 1)
-          suffixShit = "lipsync";
-        else if (singType == 2)
-          suffixShit = "";
-      }
-      else
-      {
-        if (singType == 2)
-          suffixShit = "beautiful";
+      if (singType == 2)
+        suffixShit = "beautiful";
 
       if (singType == 3)
         suffixShit = "cool";
 
-        if (singType == 4 && char == irmouse && note.noteData.getDirection() == 1)
-        {
-          suffixShit = "go";
-        }
+      if (singType == 4 && char == irmouse && note.noteData.getDirection() == 1)
+      {
+        suffixShit = "go";
       }
     }
     

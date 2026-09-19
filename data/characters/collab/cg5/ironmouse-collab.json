@@ -3,8 +3,11 @@
   "name": "Ironmouse (GO GO GO)",
   "assetPath": "shared:characters/go-go-go/ironmouse",
   "renderType": "multianimateatlas",
-  "offsets": [28, 3],
+  "offsets": [-25, 50],
   "cameraOffsets": [0, 0],
+    "healthIcon": {
+    "id": "ironmouse-collab"
+  },
   "animations": [
     {
       "name": "idle",

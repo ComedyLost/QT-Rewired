@@ -81,7 +81,7 @@
    }
   },
   {
-   "t": 7500,
+   "t": 7529.52755905512,
    "e": "ZoomCamera",
    "v": {
     "duration": 32,
@@ -94,7 +94,7 @@
    }
   },
   {
-   "t": 7500,
+   "t": 7529.52755905512,
    "e": "FocusCamera",
    "v": {
     "char": 1,
@@ -103,6 +103,20 @@
     "easeDir": "Out",
     "x": 0,
     "y": 0
+   }
+  },
+  {
+   "t": 52913.3858267717,
+   "e": "SetHealthIcon",
+   "v": {
+    "char": 1,
+    "flipX": false,
+    "id": "ironmouse-collab",
+    "isPixel": false,
+    "offsetX": 0,
+    "offsetY": 0,
+    "scale": 1,
+    "shouldBop": true
    }
   },
   {
@@ -121,6 +135,29 @@
     "anim": "idle",
     "force": true,
     "target": "girlfriend"
+   }
+  },
+  {
+   "t": 90472.4409448819,
+   "e": "SetHealthIcon",
+   "v": {
+    "char": 1,
+    "flipX": false,
+    "id": "cg5-collab",
+    "isPixel": false,
+    "offsetX": 0,
+    "offsetY": 0,
+    "scale": 1,
+    "shouldBop": true
+   }
+  },
+  {
+   "t": 99685.0393700787,
+   "e": "PlayAnimation",
+   "v": {
+    "anim": "hey",
+    "force": true,
+    "target": "boyfriend"
    }
   },
   {

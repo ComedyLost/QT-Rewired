@@ -33,6 +33,7 @@
         {
           "name": "confirm",
           "prefix": "confirm",
+          "offsets": [-32, -10],
           "frameRate": 24
         }
       ]

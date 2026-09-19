@@ -6,6 +6,9 @@
   "offsets": [10, 7],
   "cameraOffsets": [0, 192],
   "scale": 1.04,
+  "healthIcon": {
+    "id": "cg5-collab"
+  },
   "animations": [
     {
       "name": "idle",
@@ -33,6 +36,26 @@
       "offsets": [0, 0]
     },
     {
+      "name": "singLEFTmiss-lipsync",
+      "prefix": "Left Miss Lip Sync",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singDOWNmiss-lipsync",
+      "prefix": "Down Miss Lip Sync",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singUPmiss-lipsync",
+      "prefix": "Up Miss Lip Sync",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singRIGHTmiss-lipsync",
+      "prefix": "Right Miss Lip Sync",
+      "offsets": [0, 0]
+    },
+    {
       "name": "singLEFT",
       "prefix": "Left",
       "offsets": [0, 0]
@@ -53,28 +76,24 @@
       "offsets": [0, 0]
     },
     {
-      "assetPath": "shared:characters/go-go-go/cg5_placeholder",
       "name": "singLEFTmiss",
-      "prefix": "left miss",
-      "offsets": [17, -86]
+      "prefix": "Left Miss",
+      "offsets": [0, 0]
     },
     {
-      "assetPath": "shared:characters/go-go-go/cg5_placeholder",
       "name": "singDOWNmiss",
-      "prefix": "down miss",
-      "offsets": [17, -86]
+      "prefix": "Down Miss",
+      "offsets": [0, 0]
     },
     {
-      "assetPath": "shared:characters/go-go-go/cg5_placeholder",
       "name": "singUPmiss",
-      "prefix": "up miss",
-      "offsets": [17, -86]
+      "prefix": "Up Miss",
+      "offsets": [0, 0]
     },
     {
-      "assetPath": "shared:characters/go-go-go/cg5_placeholder",
       "name": "singRIGHTmiss",
-      "prefix": "right miss",
-      "offsets": [17, -86]
+      "prefix": "Right Miss",
+      "offsets": [0, 0]
     }
   ]
 }
