@@ -65,20 +65,20 @@
       "assetPath": "shared:characters/QT_assets/qt-playable/death",
       "name": "firstDeath",
       "prefix": "Intro",
-      "offsets": [-60, 105]
+      "offsets": [-140, 105]
     },
     {
       "assetPath": "shared:characters/QT_assets/qt-playable/death",
       "name": "deathLoop",
       "prefix": "Loop",
       "looped": true,
-      "offsets": [-60, 105]
+      "offsets": [-140, 105]
     },
     {
       "assetPath": "shared:characters/QT_assets/qt-playable/death",
       "name": "deathConfirm",
       "prefix": "Confirm",
-      "offsets": [-60, 105]
+      "offsets": [-140, 105]
     }
   ]
 }

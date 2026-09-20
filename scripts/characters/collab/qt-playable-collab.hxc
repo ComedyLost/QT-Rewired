@@ -1,13 +1,40 @@
 package rewired.characters;
 
+import flixel.FlxG;
+import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
+import flixel.math.FlxPoint;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import funkin.play.character.MultiAnimateAtlasCharacter;
 import funkin.play.GameOverSubState;
+import funkin.play.PauseSubState;
+import funkin.play.character.CharacterType;
+import funkin.util.TouchUtil;
 
 class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
 {
+  public var deathTimer:FlxTimer;
+
+  public var camTween:FlxTween;
+  public var zoomTween:FlxTween;
+  public final customCamScroll:FlxPoint;
+
+  public var customCamZoom:Float = 1.0;
+  public var lockCamera:Bool = false;
+
+  public var stateTimer:Float = 0.0;
+  public var hasActioned:Bool = false;
+  public var bopTween:FlxTween;
+  
+  public var isLooping:Bool = false;
+  public var bopAccumulator:Float = 0.0;
+  public var bopZoomOffset:Float = 0.0;
+
   public function new()
   {
     super('collab/cg5/qt-playable-collab');
+    customCamScroll = new FlxPoint();
   }
 
   public override function onCreate(event)
@@ -16,5 +43,220 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
     
     GameOverSubState.musicSuffix = '-qt';
     GameOverSubState.blueBallSuffix = '-qt';
+    PauseSubState.musicSuffix = '-qt';
+  }
+
+  public override function playAnimation(name:String, restart:Bool, ignoreOther:Bool)
+  {
+    super.playAnimation(name, restart, ignoreOther);
+
+    if (name == "firstDeath")
+    {
+      stateTimer = 0.0;
+      hasActioned = false;
+      lockCamera = false;
+      bopZoomOffset = 0.0;
+      
+      isLooping = false;
+      bopAccumulator = 0.0;
+
+      if (GameOverSubState.instance != null)
+      {
+        FlxG.camera.target = null;
+
+        customCamScroll.set(FlxG.camera.scroll.x, FlxG.camera.scroll.y);
+        customCamZoom = FlxG.camera.zoom;
+        lockCamera = true;
+
+        // firstDeath offsets
+        final camPos = this.getMidpoint();
+        
+        final offsetX:Float = 100;  
+        final offsetY:Float = -60;  
+        
+        final targetX = camPos.x + offsetX - (FlxG.width / 2);
+        final targetY = camPos.y + offsetY - (FlxG.height / 2);
+        
+        camPos.put();
+
+        camTween = FlxTween.tween(customCamScroll, {x: targetX, y: targetY}, 2.5, {ease: FlxEase.expoOut});
+        
+        zoomTween = FlxTween.num(customCamZoom, 0.85, 2.5, {ease: FlxEase.expoOut}, function(v:Float) {
+          customCamZoom = v;
+        });
+      }
+
+      deathTimer = new FlxTimer().start(3.08, function(tmr:FlxTimer)
+      {
+        if (GameOverSubState.instance != null && !GameOverSubState.instance.isEnding)
+        {
+          if (camTween != null) camTween.cancel();
+          if (zoomTween != null) zoomTween.cancel();
+
+          // Loop offsets
+          final camPosLoop = this.getMidpoint();
+          final loopOffsetY:Float = 10; 
+          
+          final dropY = camPosLoop.y + loopOffsetY - (FlxG.height / 2);
+          camPosLoop.put();
+          
+          camTween = FlxTween.tween(customCamScroll, {y: dropY}, 2.0, {ease: FlxEase.expoOut});
+        
+          zoomTween = FlxTween.num(customCamZoom, 0.95, 2.0, {ease: FlxEase.expoOut}, function(v:Float) {
+            customCamZoom = v;
+          });
+          
+          GameOverSubState.instance.startDeathMusic(1.0, false);
+
+          isLooping = true;
+          bopAccumulator = 0.0;
+          
+          bopZoomOffset = 0.015;
+          if (bopTween != null) bopTween.cancel();
+          bopTween = FlxTween.num(bopZoomOffset, 0.0, 0.35, {ease: FlxEase.quadOut}, function(v:Float) {
+            bopZoomOffset = v;
+          });
+        }
+      });
+    }
+  }
+
+  public override function onUpdate(event)
+  {
+    super.onUpdate(event);
+
+    if (GameOverSubState.instance == null) return;
+
+    stateTimer += FlxG.elapsed;
+
+    if (!GameOverSubState.instance.isEnding)
+    {
+      GameOverSubState.instance.mustNotExit = true;
+      
+      if (stateTimer < 2.42)
+      {
+        GameOverSubState.instance.canInput = false;
+      }
+      else
+      {
+        GameOverSubState.instance.canInput = true;
+      }
+    }
+
+    if (lockCamera)
+    {
+      FlxG.camera.target = null;
+      FlxG.camera.scroll.x = customCamScroll.x;
+      FlxG.camera.scroll.y = customCamScroll.y;
+      FlxG.camera.zoom = customCamZoom + bopZoomOffset;
+    }
+
+    if (isLooping && !GameOverSubState.instance.isEnding)
+    {
+      bopAccumulator += FlxG.elapsed;
+      final bopInterval:Float = (60.0 / 115.0) * 2.0; 
+
+      if (bopAccumulator >= bopInterval)
+      {
+        bopAccumulator -= bopInterval;
+
+        bopZoomOffset = 0.015;
+        if (bopTween != null) bopTween.cancel();
+        bopTween = FlxTween.num(bopZoomOffset, 0.0, 0.35, {ease: FlxEase.quadOut}, function(v:Float) {
+          bopZoomOffset = v;
+        });
+      }
+    }
+
+    final canTrigger = stateTimer >= 2.42 && !hasActioned && !GameOverSubState.instance.isEnding;
+
+    if (GameOverSubState.instance.controls.BACK && canTrigger)
+    {
+      hasActioned = true;
+      isLooping = false;
+      if (deathTimer != null) deathTimer.cancel();
+      if (bopTween != null) bopTween.cancel();
+      if (camTween != null) camTween.cancel();
+      if (zoomTween != null) zoomTween.cancel();
+      
+      lockCamera = false;
+      GameOverSubState.instance.mustNotExit = false;
+      GameOverSubState.blueballed = true;
+      GameOverSubState.instance.goBack();
+      return;
+    }
+
+    final inputCondition = 
+      (GameOverSubState.instance.controls.ACCEPT || (FlxG.onMobile && TouchUtil.pressAction() && !TouchUtil.overlaps(GameOverSubState.instance.backButton))) 
+      && canTrigger;
+
+    if (inputCondition)
+    {
+      hasActioned = true;
+      isLooping = false;
+      if (deathTimer != null) deathTimer.cancel();
+      if (bopTween != null) bopTween.cancel();
+      if (camTween != null) camTween.cancel();
+      if (zoomTween != null) zoomTween.cancel();
+
+      // Confirm offsets
+      final camPosConfirm = this.getMidpoint();
+      final confirmOffsetY:Float = -25;
+      
+      final confirmY = camPosConfirm.y + confirmOffsetY - (FlxG.height / 2);
+      camPosConfirm.put();
+
+      camTween = FlxTween.tween(customCamScroll, {y: confirmY}, 2.5, {ease: FlxEase.expoOut});
+      zoomTween = FlxTween.num(customCamZoom, 0.9, 2.5, {ease: FlxEase.expoOut}, function(v:Float) {
+        customCamZoom = v;
+      });
+
+      GameOverSubState.blueballed = false;
+      GameOverSubState.instance.isEnding = true;
+      GameOverSubState.instance.mustNotExit = false;
+
+      GameOverSubState.instance.hasPlayedDeathQuote = true;
+      if (GameOverSubState.instance.deathQuoteSound != null)
+      {
+        GameOverSubState.instance.deathQuoteSound.stop();
+        GameOverSubState.instance.deathQuoteSound = null;
+      }
+
+      if (FlxG.sound.music != null) FlxG.sound.music.stop();
+      GameOverSubState.instance.startDeathMusic(1.0, true);
+      
+      this.playAnimation('deathConfirm', true, false);
+      
+      new FlxTimer().start(2.5, function(tmr:FlxTimer)
+      {
+        FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
+        {
+          FlxG.camera.fade(FlxColor.BLACK, 1, true, null, true);
+
+          if (GameOverSubState.instance.parentPlayState != null)
+          {
+            GameOverSubState.instance.parentPlayState.needsReset = true;
+
+            if (!(GameOverSubState.instance.parentPlayState.isMinimalMode ?? true))
+            {
+              GameOverSubState.instance.boyfriend.isDead = false;
+              GameOverSubState.instance.remove(GameOverSubState.instance.boyfriend);
+              GameOverSubState.instance.parentPlayState.currentStage.addCharacter(GameOverSubState.instance.boyfriend, CharacterType.BF);
+            }
+          }
+
+          GameOverSubState.instance.resetCameraZoom();
+          lockCamera = false;
+          
+          if (GameOverSubState.instance.parentPlayState != null && GameOverSubState.instance.parentPlayState.camFollow != null)
+          {
+            FlxG.camera.target = GameOverSubState.instance.parentPlayState.camFollow;
+            FlxG.camera.snapToTarget();
+          }
+
+          GameOverSubState.instance.close();
+        });
+      });
+    }
   }
 }
