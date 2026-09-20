@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="icon-ironmouse-collab.png">
+  <!-- Created by hand because im so cool and awesome -->
+  <!-- Instead of a link to animate you get to read this, wow :)-->
+  <SubTexture name="idle" x="0" y="0" width="200" height="200" />
+  <SubTexture name="losing" x="200" y="0" width="200" height="200" />
+</TextureAtlas>
