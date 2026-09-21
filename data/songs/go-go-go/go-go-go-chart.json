@@ -106,16 +106,16 @@
    }
   },
   {
-   "t": 52913.3858267717,
+   "t": 52913.7086614173,
    "e": "SetHealthIcon",
    "v": {
     "char": 1,
     "flipX": false,
     "id": "ironmouse-collab",
     "isPixel": false,
-    "offsetX": 0,
-    "offsetY": 0,
-    "scale": 1,
+    "offsetX": -10,
+    "offsetY": -2,
+    "scale": 1.2,
     "shouldBop": true
    }
   },
@@ -145,9 +145,9 @@
     "flipX": false,
     "id": "cg5-collab",
     "isPixel": false,
-    "offsetX": 0,
+    "offsetX": -10,
     "offsetY": 0,
-    "scale": 1,
+    "scale": 1.1,
     "shouldBop": true
    }
   },

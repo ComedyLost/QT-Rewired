@@ -7,7 +7,9 @@
   "cameraOffsets": [0, 192],
   "scale": 1.04,
   "healthIcon": {
-    "id": "cg5-collab"
+    "id": "cg5-collab",
+    "scale": 1.1,
+    "offsets": [-10, 0]
   },
   "animations": [
     {

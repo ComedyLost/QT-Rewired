@@ -1,6 +1,7 @@
 package rewired.characters;
 
 import flixel.FlxG;
+import flixel.FlxCamera;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
@@ -10,7 +11,12 @@ import funkin.play.character.MultiAnimateAtlasCharacter;
 import funkin.play.GameOverSubState;
 import funkin.play.PauseSubState;
 import funkin.play.character.CharacterType;
+import funkin.play.components.Subtitles;
+import funkin.play.components.SubtitlesAlignment;
 import funkin.util.TouchUtil;
+import funkin.audio.FunkinSound;
+import funkin.Paths;
+import funkin.Preferences;
 
 class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
 {
@@ -30,6 +36,15 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
   public var isLooping:Bool = false;
   public var bopAccumulator:Float = 0.0;
   public var bopZoomOffset:Float = 0.0;
+
+  public var confirmSubtitles:Subtitles;
+  public var subtitlesCamera:FlxCamera;
+
+  public var confirmLineCount:Int = 1;
+  public var confirmSubtitlesPath:String = 'subtitles/english/gameover/qt/confirm-line-';
+
+  public var subtitlesAnchorX:Float = 0;
+  public var subtitlesAnchorY:Float = 138;
 
   public function new()
   {
@@ -86,7 +101,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
         });
       }
 
-      deathTimer = new FlxTimer().start(3.08, function(tmr:FlxTimer)
+      deathTimer = new FlxTimer().start(2.96, function(tmr:FlxTimer)
       {
         if (GameOverSubState.instance != null && !GameOverSubState.instance.isEnding)
         {
@@ -168,7 +183,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       }
     }
 
-    final canTrigger = stateTimer >= 2.42 && !hasActioned && !GameOverSubState.instance.isEnding;
+    final canTrigger = stateTimer >= 2.2 && !hasActioned && !GameOverSubState.instance.isEnding;
 
     if (GameOverSubState.instance.controls.BACK && canTrigger)
     {
@@ -224,7 +239,15 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
 
       if (FlxG.sound.music != null) FlxG.sound.music.stop();
       GameOverSubState.instance.startDeathMusic(1.0, true);
-      
+
+      final confirmLine:Int = Std.random(confirmLineCount) + 1;
+
+      GameOverSubState.instance.deathQuoteSound = FunkinSound.playOnce(Paths.sound('qtgameover/english/qt/qtConfirm-' + confirmLine), 1.0, function()
+      {
+        hideConfirmSubtitles();
+      });
+      showConfirmSubtitles(confirmLine, GameOverSubState.instance.deathQuoteSound);
+
       this.playAnimation('deathConfirm', true, false);
       
       new FlxTimer().start(2.5, function(tmr:FlxTimer)
@@ -254,9 +277,44 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
             FlxG.camera.snapToTarget();
           }
 
+          hideConfirmSubtitles();
+
           GameOverSubState.instance.close();
         });
       });
+    }
+  }
+
+  public function showConfirmSubtitles(line:Int, sound:FunkinSound):Void
+  {
+    if (!Preferences.subtitles || sound == null || GameOverSubState.instance == null) return;
+
+    hideConfirmSubtitles();
+
+    subtitlesCamera = new FlxCamera();
+    subtitlesCamera.bgColor = FlxColor.TRANSPARENT;
+    FlxG.cameras.add(subtitlesCamera, false);
+
+    confirmSubtitles = new Subtitles(subtitlesAnchorX, subtitlesAnchorY, SubtitlesAlignment.SUBTITLES_BOTTOM);
+    confirmSubtitles.cameras = [subtitlesCamera];
+    confirmSubtitles.assignSubtitles(confirmSubtitlesPath + line, sound);
+
+    GameOverSubState.instance.add(confirmSubtitles);
+  }
+
+  public function hideConfirmSubtitles():Void
+  {
+    if (confirmSubtitles != null)
+    {
+      if (GameOverSubState.instance != null) GameOverSubState.instance.remove(confirmSubtitles);
+      confirmSubtitles.destroy();
+      confirmSubtitles = null;
+    }
+
+    if (subtitlesCamera != null)
+    {
+      FlxG.cameras.remove(subtitlesCamera);
+      subtitlesCamera = null;
     }
   }
 }

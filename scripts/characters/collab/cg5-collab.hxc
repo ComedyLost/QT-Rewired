@@ -17,14 +17,14 @@ class CG5CollabCharacter extends MultiAnimateAtlasCharacter
   var lipSync:FunkinSprite;
   var currentShader:FlxShader = null;
 
-  var customLipScaleX:Float = 1;
-  var customLipScaleY:Float = 1;
+  var customLipScaleX:Float = 1.06;
+  var customLipScaleY:Float = 1.06;
 
   final LIP_SYNC_OFFSETS:Map<String, LipSyncPoseData> = [
-    "singLEFT-lipsync"  => {offsetX: -34, offsetY: -40, angle: 0.8},
-    "singDOWN-lipsync"  => {offsetX: -33, offsetY: -41.5, angle: 1.2},
-    "singUP-lipsync"    => {offsetX: -29.5, offsetY: -47, angle: 2.2},
-    "singRIGHT-lipsync" => {offsetX: -28, offsetY: -48, angle: 1.4}
+    "singLEFT-lipsync"  => {offsetX: -37, offsetY: -42.5, angle: 0.2},
+    "singDOWN-lipsync"  => {offsetX: -36, offsetY: -43.5, angle: 0.8},
+    "singUP-lipsync"    => {offsetX: -32, offsetY: -48, angle: 0.1},
+    "singRIGHT-lipsync" => {offsetX: -31, offsetY: -49, angle: -0.2}
   ];
 
   public function new()
