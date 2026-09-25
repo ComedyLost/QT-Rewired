@@ -20,7 +20,6 @@ import funkin.save.Save;
 class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
 {
   public var gameoverSound;
-  public var randomInt:Int;
 
   function new()
   {
@@ -212,9 +211,10 @@ class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
     switch (PlayState.instance?.currentStage?.getDad()?.characterId)
     {
       case "qt":
-        randomInt = FlxG.random.int(1, 7);
-        gameoverSound = Paths.sound('qtgameover/' + Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT) + '/bf/qtGameover-' + randomInt);
-        return gameoverSound;
+        var language:String = Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT);
+        var randomInt:Int = FlxG.random.int(1, 7);
+        GameOverSubtitles.assignToQuote('subtitles/$language/gameover/bf-qt/gameover-line-$randomInt');
+        return Paths.sound('qtgameover/$language/bf/qtGameover-$randomInt');
       case "tankman":
         var randomCensor:Array<Int> = [];
 

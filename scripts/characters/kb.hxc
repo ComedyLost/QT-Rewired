@@ -55,7 +55,10 @@ class KillerByteCharacter extends MultiAnimateAtlasCharacter
     // Calculate the camera focus point
     var charCenterX = this.originalPosition.x + (startingSize?.x ?? this.width) / 2;
     var charCenterY = this.originalPosition.y + (startingSize?.y ?? this.height) / 2;
-    this.cameraFocusPoint = FlxPoint.get(charCenterX + _data.cameraOffsets[0], charCenterY + _data.cameraOffsets[1]);
+    super.resetCameraFocusPoint();
+
+    this.cameraFocusPoint.x = charCenterX + _data.cameraOffsets[0];
+    this.cameraFocusPoint.y = charCenterY + _data.cameraOffsets[1];
   }
   
   public override function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false):Void

@@ -29,8 +29,6 @@ class PicoQtCharacter extends PicoPlayerBaseCharacter
 
   var ps;
 
-  public var randomInt;
-
   public override function onCreate(event:ScriptEvent):Void
   {
     super.onCreate(event);
@@ -104,9 +102,10 @@ class PicoQtCharacter extends PicoPlayerBaseCharacter
     switch (PlayState.instance?.currentStage?.getDad()?.characterId)
     {
       case "qt":
-        randomInt = FlxG.random.int(1, 6);
-        var gameoverSound = Paths.sound('qtgameover/' + Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT) + '/pico/qtGameover-' + randomInt);
-        return gameoverSound;
+        var language:String = Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT);
+        var randomInt:Int = FlxG.random.int(1, 6);
+        GameOverSubtitles.assignToQuote('subtitles/$language/gameover/pico-qt/gameover-line-$randomInt');
+        return Paths.sound('qtgameover/$language/pico/qtGameover-$randomInt');
       default:
         super.getDeathQuote();
     }

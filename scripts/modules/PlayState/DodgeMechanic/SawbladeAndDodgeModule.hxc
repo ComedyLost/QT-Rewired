@@ -49,8 +49,6 @@ class SawbladeAndDodgeModule extends Module
   var touchAreaSprite:FlxSprite;
   var warningVfx:FunkinSprite;
   var sawSprite:FlxAtlasSprite;
-  var warnSound:FunkinSound;
-  var attackSound:FunkinSound;
   var playState;
   var dodgeText:FlxText;
   var dodgeText2:FlxText;
@@ -114,16 +112,6 @@ class SawbladeAndDodgeModule extends Module
       dodgeTextSwapTimer.cancel();
       dodgeTextSwapTimer = null;
     }
-    if (warnSound != null)
-    {
-      warnSound.destroy();
-      warnSound = null;
-    }
-    if (attackSound != null)
-    {
-      attackSound.destroy();
-      attackSound = null;
-    }
     if (touchAreaSprite != null)
     {
       touchAreaSprite.destroy();
@@ -141,8 +129,6 @@ class SawbladeAndDodgeModule extends Module
   {
     var stage = playState.currentStage;
 
-    warnSound = FunkinSound.load(Paths.sound('sawblades/alerts/alert'), 1.0, false, false, false);
-    attackSound = FunkinSound.load(Paths.sound('sawblades/attacks/attack'), 1.0, false, false, false);
     dimOverlay = new FlxSprite();
     dimOverlay.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
     dimOverlay.scrollFactor.set();
