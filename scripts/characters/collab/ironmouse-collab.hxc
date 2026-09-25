@@ -50,25 +50,25 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
   ];
 
   final LIP_SYNC_OFFSETS:Map<String, LipSyncPoseData> = [
-    "singLEFT"             => {offsetX: -41.5, offsetY: -73, angle: -0.8},
-    "singLEFT-beautiful"   => {offsetX: -41.5, offsetY: -73, angle: -0.8},
-    "singLEFT-cool"        => {offsetX: -42, offsetY: -73, angle: -0.9},
+    "singLEFT"             => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
+    "singLEFT-beautiful"   => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
+    "singLEFT-cool"        => {offsetX: -43.25, offsetY: -75, angle: -0.8},
 
-    "singDOWN"             => {offsetX: -45, offsetY: -71, angle: 1.2},
-    "singDOWN-beautiful"   => {offsetX: -45, offsetY: -71, angle: 1.2},
-    "singDOWN-cool"        => {offsetX: -46, offsetY: -68, angle: -0.6},
-    "singDOWN-go"          => {offsetX: -46, offsetY: -68, angle: -0.6},
+    "singDOWN"             => {offsetX: -45, offsetY: -73, angle: 0.3},
+    "singDOWN-beautiful"   => {offsetX: -45, offsetY: -73, angle: 0.3},
+    "singDOWN-cool"        => {offsetX: -46.75, offsetY: -71, angle: -0.6},
+    "singDOWN-go"          => {offsetX: -46.75, offsetY: -71, angle: -0.6},
 
-    "singUP"               => {offsetX: -41, offsetY: -74.5, angle: -0.6},
-    "singUP-beautiful"     => {offsetX: -41, offsetY: -74.5, angle: -0.6},
-    "singUP-cool"          => {offsetX: -44, offsetY: -71.5, angle: 1.1},
+    "singUP"               => {offsetX: -42, offsetY: -76, angle: -0.8},
+    "singUP-beautiful"     => {offsetX: -42, offsetY: -76, angle: -0.8},
+    "singUP-cool"          => {offsetX: -44, offsetY: -74.75, angle: 0.2},
 
-    "singRIGHT"            => {offsetX: -41, offsetY: -75, angle: 0.7},
-    "singRIGHT-beautiful"  => {offsetX: -41, offsetY: -75, angle: 0.7},
-    "singRIGHT-cool"       => {offsetX: -44, offsetY: -71.5, angle: 1.3},
+    "singRIGHT"            => {offsetX: -42, offsetY: -76.5, angle: 0.2},
+    "singRIGHT-beautiful"  => {offsetX: -42, offsetY: -76.5, angle: 0.2},
+    "singRIGHT-cool"       => {offsetX: -43.75, offsetY: -75, angle: -0.4},
 
-    "mistakeAnimation"     => {offsetX: -39, offsetY: -76, angle: -0.7},
-    "stayAnimation"        => {offsetX: -46, offsetY: -70, angle: 1.2}
+    "mistakeAnimation"     => {offsetX: -40.75, offsetY: -78, angle: -0.6},
+    "stayAnimation"        => {offsetX: -47, offsetY: -72, angle: 1.2}
   ];
 
   public function new()

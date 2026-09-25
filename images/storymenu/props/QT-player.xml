@@ -16,6 +16,16 @@
 	<SubTexture name="confirm0011" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
 	<SubTexture name="confirm0012" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
 	<SubTexture name="confirm0013" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
+	<SubTexture name="confirm0014" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
+	<SubTexture name="confirm0015" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
+	<SubTexture name="confirm0016" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
+	<SubTexture name="confirm0017" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
+	<SubTexture name="confirm0018" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
+	<SubTexture name="confirm0019" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
+	<SubTexture name="confirm0020" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
+	<SubTexture name="confirm0021" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
+	<SubTexture name="confirm0022" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
+	<SubTexture name="confirm0023" x="716" y="454" width="310" height="414" frameX="-18" frameY="-14" frameWidth="330" frameHeight="428"/>
 	<SubTexture name="idle0000" x="369" y="457" width="342" height="438" frameX="-21" frameY="-9" frameWidth="363" frameHeight="447"/>
 	<SubTexture name="idle0001" x="369" y="457" width="342" height="438" frameX="-21" frameY="-9" frameWidth="363" frameHeight="447"/>
 	<SubTexture name="idle0002" x="5" y="457" width="359" height="443" frameX="-3" frameY="-4" frameWidth="363" frameHeight="447"/>
