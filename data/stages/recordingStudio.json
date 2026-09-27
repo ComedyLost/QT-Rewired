@@ -136,10 +136,10 @@
       "zIndex": 200
     },
     "gf": {
-      "cameraOffsets": [-80, 78],
+      "cameraOffsets": [-100, 78],
       "position": [30, -110],
       "zIndex": 100
     }
   },
-  "cameraZoom": 0.645
+  "cameraZoom": 0.675
 }

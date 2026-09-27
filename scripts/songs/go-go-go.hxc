@@ -17,15 +17,43 @@ class GoGoGoSong extends Song
   var introFadeDuration:Float = 6.8;
   var hasHiddenStrums:Bool;
   var coverScreen:FunkinSprite;
+
   var horsePNG:FunkinSprite;
   
+  var collabLogo:FunkinSprite;
+  var cg5Logo:FunkinSprite;
+
+  var rewiredLogoStartScale:Float = 2.0;
+  var rewiredLogoEndScale:Float = 0.88;
+  var rewiredLogoShrinkDuration:Float = 2.0;
+
+  var rewiredLogoTargetX:Float = -175;
+  var rewiredLogoMoveDuration:Float = 2.2;
+
+  var collabLogoX:Float = 695;
+  var collabLogoY:Float = 325;
+  var collabLogoFadeInDuration:Float = 1.5;
+
+  var cg5LogoStartX:Float = 800;
+  var cg5LogoEndX:Float = 865;
+  var cg5LogoY:Float = 230;
+  var cg5LogoMoveDuration:Float = 2.5;
+  var cg5LogoFadeInDuration:Float = 1.6;
+
+  var collabDelay:Float = 0.6;
+  var cg5LogoAppearDelay:Float = 0.9;
+  var outroHoldDuration:Float = 0.0;
+
+  var outroFallDistance:Float = 500;
+  var outroFallFadeDuration:Float = 3.2;
+  var outroTotalDuration:Float = 10.0;
+
   var outroTimer:FlxTimer;
+  var logoFallTimer:FlxTimer;
   var outroFlashSpr:FunkinSprite;
 
   var hasDoneOutro:Bool;
-
-  var misteriousWind:FlxText;
-  final misteriousWindMaxAlpha:Float = 0.25; 
+  
   public function new()
   {
     super('go-go-go');
@@ -95,11 +123,29 @@ class GoGoGoSong extends Song
       outroTimer.cancel();
       outroTimer = null;
     }
+
+    if (logoFallTimer != null)
+    {
+      logoFallTimer.cancel();
+      logoFallTimer = null;
+    }
     
     if (horsePNG != null)
     {
       FlxTween.cancelTweensOf(horsePNG);
       horsePNG.visible = false;
+    }
+
+    if (collabLogo != null)
+    {
+      FlxTween.cancelTweensOf(collabLogo);
+      collabLogo.visible = false;
+    }
+
+    if (cg5Logo != null)
+    {
+      FlxTween.cancelTweensOf(cg5Logo);
+      cg5Logo.visible = false;
     }
 
     if (coverScreen != null)
@@ -111,12 +157,6 @@ class GoGoGoSong extends Song
     {
       FlxTween.cancelTweensOf(outroFlashSpr);
       outroFlashSpr.visible = false;
-    }
-
-    if (misteriousWind != null)
-    {
-      FlxTween.cancelTweensOf(misteriousWind);
-      misteriousWind.visible = false;
     }
     
     PlayState.instance.camHUD.visible = true;
@@ -201,7 +241,7 @@ class GoGoGoSong extends Song
        stage.setLightHueInstant(170, 1.5);
       case 144:
        stage.setLightHueInstant(75, 1.5);
-       if (gf != null) gf.setIdleState('dance2');
+       if (gf != null) gf.setIdleState('idleCool');
       case 160:
        stage.setLightHueInstant(100, 2.0);
        stage.setLightHueLinear(0, 6.0);
@@ -215,11 +255,36 @@ class GoGoGoSong extends Song
        stage.disableBlackScreen();
        stage.whiteFlash(6.0);
       case 192:
-       if (gf != null) gf.setIdleState('dance2');
+       if (gf != null) gf.setIdleState('idleCool');
       case 221:
        if (gf != null) gf.setIdleState('danceCool1');
-      case 241:
+      case 239:
+       stage.enableBlackScreen();
+       stage.enableDarkness();
+      case 240:
        if (gf != null) gf.setIdleState('danceCool2');
+       stage.disableBlackScreen();
+       stage.whiteFlash(6.0);
+      case 242:
+       stage.setLightHueInstant(120, 1.5);
+      case 246:
+       stage.setLightHueInstant(100, 1.5);
+      case 250:
+       stage.setLightHueInstant(75, 1.5);
+      case 254:
+       stage.setLightHueInstant(120, 1.5);
+      case 258:
+       stage.setLightHueInstant(100, 1.5);
+      case 262:
+       if (gf != null) gf.setIdleState('dance2');
+       stage.setLightHueInstant(75, 1.5);
+      case 266:
+       stage.setLightHueInstant(120, 1.5);
+       stage.setLightHueLinear(0, 3.0);
+      case 272:
+       stage.setLightHueInstant(0, 1.5);
+       stage.disableDarkness();
+       stage.whiteFlash(6.0);
       case 300:
        stage.startOutroBuildup(2.5);
     }
@@ -240,6 +305,8 @@ class GoGoGoSong extends Song
 
   public function doOutro()
   {
+    var horseChance:Bool = FlxG.random.bool(5);
+
     var stage:Dynamic = PlayState.instance.currentStage;
     if (stage != null && stage.id == 'recordingStudio')
     {
@@ -256,29 +323,40 @@ class GoGoGoSong extends Song
     coverScreen.zIndex = 99999;
     PlayState.instance.add(coverScreen);
 
-    //if you rename this variable you go to hell
-    horsePNG = new FunkinSprite().loadTexture('recordingStudio/placeholder');
+    //if you rename this variable you go to hell <--- "horsePNG is love, horsePNG os life" <--- really got that eric soul
+    horsePNG = new FunkinSprite().loadTexture(horseChance ? 'recordingStudio/endSequence/placeholder' : 'recordingStudio/endSequence/rewiredLogo');
     horsePNG.cameras = [PlayState.instance.camCutscene];
     horsePNG.zIndex = coverScreen.zIndex + 1;
-    horsePNG.scale.set(1.4, 1.4);
+    horsePNG.scale.set(rewiredLogoStartScale, rewiredLogoStartScale);
     horsePNG.updateHitbox();
     horsePNG.screenCenter();
     PlayState.instance.add(horsePNG);
 
+    collabLogo = new FunkinSprite().loadTexture('recordingStudio/endSequence/collab');
+    collabLogo.cameras = [PlayState.instance.camCutscene];
+    collabLogo.zIndex = horsePNG.zIndex + 1;
+    collabLogo.scale.set(rewiredLogoEndScale, rewiredLogoEndScale);
+    collabLogo.updateHitbox();
+    collabLogo.setPosition(collabLogoX, collabLogoY);
+    collabLogo.alpha = 0;
+    PlayState.instance.add(collabLogo);
+
+    cg5Logo = new FunkinSprite().loadTexture('recordingStudio/endSequence/CG5Logo');
+    cg5Logo.cameras = [PlayState.instance.camCutscene];
+    cg5Logo.zIndex = collabLogo.zIndex + 1;
+    cg5Logo.scale.set(rewiredLogoEndScale, rewiredLogoEndScale);
+    cg5Logo.updateHitbox();
+    cg5Logo.setPosition(cg5LogoStartX, cg5LogoY);
+    cg5Logo.alpha = 0;
+    PlayState.instance.add(cg5Logo);
+
     outroFlashSpr = new FunkinSprite().makeSolidColor(FlxG.width, FlxG.height, FlxColor.WHITE);
     outroFlashSpr.cameras = [PlayState.instance.camCutscene];
     outroFlashSpr.zIndex = horsePNG.zIndex + 1;
-    outroFlashSpr.blend = BlendMode.OVERLAY;
+    outroFlashSpr.alpha = 0.115;
     PlayState.instance.add(outroFlashSpr);
 
-    misteriousWind = new FlxText(1, 1, 0, "https://www.youtube.com/watch?v=9T0EUSilikI", 20);
-    misteriousWind.setFormat(Paths.font('vcr.ttf'), 20, FlxColor.WHITE, "left");
-    misteriousWind.cameras = [PlayState.instance.camCutscene];
-    misteriousWind.zIndex = outroFlashSpr.zIndex + 2; 
-    misteriousWind.alpha = 0; 
-    PlayState.instance.add(misteriousWind);
-
-    FlxTween.tween(outroFlashSpr, {alpha: 0}, 1.0, {
+    FlxTween.tween(outroFlashSpr, {alpha: 0}, 2.0, {
       onComplete: function(_) {
         if (outroFlashSpr != null)
         {
@@ -289,26 +367,27 @@ class GoGoGoSong extends Song
       }
     });
 
-    FlxTween.tween(horsePNG.scale, {x: 0.6, y: 0.6}, 2.0, {ease: FlxEase.expoOut});
-    FlxTween.tween(horsePNG, {y: horsePNG.y + 500, alpha: 0}, 3.2, {ease: FlxEase.expoIn, startDelay: 1.8});
-
-    FlxTween.tween(misteriousWind, {alpha: misteriousWindMaxAlpha}, 1.0, {
-      startDelay: 4.0,
+    FlxTween.tween(horsePNG.scale, {x: rewiredLogoEndScale, y: rewiredLogoEndScale}, rewiredLogoShrinkDuration, {
+      ease: FlxEase.expoOut,
       onComplete: function(_) {
-        FlxTween.tween(misteriousWind, {alpha: 0}, 1.0, {
-          startDelay: 1.0, 
-          onComplete: function(_) {
-            if (misteriousWind != null) {
-              PlayState.instance.remove(misteriousWind);
-              misteriousWind.destroy();
-              misteriousWind = null;
-            }
-          }
+        if (horseChance) return;
+
+        FlxTween.tween(horsePNG, {x: rewiredLogoTargetX}, rewiredLogoMoveDuration, {ease: FlxEase.quartInOut});
+        FlxTween.tween(collabLogo, {alpha: 1}, collabLogoFadeInDuration, {startDelay: collabDelay});
+        FlxTween.tween(cg5Logo, {alpha: 1}, cg5LogoFadeInDuration, {ease: FlxEase.expoOut, startDelay: cg5LogoAppearDelay});
+        FlxTween.tween(cg5Logo, {x: cg5LogoEndX}, cg5LogoMoveDuration, {ease: FlxEase.expoOut, startDelay: cg5LogoAppearDelay});
+
+        var settleDuration:Float = 2.2;
+
+        logoFallTimer = new FlxTimer().start(settleDuration + outroHoldDuration, function(_) {
+          if (horsePNG != null) FlxTween.tween(horsePNG, {y: horsePNG.y + outroFallDistance, alpha: 0}, outroFallFadeDuration, {ease: FlxEase.expoIn});
+          if (collabLogo != null) FlxTween.tween(collabLogo, {y: collabLogo.y + outroFallDistance, alpha: 0}, outroFallFadeDuration, {ease: FlxEase.expoIn});
+          if (cg5Logo != null) FlxTween.tween(cg5Logo, {y: cg5Logo.y + outroFallDistance, alpha: 0}, outroFallFadeDuration, {ease: FlxEase.expoIn});
         });
       }
     });
 
-    outroTimer = new FlxTimer().start(7.0, function(_) {
+    outroTimer = new FlxTimer().start(outroTotalDuration, function(_) {
       PlayState.instance.endSong();
     });
   }
@@ -325,10 +404,10 @@ class GoGoGoSong extends Song
       outroTimer = null;
     }
 
-    if (misteriousWind != null)
+    if (logoFallTimer != null)
     {
-      misteriousWind.destroy();
-      misteriousWind = null;
+      logoFallTimer.cancel();
+      logoFallTimer = null;
     }
   }
 }

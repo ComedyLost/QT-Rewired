@@ -37,6 +37,26 @@
       "offsets": [0, 0]
     },
     {
+      "name": "singLEFTmiss",
+      "prefix": "Left Miss",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singDOWNmiss",
+      "prefix": "Down Miss",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singUPmiss",
+      "prefix": "Up Miss",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singRIGHTmiss",
+      "prefix": "Right Miss",
+      "offsets": [0, 0]
+    },
+    {
       "name": "singLEFT-beautiful",
       "prefix": "Left Beautiful",
       "offsets": [0, 0]
@@ -54,6 +74,26 @@
     {
       "name": "singRIGHT-beautiful",
       "prefix": "Right Beautiful",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singLEFTmiss-beautiful",
+      "prefix": "Left Miss Beautiful",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singDOWNmiss-beautiful",
+      "prefix": "Down Miss Beautiful",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singUPmiss-beautiful",
+      "prefix": "Up Miss Beautiful",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singRIGHTmiss-beautiful",
+      "prefix": "Right Miss Beautiful",
       "offsets": [0, 0]
     },
     {
@@ -136,30 +176,6 @@
       "frameRate": 26,
       "name": "stayAnimation",
       "prefix": "You need to stay",
-      "offsets": [0, 0]
-    },
-    {
-      "assetPath": "shared:characters/go-go-go/ironmouse_placeholder",
-      "name": "singLEFTmiss",
-      "prefix": "left miss",
-      "offsets": [0, 0]
-    },
-    {
-      "assetPath": "shared:characters/go-go-go/ironmouse_placeholder",
-      "name": "singDOWNmiss",
-      "prefix": "down miss",
-      "offsets": [0, 0]
-    },
-    {
-      "assetPath": "shared:characters/go-go-go/ironmouse_placeholder",
-      "name": "singUPmiss",
-      "prefix": "up miss",
-      "offsets": [0, 0]
-    },
-    {
-      "assetPath": "shared:characters/go-go-go/ironmouse_placeholder",
-      "name": "singRIGHTmiss",
-      "prefix": "right miss",
       "offsets": [0, 0]
     }
   ]
