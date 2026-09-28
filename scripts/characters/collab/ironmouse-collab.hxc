@@ -199,7 +199,6 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
   public override function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false):Void
   {
     super.playAnimation(name, restart, ignoreOther, reversed);
-    trace(name);
     
     if (tail != null)
     {
