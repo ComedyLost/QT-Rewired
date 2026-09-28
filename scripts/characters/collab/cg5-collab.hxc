@@ -32,15 +32,6 @@ class CG5CollabCharacter extends MultiAnimateAtlasCharacter
     super('collab/cg5/cg5-collab'); 
   }
 
-  public override function onNoteMiss(event:Dynamic)
-  {
-    super.onNoteMiss(event);
-
-    if(event.note.kind != 'qt-go-go-go-note') return;
-
-    playSingAnimation(event.note.noteData.getDirection(), true, event.note.suffixShit);
-  }
-
   public override function onCreate(event:ScriptEvent):Void
   {
     super.onCreate(event);

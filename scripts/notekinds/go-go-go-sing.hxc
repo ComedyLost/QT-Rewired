@@ -6,6 +6,9 @@ import funkin.play.character.CharacterType;
 
 class GoGoGoNoteKind extends NoteKind
 {
+
+  //remove this later
+  static var counterThing:Int = 0;
   // 0 = no
   // 1 = lipsync
   // 2 = normal
@@ -143,11 +146,11 @@ class GoGoGoNoteKind extends NoteKind
     if (char == cg5)
     {
       if (singType == 1)
-        suffixShit = "lipsync";
+        this.suffixShit = "lipsync";
       else if (singType == 2)
-        suffixShit = "";
+        this.suffixShit = "";
     }
-    else if (!miss)
+    else
     {
       /*switch (singType)
       {
@@ -162,19 +165,19 @@ class GoGoGoNoteKind extends NoteKind
       }*/ //:rolling_eyes:
 
       if (singType == 2)
-        suffixShit = "beautiful";
+        this.suffixShit = "beautiful";
 
       if (singType == 3)
-        suffixShit = "cool";
+        this.suffixShit = "cool";
 
       if (singType == 4 && char == irmouse && note.noteData.getDirection() == 1)
       {
-        suffixShit = "go";
+        this.suffixShit = "go";
       }
     }
-    
-    char.playSingAnimation(note.noteData.getDirection(), miss, suffixShit);
+    char.playSingAnimation(note.noteData.getDirection(), miss, this.suffixShit);
     char.holdTimer = 0;
+    if(miss) unHookChar(char);
   }
 
   function unHookChar(char:Dynamic):Void
