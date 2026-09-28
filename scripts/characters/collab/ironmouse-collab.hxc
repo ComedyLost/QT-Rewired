@@ -244,6 +244,15 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
     }
   }
 
+  public override function onNoteMiss(event:Dynamic)
+  {
+    super.onNoteMiss(event);
+
+    if(event.note.kind != 'qt-go-go-go-note') return;
+
+    playSingAnimation(event.note.noteData.getDirection(), true, event.note.suffixShit);
+  }
+
   public function setIdleState(state:String):Void
   {
     this.danceEvery = 1;

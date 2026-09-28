@@ -54,6 +54,9 @@ class GoGoGoNoteKind extends NoteKind
     }
   ];
 
+  //we want to be able to access this later.
+  public var suffixShit:String;
+
   public function new()
   {
     super('qt-go-go-go-note', 'Go Go Go Character Sings', 'funkin', goParams, true);
@@ -136,8 +139,6 @@ class GoGoGoNoteKind extends NoteKind
   function hookChar(char:Dynamic, miss:Bool, note:Dynamic, singType:Int, doPlayer:Bool = true):Void
   {
     char.characterType = doPlayer ? CharacterType.BF : CharacterType.DAD;
-
-    var suffixShit:String = "";
 
     if (char == cg5)
     {
