@@ -32,7 +32,7 @@ class GoGoGoSong extends Song
 
   var collabLogoX:Float = 695;
   var collabLogoY:Float = 325;
-  var collabLogoFadeInDuration:Float = 1.5;
+  var collabLogoFadeInDuration:Float = 0.4;
 
   var cg5LogoStartX:Float = 800;
   var cg5LogoEndX:Float = 865;
@@ -40,19 +40,20 @@ class GoGoGoSong extends Song
   var cg5LogoMoveDuration:Float = 2.5;
   var cg5LogoFadeInDuration:Float = 1.6;
 
-  var collabDelay:Float = 0.6;
+  var collabDelay:Float = 0.9;
   var cg5LogoAppearDelay:Float = 0.9;
-  var outroHoldDuration:Float = 0.0;
+  var outroHoldDuration:Float = 0.4;
 
-  var outroFallDistance:Float = 500;
-  var outroFallFadeDuration:Float = 3.2;
-  var outroTotalDuration:Float = 10.0;
+  var outroFallFadeDuration:Float = 2.5;
+  var outroTotalDuration:Float = 8.8;
 
   var outroTimer:FlxTimer;
   var logoFallTimer:FlxTimer;
   var outroFlashSpr:FunkinSprite;
 
   var hasDoneOutro:Bool;
+  var curBeat:Int = 0;
+  var introGhostTapEndBeat:Int = 16;
   
   public function new()
   {
@@ -67,6 +68,7 @@ class GoGoGoSong extends Song
 
     hasHiddenStrums = false;
     hasDoneOutro = false; 
+    curBeat = 0;
   }
 
   override function onSongLoaded(event)
@@ -117,6 +119,7 @@ class GoGoGoSong extends Song
     super.onSongRetry(event);
 
     hasDoneOutro = false;
+    curBeat = 0;
 
     if (outroTimer != null)
     {
@@ -180,6 +183,7 @@ class GoGoGoSong extends Song
   override function onBeatHit(event)
   {
     super.onBeatHit(event);
+    curBeat = event.beat;
 
     var gf = PlayState.instance.currentStage?.getGirlfriend();
     if (gf != null)
@@ -289,6 +293,16 @@ class GoGoGoSong extends Song
        stage.startOutroBuildup(2.5);
     }
   }
+  override function onNoteGhostMiss(event)
+  {
+    super.onNoteGhostMiss(event);
+
+    if (curBeat <= introGhostTapEndBeat)
+    {
+      event.cancel();
+      event.stopPropagation();
+    }
+  }
 
   override function onSongEnd(event)
   {
@@ -377,12 +391,21 @@ class GoGoGoSong extends Song
         FlxTween.tween(cg5Logo, {alpha: 1}, cg5LogoFadeInDuration, {ease: FlxEase.expoOut, startDelay: cg5LogoAppearDelay});
         FlxTween.tween(cg5Logo, {x: cg5LogoEndX}, cg5LogoMoveDuration, {ease: FlxEase.expoOut, startDelay: cg5LogoAppearDelay});
 
-        var settleDuration:Float = 2.2;
+        var settleDuration:Float = 2.6;
 
         logoFallTimer = new FlxTimer().start(settleDuration + outroHoldDuration, function(_) {
-          if (horsePNG != null) FlxTween.tween(horsePNG, {y: horsePNG.y + outroFallDistance, alpha: 0}, outroFallFadeDuration, {ease: FlxEase.expoIn});
-          if (collabLogo != null) FlxTween.tween(collabLogo, {y: collabLogo.y + outroFallDistance, alpha: 0}, outroFallFadeDuration, {ease: FlxEase.expoIn});
-          if (cg5Logo != null) FlxTween.tween(cg5Logo, {y: cg5Logo.y + outroFallDistance, alpha: 0}, outroFallFadeDuration, {ease: FlxEase.expoIn});
+          if (horsePNG != null) {
+            FlxTween.cancelTweensOf(horsePNG);
+            FlxTween.tween(horsePNG, {alpha: 0}, outroFallFadeDuration, {ease: FlxEase.sineOut});
+          }
+          if (collabLogo != null) {
+            FlxTween.cancelTweensOf(collabLogo);
+            FlxTween.tween(collabLogo, {alpha: 0}, outroFallFadeDuration, {ease: FlxEase.sineOut});
+          }
+          if (cg5Logo != null) {
+            FlxTween.cancelTweensOf(cg5Logo);
+            FlxTween.tween(cg5Logo, {alpha: 0}, outroFallFadeDuration, {ease: FlxEase.sineOut});
+          }
         });
       }
     });
@@ -397,6 +420,7 @@ class GoGoGoSong extends Song
     super.onDestroy(event);
     this.hasHiddenStrums = false;
     this.hasDoneOutro = false; 
+    this.curBeat = 0;
     
     if (outroTimer != null)
     {

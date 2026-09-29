@@ -96,6 +96,11 @@
       "name": "singRIGHTmiss",
       "prefix": "Right Miss",
       "offsets": [0, 0]
+    },
+    {
+      "name": "clap",
+      "prefix": "Clap",
+      "offsets": [0, 0]
     }
   ]
 }
