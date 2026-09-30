@@ -149,18 +149,6 @@ class GoGoGoNoteKind extends NoteKind
     }
     else
     {
-      /*switch (singType)
-      {
-        case 2:
-          suffix = "alt";
-
-        case 3:
-          suffix = "alt2";
-
-        default:
-          suffix = "";
-      }*/ //:rolling_eyes:
-
       if (singType == 2)
         this.suffixShit = "beautiful";
 
@@ -172,6 +160,7 @@ class GoGoGoNoteKind extends NoteKind
         this.suffixShit = "go";
       }
     }
+    
     char.playSingAnimation(note.noteData.getDirection(), miss, this.suffixShit);
     char.holdTimer = 0;
     if(miss) unHookChar(char);
