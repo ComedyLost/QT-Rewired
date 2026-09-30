@@ -137,9 +137,9 @@ class RecordingStudio extends Stage
       PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, true, null, true);
   }
 
-  public function whiteFlash(duration:Float, startAlpha:Float = 1.0):Void
+  public function whiteFlash(duration:Float):Void
   {
-    var flashSpr = new FlxSprite().makeGraphic(3000, 1500, FlxColor.WHITE);
+    var flashSpr = new FunkinSprite().makeSolidColor(Std.int(FlxG.width * 3.0), Std.int(FlxG.height * 3.0), FlxColor.WHITE);
     flashSpr.scrollFactor.set(0, 0);
     flashSpr.screenCenter();
     flashSpr.blend = BlendMode.OVERLAY;
