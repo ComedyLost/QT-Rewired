@@ -90,7 +90,7 @@ class BlissfulErectSong extends Song
 
   function setupQTDanceSprite(qt)
   {
-    danceQT = new QTErectDanceSprite(qt.x - 10, qt.y - 30);
+    danceQT = new QTErectDanceSprite(qt.x, qt.y);
     PS.currentStage.add(danceQT);
     danceQT.zIndex = 301;
 
@@ -697,42 +697,65 @@ class BlissfulErectSong extends Song
 class QTErectDanceSprite extends FunkinSprite
 {
   public var curDanceState:Int = -1;
+  var isPeak:Bool;
 
   public function new(x:Float, y:Float)
   {
     super(x, y);
-    loadTextureAtlas("characters/QT_assets/qt-dance", "shared");
 
-    function inci(from, to)
-    {
-      return[for (i in from...to) i];
-    }
-
-    function aAnim(name, from, to, ff)
-    {
-      animation.addBySymbolIndices(name, this.getDefaultSymbol(), inci(from, to), ff, false);
-    }
-
-    aAnim("bupm", 27, 46, 24);
-
+    isPeak = FlxG.random.bool(5);
     visible = false;
-    aAnim("part1", 1, 160, 24);
-    aAnim("part2", 161, 317, 24);
-    aAnim("jumpey", 318, 462, 24);
 
-    aAnim("part3", 463, 474, 24);
+    if (!isPeak)
+    {
+      loadTextureAtlas("characters/QT_assets/qt-dance", "shared");
+      x -= 10;
+      y -= 30;
 
-    aAnim("part3-l", 475, 484, 24);
-    aAnim("part3-r", 485, 494, 24);
+      function inci(from, to)
+      {
+        return [for (i in from...to) i];
+      }
 
-    aAnim("part4", 551, 624, 24);
+      function aAnim(name, from, to, ff)
+      {
+        animation.addBySymbolIndices(name, this.getDefaultSymbol(), inci(from, to), ff, false);
+      }
 
-    aAnim("part5", 625, 700, 24);
+      aAnim("bupm", 27, 46, 24);
 
-    aAnim("part6", 701, 1185, 24);
+      aAnim("part1", 1, 160, 24);
+      aAnim("part2", 161, 317, 24);
+      aAnim("jumpey", 318, 462, 24);
 
-    aAnim("end", 1186, 1222, 24);
-    animation.play("part1", true);
+      aAnim("part3", 463, 474, 24);
+
+      aAnim("part3-l", 475, 484, 24);
+      aAnim("part3-r", 485, 494, 24);
+
+      aAnim("part4", 551, 624, 24);
+
+      aAnim("part5", 625, 700, 24);
+
+      aAnim("part6", 701, 1185, 24);
+
+      aAnim("end", 1186, 1222, 24);
+      animation.play("part1", true);
+    }
+    else
+    {
+      // HUGE shoutout to Lerobri for this animation
+      // its beautiful
+
+      loadTextureAtlas("characters/QT_assets/qt-gangnam", "shared");
+      x += 10;
+      y += 5;
+
+      animation.addByFrameLabel('danceLeft', 'Gangnam Left', 24, false);
+      animation.addByFrameLabel('danceRight', 'Gangnam Right', 24, false);
+      animation.play('danceLeft', true);
+    }
+
     this.applyStageMatrix = false;
     this.useRenderTexture = true;
   }
@@ -744,51 +767,66 @@ class QTErectDanceSprite extends FunkinSprite
 
   public function onBeatHit(beat):Void
   {
-    switch (beat)
+    if (!isPeak)
     {
-      case 222:
-        curDanceState = -1;
-        visible = true;
-        pa("part1");
+      switch (beat)
+      {
+        case 222:
+          curDanceState = -1;
+          visible = true;
+          pa("part1");
 
-      case 239:
-        visible = true;
-        curDanceState = -1;
-        pa("part2");
+        case 239:
+          visible = true;
+          curDanceState = -1;
+          pa("part2");
 
-      case 256:
-        visible = true;
-        curDanceState = -1;
-        pa("jumpey");
+        case 256:
+          visible = true;
+          curDanceState = -1;
+          pa("jumpey");
 
-      case 271:
-        visible = true;
-        curDanceState = -1;
-        pa("part3");
+        case 271:
+          visible = true;
+          curDanceState = -1;
+          pa("part3");
 
-      case 272:
-        curDanceState = 0;
+        case 272:
+          curDanceState = 0;
 
-      case 280:
-        curDanceState = -1;
-        pa("part4");
+        case 280:
+          curDanceState = -1;
+          pa("part4");
 
-      case 288:
-        curDanceState = -1;
-        pa("part5");
-      case 296:
-        curDanceState = -1;
-        pa("part6");
+        case 288:
+          curDanceState = -1;
+          pa("part5");
+        case 296:
+          curDanceState = -1;
+          pa("part6");
 
-      case 347:
-        curDanceState = -1;
-        pa("end");
+        case 347:
+          curDanceState = -1;
+          pa("end");
+      }
+
+      switch (curDanceState)
+      {
+        case 0:
+          pa(beat % 2 == 0 ? "part3-l" : "part3-r");
+      }
     }
-
-    switch (curDanceState)
+    else
     {
-      case 0:
-        pa(beat % 2 == 0 ? "part3-l" : "part3-r");
+      switch(beat)
+      {
+        case 222:
+          visible = true;
+        case 351:
+          animation.onFinish.dispatch('end');
+      }
+
+      pa(beat % 2 == 0 ? 'danceLeft' : 'danceRight');
     }
   }
 }
