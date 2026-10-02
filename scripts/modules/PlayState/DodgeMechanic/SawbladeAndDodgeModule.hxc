@@ -122,7 +122,6 @@ class SawbladeAndDodgeModule extends Module
       dimOverlay.destroy();
       dimOverlay = null;
     }
-    isAllowed = false;
   }
 
   function initializeAssets():Void
