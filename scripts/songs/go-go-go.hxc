@@ -373,7 +373,7 @@ class GoGoGoSong extends Song
     if (getPauseCreditee(pauseCreditCategory) == null) return;
 
     isPauseCreditHooked = true;
-    PlayState.instance.subStateOpened.addOnce(function(subState) {
+    PlayState.instance.subStateOpened.addOnce(subState -> {
       isPauseCreditHooked = false;
       if (Std.isOfType(subState, PauseSubState)) addPauseCredit(subState);
     });
@@ -549,7 +549,7 @@ class GoGoGoSong extends Song
 
     FlxTween.tween(outroFlashSpr, {alpha: 0}, 2.0,
       {
-        onComplete: function(_) {
+        onComplete: _ -> {
           if (outroFlashSpr != null)
           {
             PlayState.instance.remove(outroFlashSpr);
@@ -562,7 +562,7 @@ class GoGoGoSong extends Song
     FlxTween.tween(horsePNG.scale, {x: rewiredLogoEndScale, y: rewiredLogoEndScale}, rewiredLogoShrinkDuration,
       {
         ease: FlxEase.expoOut,
-        onComplete: function(_) {
+        onComplete: _ -> {
           if (horseChance) return;
 
           FlxTween.tween(horsePNG, {x: rewiredLogoTargetX + offsetX}, rewiredLogoMoveDuration, {ease: FlxEase.quartInOut});
@@ -572,7 +572,7 @@ class GoGoGoSong extends Song
 
           var settleDuration:Float = 2.6;
 
-          logoFallTimer = new FlxTimer().start(settleDuration + outroHoldDuration, function(_) {
+          logoFallTimer = FlxTimer.wait(settleDuration + outroHoldDuration, () -> {
             if (horsePNG != null)
             {
               FlxTween.cancelTweensOf(horsePNG);
@@ -592,9 +592,7 @@ class GoGoGoSong extends Song
         }
       });
 
-    outroTimer = new FlxTimer().start(outroTotalDuration, function(_) {
-      PlayState.instance.endSong();
-    });
+    outroTimer = FlxTimer.wait(outroTotalDuration, () -> PlayState.instance?.endSong());
   }
 
   override function onDestroy(event)
