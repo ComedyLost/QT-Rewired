@@ -176,7 +176,7 @@ class GoGoGoSong extends Song
       {
         time: Conductor.instance.getBeatTimeInMs(175) / 1000,
         callback: () -> {
-          stage.setLightHueInstant(0, 1.5);
+          stage.enableBlackScreen();
           gf?.setIdleState('default');
         }
       },
