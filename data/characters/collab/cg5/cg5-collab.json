@@ -39,22 +39,22 @@
     },
     {
       "name": "singLEFTmiss-lipsync",
-      "prefix": "Left Miss Lip Sync",
+      "prefix": "Left Lip Sync Miss",
       "offsets": [0, 0]
     },
     {
       "name": "singDOWNmiss-lipsync",
-      "prefix": "Down Miss Lip Sync",
+      "prefix": "Down Lip Sync Miss",
       "offsets": [0, 0]
     },
     {
       "name": "singUPmiss-lipsync",
-      "prefix": "Up Miss Lip Sync",
+      "prefix": "Up Lip Sync Miss",
       "offsets": [0, 0]
     },
     {
       "name": "singRIGHTmiss-lipsync",
-      "prefix": "Right Miss Lip Sync",
+      "prefix": "Right Lip Sync Miss",
       "offsets": [0, 0]
     },
     {

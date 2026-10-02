@@ -11,6 +11,7 @@ import flixel.FlxG;
 import openfl.display.BlendMode; 
 import flixel.text.FlxText;
 import funkin.Paths;
+import funkin.play.PauseSubState;
 
 class GoGoGoSong extends Song
 {
@@ -54,6 +55,10 @@ class GoGoGoSong extends Song
   var hasDoneOutro:Bool;
   var curBeat:Int = 0;
   var introGhostTapEndBeat:Int = 16;
+
+  var pauseCreditCategory:String = 'Arrangement';
+  var pauseMetadataRowHeight:Float = 32;
+  var isPauseCreditHooked:Bool = false;
   
   public function new()
   {
@@ -180,6 +185,79 @@ class GoGoGoSong extends Song
     }
   }
 
+  override function onPause(event)
+  {
+    super.onPause(event);
+
+    if (event.eventCanceled || isPauseCreditHooked || PlayState.instance == null) return;
+    if (getPauseCreditee(pauseCreditCategory) == null) return;
+
+    isPauseCreditHooked = true;
+    PlayState.instance.subStateOpened.addOnce(function(subState) {
+      isPauseCreditHooked = false;
+      if (Std.isOfType(subState, PauseSubState)) addPauseCredit(subState);
+    });
+  }
+
+  function getPauseCreditee(category:String):String
+  {
+    switch (category)
+    {
+      case 'Arrangement':
+        return 'CheeseWithCake';
+      default:
+        return null;
+    }
+  }
+
+  function addPauseCredit(pauseState)
+  {
+    var creditee:String = getPauseCreditee(pauseCreditCategory);
+    if (creditee == null) return;
+
+    var metadata = pauseState.metadata;
+    var artist = pauseState.metadataArtist;
+    var artistIndex:Int = metadata.members.indexOf(artist);
+    if (artistIndex < 0 || artistIndex + 1 >= metadata.members.length) return;
+
+    var difficulty = metadata.members[artistIndex + 1];
+    var rowHeight:Float = pauseMetadataRowHeight;
+    var isBottomAnchored:Bool = metadata.members[0].y > pauseState.camera.height * 0.5;
+
+    if (isBottomAnchored)
+    {
+      for (i in 0...artistIndex)
+      {
+        metadata.members[i].y -= rowHeight;
+      }
+    }
+    else
+    {
+      artist.y += rowHeight;
+      difficulty.y += rowHeight;
+      pauseState.metadataDeaths.y += rowHeight;
+      pauseState.metadataPractice.y += rowHeight;
+    }
+
+    var creditText:FlxText = new FlxText(artist.x, artist.y - rowHeight, artist.fieldWidth, pauseCreditCategory + ': ' + creditee);
+    creditText.setFormat(Paths.font('vcr.ttf'), artist.size, FlxColor.WHITE, artist.alignment);
+    creditText.scrollFactor.set(0, 0);
+    creditText.alpha = 0;
+    metadata.insert(artistIndex, creditText);
+
+    if (!isBottomAnchored)
+    {
+      var firstIndex:Int = artistIndex;
+      var lastIndex:Int = metadata.members.length;
+      for (i in firstIndex...lastIndex)
+      {
+        var child = metadata.members[i];
+        FlxTween.cancelTweensOf(child, ['y']);
+        FlxTween.tween(child, {alpha: 1, y: child.y + 5}, 1.8, {ease: FlxEase.quartOut, startDelay: 0.1 * (i + 1)});
+      }
+    }
+  }
+
   override function onBeatHit(event)
   {
     super.onBeatHit(event);
@@ -260,6 +338,8 @@ class GoGoGoSong extends Song
        stage.whiteFlash(6.0);
       case 192:
        if (gf != null) gf.setIdleState('idleCool');
+      case 211:
+       if (gf != null) gf.setIdleState('dance2');
       case 221:
        if (gf != null) gf.setIdleState('danceCool1');
       case 239:
@@ -274,14 +354,14 @@ class GoGoGoSong extends Song
       case 246:
        stage.setLightHueInstant(100, 1.5);
       case 250:
-       stage.setLightHueInstant(75, 1.5);
+       stage.setLightHueInstant(80, 1.5);
       case 254:
        stage.setLightHueInstant(120, 1.5);
       case 258:
-       stage.setLightHueInstant(100, 1.5);
+       stage.setLightHueInstant(80, 1.5);
       case 262:
        if (gf != null) gf.setIdleState('dance2');
-       stage.setLightHueInstant(75, 1.5);
+       stage.setLightHueInstant(70, 1.5);
       case 266:
        stage.setLightHueInstant(120, 1.5);
        stage.setLightHueLinear(0, 3.0);
@@ -332,9 +412,24 @@ class GoGoGoSong extends Song
     PlayState.instance.mayPauseGame = false;
     PlayState.instance.togglePauseButton();
 
-    coverScreen = new FunkinSprite().makeSolidColor(FlxG.width, FlxG.height, FlxColor.BLACK);
+    var cutsceneCam = PlayState.instance.camCutscene;
+
+    if (cutsceneCam.width != FlxG.width || cutsceneCam.height != FlxG.height)
+    {
+      trace('[go-go-go] camCutscene (' + cutsceneCam.width + 'x' + cutsceneCam.height + ') no coincide con FlxG (' + FlxG.width + 'x' + FlxG.height + '), se resincroniza.');
+      cutsceneCam.setSize(FlxG.width, FlxG.height);
+    }
+
+    var offsetX:Float = (FlxG.width - 1280) / 2;
+    var offsetY:Float = (FlxG.height - 720) / 2;
+    var centerX:Float = FlxG.width / 2;
+    var centerY:Float = FlxG.height / 2;
+
+    coverScreen = new FunkinSprite().makeSolidColor(Std.int(cutsceneCam.width * 1.5), Std.int(cutsceneCam.height * 1.5), FlxColor.BLACK);
     coverScreen.cameras = [PlayState.instance.camCutscene];
     coverScreen.zIndex = 99999;
+    coverScreen.setPosition(centerX - coverScreen.width / 2, centerY - coverScreen.height / 2);
+  
     PlayState.instance.add(coverScreen);
 
     //if you rename this variable you go to hell <--- "horsePNG is love, horsePNG os life" <--- really got that eric soul
@@ -343,7 +438,7 @@ class GoGoGoSong extends Song
     horsePNG.zIndex = coverScreen.zIndex + 1;
     horsePNG.scale.set(rewiredLogoStartScale, rewiredLogoStartScale);
     horsePNG.updateHitbox();
-    horsePNG.screenCenter();
+    horsePNG.setPosition(centerX - horsePNG.width / 2, centerY - horsePNG.height / 2);
     PlayState.instance.add(horsePNG);
 
     collabLogo = new FunkinSprite().loadTexture('recordingStudio/endSequence/collab');
@@ -351,7 +446,7 @@ class GoGoGoSong extends Song
     collabLogo.zIndex = horsePNG.zIndex + 1;
     collabLogo.scale.set(rewiredLogoEndScale, rewiredLogoEndScale);
     collabLogo.updateHitbox();
-    collabLogo.setPosition(collabLogoX, collabLogoY);
+    collabLogo.setPosition(collabLogoX + offsetX, collabLogoY + offsetY);
     collabLogo.alpha = 0;
     PlayState.instance.add(collabLogo);
 
@@ -360,14 +455,15 @@ class GoGoGoSong extends Song
     cg5Logo.zIndex = collabLogo.zIndex + 1;
     cg5Logo.scale.set(rewiredLogoEndScale, rewiredLogoEndScale);
     cg5Logo.updateHitbox();
-    cg5Logo.setPosition(cg5LogoStartX, cg5LogoY);
+    cg5Logo.setPosition(cg5LogoStartX + offsetX, cg5LogoY + offsetY);
     cg5Logo.alpha = 0;
     PlayState.instance.add(cg5Logo);
 
-    outroFlashSpr = new FunkinSprite().makeSolidColor(FlxG.width, FlxG.height, FlxColor.WHITE);
+    outroFlashSpr = new FunkinSprite().makeSolidColor(Std.int(cutsceneCam.width * 1.5), Std.int(cutsceneCam.height * 1.5), FlxColor.WHITE);
     outroFlashSpr.cameras = [PlayState.instance.camCutscene];
     outroFlashSpr.zIndex = horsePNG.zIndex + 1;
     outroFlashSpr.alpha = 0.115;
+    outroFlashSpr.setPosition(centerX - outroFlashSpr.width / 2, centerY - outroFlashSpr.height / 2);
     PlayState.instance.add(outroFlashSpr);
 
     FlxTween.tween(outroFlashSpr, {alpha: 0}, 2.0, {
@@ -386,10 +482,10 @@ class GoGoGoSong extends Song
       onComplete: function(_) {
         if (horseChance) return;
 
-        FlxTween.tween(horsePNG, {x: rewiredLogoTargetX}, rewiredLogoMoveDuration, {ease: FlxEase.quartInOut});
+        FlxTween.tween(horsePNG, {x: rewiredLogoTargetX + offsetX}, rewiredLogoMoveDuration, {ease: FlxEase.quartInOut});
         FlxTween.tween(collabLogo, {alpha: 1}, collabLogoFadeInDuration, {startDelay: collabDelay});
         FlxTween.tween(cg5Logo, {alpha: 1}, cg5LogoFadeInDuration, {ease: FlxEase.expoOut, startDelay: cg5LogoAppearDelay});
-        FlxTween.tween(cg5Logo, {x: cg5LogoEndX}, cg5LogoMoveDuration, {ease: FlxEase.expoOut, startDelay: cg5LogoAppearDelay});
+        FlxTween.tween(cg5Logo, {x: cg5LogoEndX + offsetX}, cg5LogoMoveDuration, {ease: FlxEase.expoOut, startDelay: cg5LogoAppearDelay});
 
         var settleDuration:Float = 2.6;
 
@@ -421,6 +517,7 @@ class GoGoGoSong extends Song
     this.hasHiddenStrums = false;
     this.hasDoneOutro = false; 
     this.curBeat = 0;
+    this.isPauseCreditHooked = false;
     
     if (outroTimer != null)
     {

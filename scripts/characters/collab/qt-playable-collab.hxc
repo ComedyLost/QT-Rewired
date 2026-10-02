@@ -9,12 +9,14 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import funkin.play.character.MultiAnimateAtlasCharacter;
 import funkin.play.GameOverSubState;
+import funkin.play.PlayState;
 import funkin.play.PauseSubState;
 import funkin.play.character.CharacterType;
 import funkin.util.TouchUtil;
 import funkin.audio.FunkinSound;
 import funkin.Paths;
 import funkin.Preferences;
+import funkin.save.Save;
 
 class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
 {
@@ -36,6 +38,10 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
   public var bopZoomOffset:Float = 0.0;
 
   public var confirmLineCount:Int = 1;
+  public var cg5DeathLineCount:Int = 3;
+  public var cg5DeathLine:Int = 0;
+  public var cg5DeathQuoteDelay:Float = 0.3;
+  public var quoteTimer:FlxTimer;
 
   public function new()
   {
@@ -61,6 +67,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       stateTimer = 0.0;
       hasActioned = false;
       lockCamera = false;
+      cg5DeathLine = 0;
       bopZoomOffset = 0.0;
       
       isLooping = false;
@@ -90,6 +97,8 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
         zoomTween = FlxTween.num(customCamZoom, 0.85, 2.5, {ease: FlxEase.expoOut}, function(v:Float) {
           customCamZoom = v;
         });
+
+        if (this.getDeathQuote() != null) GameOverSubState.instance.hasPlayedDeathQuote = true;
       }
 
       deathTimer = new FlxTimer().start(2.96, function(tmr:FlxTimer)
@@ -113,6 +122,15 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
           });
           
           GameOverSubState.instance.startDeathMusic(1.0, false);
+
+          final deathQuote:Null<String> = this.getDeathQuote();
+          if (deathQuote != null)
+          {
+            quoteTimer = new FlxTimer().start(cg5DeathQuoteDelay, function(quoteTmr:FlxTimer)
+            {
+              this.playDeathQuote(deathQuote);
+            });
+          }
 
           isLooping = true;
           bopAccumulator = 0.0;
@@ -181,6 +199,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       hasActioned = true;
       isLooping = false;
       if (deathTimer != null) deathTimer.cancel();
+      if (quoteTimer != null) quoteTimer.cancel();
       if (bopTween != null) bopTween.cancel();
       if (camTween != null) camTween.cancel();
       if (zoomTween != null) zoomTween.cancel();
@@ -201,6 +220,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       hasActioned = true;
       isLooping = false;
       if (deathTimer != null) deathTimer.cancel();
+      if (quoteTimer != null) quoteTimer.cancel();
       if (bopTween != null) bopTween.cancel();
       if (camTween != null) camTween.cancel();
       if (zoomTween != null) zoomTween.cancel();
@@ -231,10 +251,11 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       if (FlxG.sound.music != null) FlxG.sound.music.stop();
       GameOverSubState.instance.startDeathMusic(1.0, true);
 
-      final confirmLine:Int = Std.random(confirmLineCount) + 1;
+      final confirmLine:Int = FlxG.random.int(1, confirmLineCount);
+      final language:String = Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT);
 
-      GameOverSubState.instance.deathQuoteSound = FunkinSound.playOnce(Paths.sound('qtgameover/english/qt/qtConfirm-' + confirmLine), 1.0);
-      GameOverSubtitles.assignToQuote('subtitles/english/gameover/qt/confirm-line-' + confirmLine);
+      GameOverSubState.instance.deathQuoteSound = FunkinSound.playOnce(Paths.sound('qtgameover/$language/qt/qtConfirm-$confirmLine'), 1.0);
+      GameOverSubtitles.assignToQuote('subtitles/$language/gameover/qt/confirm-line-$confirmLine');
 
       this.playAnimation('deathConfirm', true, false);
       
@@ -269,5 +290,34 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
         });
       });
     }
+  }
+
+  public override function getDeathQuote():Null<String>
+  {
+    switch (PlayState.instance?.currentStage?.getDad()?.characterId)
+    {
+      case "collab/cg5/cg5-collab":
+        final language:String = Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT);
+        if (cg5DeathLine == 0) cg5DeathLine = FlxG.random.int(1, cg5DeathLineCount);
+        return Paths.sound('qtgameover/$language/qt/cg5/CG5Gameover-$cg5DeathLine');
+      default:
+        return super.getDeathQuote();
+    }
+  }
+
+  public function playDeathQuote(quotePath:String):Void
+  {
+    final gameOver = GameOverSubState.instance;
+    if (gameOver == null || gameOver.isEnding) return;
+
+    final currentQuote = gameOver.deathQuoteSound;
+    if (currentQuote == null || currentQuote == FlxG.sound.music || !currentQuote.isPlaying)
+    {
+      gameOver.hasPlayedDeathQuote = true;
+      gameOver.deathQuoteSound = FunkinSound.playOnce(quotePath, 1.0, null, null, true);
+    }
+
+    final language:String = Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT);
+    GameOverSubtitles.assignToQuote('subtitles/$language/gameover/qt/cg5/gameover-line-$cg5DeathLine');
   }
 }

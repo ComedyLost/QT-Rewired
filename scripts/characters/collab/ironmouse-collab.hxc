@@ -50,25 +50,34 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
   ];
 
   final LIP_SYNC_OFFSETS:Map<String, LipSyncPoseData> = [
-    "singLEFT"             => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
-    "singLEFT-beautiful"   => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
-    "singLEFT-cool"        => {offsetX: -43.25, offsetY: -75, angle: -0.8},
+    "singLEFT"                => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
+    "singDOWN"                => {offsetX: -45, offsetY: -73, angle: 0.3},
+    "singUP"                  => {offsetX: -42, offsetY: -76, angle: -0.8},
+    "singRIGHT"               => {offsetX: -42, offsetY: -76.5, angle: 0.2},
 
-    "singDOWN"             => {offsetX: -45, offsetY: -73, angle: 0.3},
-    "singDOWN-beautiful"   => {offsetX: -45, offsetY: -73, angle: 0.3},
-    "singDOWN-cool"        => {offsetX: -46.75, offsetY: -71, angle: -0.6},
-    "singDOWN-go"          => {offsetX: -46.75, offsetY: -71, angle: -0.6},
+    "singLEFTmiss"            => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
+    "singDOWNmiss"            => {offsetX: -45, offsetY: -73, angle: 0.3},
+    "singUPmiss"              => {offsetX: -42, offsetY: -76, angle: -0.8},
+    "singRIGHTmiss"           => {offsetX: -42, offsetY: -76.5, angle: 0.2},
 
-    "singUP"               => {offsetX: -42, offsetY: -76, angle: -0.8},
-    "singUP-beautiful"     => {offsetX: -42, offsetY: -76, angle: -0.8},
-    "singUP-cool"          => {offsetX: -44, offsetY: -74.75, angle: 0.2},
+    "singLEFT-beautiful"      => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
+    "singDOWN-beautiful"      => {offsetX: -45, offsetY: -73, angle: 0.3},
+    "singUP-beautiful"        => {offsetX: -42, offsetY: -76, angle: -0.8},
+    "singRIGHT-beautiful"     => {offsetX: -42, offsetY: -76.5, angle: 0.2},
 
-    "singRIGHT"            => {offsetX: -42, offsetY: -76.5, angle: 0.2},
-    "singRIGHT-beautiful"  => {offsetX: -42, offsetY: -76.5, angle: 0.2},
-    "singRIGHT-cool"       => {offsetX: -43.75, offsetY: -75, angle: -0.4},
+    "singLEFTmiss-beautiful"  => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
+    "singDOWNmiss-beautiful"  => {offsetX: -45, offsetY: -73, angle: 0.3},
+    "singUPmiss-beautiful"    => {offsetX: -42, offsetY: -76, angle: -0.8},
+    "singRIGHTmiss-beautiful" => {offsetX: -42, offsetY: -76.5, angle: 0.2},
 
-    "mistakeAnimation"     => {offsetX: -40.75, offsetY: -78, angle: -0.6},
-    "stayAnimation"        => {offsetX: -47, offsetY: -72, angle: 1.2}
+    "singLEFT-cool"           => {offsetX: -43.25, offsetY: -75, angle: -0.8},
+    "singDOWN-cool"           => {offsetX: -46.75, offsetY: -71, angle: -0.6},
+    "singUP-cool"             => {offsetX: -44, offsetY: -74.75, angle: 0.2},
+    "singRIGHT-cool"          => {offsetX: -43.75, offsetY: -75, angle: -0.4},
+    "singDOWN-go"             => {offsetX: -46.75, offsetY: -71, angle: -0.6},
+
+    "mistakeAnimation"        => {offsetX: -40.75, offsetY: -78, angle: -0.6},
+    "stayAnimation"           => {offsetX: -47, offsetY: -72, angle: 1.2}
   ];
 
   public function new()
