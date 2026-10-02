@@ -9,7 +9,6 @@ class GoGoGoNoteKind extends NoteKind
   // 0 = no
   // 1 = lipsync
   // 2 = normal
-
   // 0 - no
   // 1 - normal
   // 2 - beautiful
@@ -20,41 +19,44 @@ class GoGoGoNoteKind extends NoteKind
       name: "cg5Sing",
       description: "Cg5 Sings",
       type: "Int",
-      data: {
-        min: 0,
-        max: 3,
-        step: 1,
-        precision: 1,
-        defaultValue: 1
-      }
+      data:
+        {
+          min: 0,
+          max: 3,
+          step: 1,
+          precision: 1,
+          defaultValue: 1
+        }
     },
     {
       name: "ironSing",
       description: "Ironmouse Sings",
       type: "Int",
-      data: {
-        min: 0,
-        max: 4,
-        step: 1,
-        precision: 1,
-        defaultValue: 1
-      }
+      data:
+        {
+          min: 0,
+          max: 4,
+          step: 1,
+          precision: 1,
+          defaultValue: 1
+        }
     },
     {
       name: "qtSing",
       description: "QT Sings",
       type: "Int",
-      data: {
-        min: 0,
-        max: 3,
-        step: 1,
-        precision: 1,
-        defaultValue: 1
-      }
+      data:
+        {
+          min: 0,
+          max: 3,
+          step: 1,
+          precision: 1,
+          defaultValue: 1
+        }
     }
   ];
 
-  //we want to be able to access this later.
+  // we want to be able to access this later.
   public var suffixShit:String;
 
   public function new()
@@ -75,9 +77,7 @@ class GoGoGoNoteKind extends NoteKind
     }
   }
 
-  override public function onNoteHoldDrop(ev)
-  {
-  }
+  override public function onNoteHoldDrop(ev) {}
 
   function processNoteSings(note, miss:Bool, isPlayer:Bool):Void
   {
@@ -92,15 +92,13 @@ class GoGoGoNoteKind extends NoteKind
 
   function processCharacter(char:Dynamic, singType:Int, note:Dynamic, miss:Bool, isPlayer:Bool):Void
   {
-    if (char == null)
-      return;
+    if (char == null) return;
 
     if (singType <= 0)
     {
-      //On both hit and miss, a character with 0
-      //must stop being hooked
-      if (isPlayer)
-        unHookChar(char);
+      // On both hit and miss, a character with 0
+      // must stop being hooked
+      if (isPlayer) unHookChar(char);
 
       return;
     }
@@ -112,25 +110,27 @@ class GoGoGoNoteKind extends NoteKind
   {
     final value:Dynamic = note.getParam(name);
 
-    if (value == null)
-      return 0;
+    if (value == null) return 0;
 
     return Std.int(value);
   }
 
   var cg5(get, never):Dynamic;
+
   function get_cg5():Dynamic
   {
     return PlayState.instance.currentStage.getDad();
   }
 
   var irmouse(get, never):Dynamic;
+
   function get_irmouse():Dynamic
   {
     return PlayState.instance.currentStage.getGirlfriend();
   }
 
   var qt(get, never):Dynamic;
+
   function get_qt():Dynamic
   {
     return PlayState.instance.currentStage.getBoyfriend();
@@ -141,16 +141,15 @@ class GoGoGoNoteKind extends NoteKind
     char.characterType = doPlayer ? CharacterType.BF : CharacterType.DAD;
 
     this.suffixShit = getSingSuffix(char, note, singType);
-    
+
     char.playSingAnimation(note.noteData.getDirection(), miss, this.suffixShit);
     char.holdTimer = 0;
-    if(miss) unHookChar(char);
+    if (miss) unHookChar(char);
   }
 
   function getSingSuffix(char:Dynamic, note:Dynamic, singType:Int):String
   {
-    if (char == cg5)
-      return singType == 1 ? "lipsync" : "";
+    if (char == cg5) return singType == 1 ? "lipsync" : "";
 
     switch (singType)
     {
@@ -167,8 +166,7 @@ class GoGoGoNoteKind extends NoteKind
 
   function unHookChar(char:Dynamic):Void
   {
-    if (char == null)
-      return;
+    if (char == null) return;
 
     char.characterType = CharacterType.DAD;
   }

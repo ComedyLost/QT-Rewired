@@ -1,13 +1,11 @@
 {
   "version": "1.0.0",
-     "name": "ROCKIN' THEM BEATS",
-     "capsule":
-     {
-     "name": "CG5 COLLAB"
-     },
-     "titleAsset": "storymenu/titles/cg5-collab",
-     "props":
-     [
+  "name": "ROCKIN' THEM BEATS",
+  "capsule": {
+    "name": "CG5 COLLAB"
+  },
+  "titleAsset": "storymenu/titles/cg5-collab",
+  "props": [
     {
       "assetPath": "storymenu/props/CG5",
       "scale": 0.465,
@@ -38,7 +36,7 @@
         }
       ]
     }
-     ],
-     "background": "#ff2882",
-     "songs": ["go-go-go"]
+  ],
+  "background": "#ff2882",
+  "songs": ["go-go-go"]
 }

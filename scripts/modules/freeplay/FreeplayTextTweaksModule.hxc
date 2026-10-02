@@ -15,9 +15,10 @@ class FreeplayTextTweaksModule extends Module
 {
   public function new()
   {
-    super('FreeplayTextTweaksModule', 1000, {
-      state: MainMenuState
-    });
+    super('FreeplayTextTweaksModule', 1000,
+      {
+        state: MainMenuState
+      });
   }
 
   var starSprites:FunkinSprite;
@@ -26,7 +27,7 @@ class FreeplayTextTweaksModule extends Module
   {
     super.onSubStateOpenEnd(event);
     if (!(event.targetState is FreeplayState)) return;
-    
+
     starSprites = new FunkinSprite().loadGraphic(Paths.image('freeplay/diffOverride/question-marks-stars'));
     starSprites.visible = false;
     starSprites.x = event.targetState.albumRoll.difficultyStars.x + 83;
@@ -46,7 +47,7 @@ class FreeplayTextTweaksModule extends Module
     for (cap in sub.grpCapsules.members)
     {
       if (cap.freeplayData == null || cap.freeplayData.data == null) continue;
-      
+
       if (cap.freeplayData.data.id == "obliterated" && cap.freeplayData.curVariation == "erect")
       {
         hideDifficulty(cap);
@@ -82,7 +83,7 @@ class FreeplayTextTweaksModule extends Module
     @:privateAccess
     var capsule = sub.currentCapsule;
     if (capsule == null || capsule.freeplayData == null || capsule.freeplayData.data == null) return;
-    
+
     var data = capsule.freeplayData;
     var songId = data.data.id;
     var isObliteratedErect = (songId == "obliterated" && data.curVariation == "erect");
@@ -91,13 +92,14 @@ class FreeplayTextTweaksModule extends Module
 
     if (isObliteratedErect)
     {
-        sub.albumRoll.difficultyStars.stars.visible = false;
-        for (member in sub.albumRoll.difficultyStars.flames.members) member.visible = false;
+      sub.albumRoll.difficultyStars.stars.visible = false;
+      for (member in sub.albumRoll.difficultyStars.flames.members)
+        member.visible = false;
     }
     else
     {
-        sub.albumRoll.difficultyStars.stars.visible = true;
-        sub.albumRoll.difficultyStars.flameCheck();
+      sub.albumRoll.difficultyStars.stars.visible = true;
+      sub.albumRoll.difficultyStars.flameCheck();
     }
 
     if (sub.instSelectMenu != null)
@@ -105,8 +107,9 @@ class FreeplayTextTweaksModule extends Module
       var label = sub.instSelectMenu.members[3];
       if (label != null)
       {
-        var isObliteratedDefault = (songId == "obliterated" && (data.curVariation == "default" || data.curVariation == null || data.curVariation == ""));
-        
+        var isObliteratedDefault = (songId == "obliterated"
+          && (data.curVariation == "default" || data.curVariation == null || data.curVariation == ""));
+
         if (isObliteratedDefault)
         {
           if (label.text == "INSTRUMENTAL")
@@ -115,11 +118,11 @@ class FreeplayTextTweaksModule extends Module
             sub.instSelectMenu.instrumentalIds = ["", "Revox"]; // Revox is current, "" is Legacy, its old! - Gerson Deltarune
             sub.instSelectMenu.currentInstrumentalIndex = 1;
             sub.instSelectMenu.currentInstrumental.text = sub.instSelectMenu.instrumentalIds[1];
-            
+
             sub.instSelectMenu.onConfirm = (targetInstId:String) -> {
-                @:privateAccess {
-                    sub.capsuleOnConfirmDefault(capsule, targetInstId == "Revox" ? "" : "legacy");
-                }
+              @:privateAccess {
+                sub.capsuleOnConfirmDefault(capsule, targetInstId == "Revox" ? "" : "legacy");
+              }
             };
           }
         }
@@ -129,9 +132,9 @@ class FreeplayTextTweaksModule extends Module
           {
             label.text = "INSTRUMENTAL";
             sub.instSelectMenu.onConfirm = (targetInstId:String) -> {
-                @:privateAccess {
-                    sub.capsuleOnConfirmDefault(capsule, targetInstId);
-                }
+              @:privateAccess {
+                sub.capsuleOnConfirmDefault(capsule, targetInstId);
+              }
             };
           }
         }

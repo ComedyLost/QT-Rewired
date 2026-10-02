@@ -15,7 +15,7 @@ class BoyfriendCard extends BackingCard
       moreWays2.updateText('COLLAB');
       funnyScroll3.updateText('GO GO GO GO');
     }
-    else if (prevLevelId == 'CG5Collab' && prevLevelId != 'serrafim'  && curLevelId != prevLevelId)
+    else if (prevLevelId == 'CG5Collab' && prevLevelId != 'serrafim' && curLevelId != prevLevelId)
     {
       var player = PlayerRegistry.instance.fetchEntry(this.currentCharacter);
 
@@ -36,7 +36,7 @@ class BoyfriendCard extends BackingCard
       moreWays2.updateText('COLLAB');
       funnyScroll3.updateText('GO GO GO GO');
     }
-	// i wanna kms... - pursk
+    // i wanna kms... - pursk
     if (curLevelId == 'sserafim' && curLevelId != prevLevelId)
     {
       moreWays.updateText('SPECIAL');

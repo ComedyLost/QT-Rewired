@@ -6,7 +6,8 @@ import flixel.system.FlxAssets.FlxShader;
 import animate.internal.elements.FlxSpriteElement;
 import funkin.Conductor;
 
-typedef LipSyncPoseData = {
+typedef LipSyncPoseData =
+{
   offsetX:Float,
   offsetY:Float,
   angle:Float
@@ -21,35 +22,35 @@ class CG5CollabCharacter extends MultiAnimateAtlasCharacter
   var customLipScaleY:Float = 1.06;
 
   final LIP_SYNC_OFFSETS:Map<String, LipSyncPoseData> = [
-    "singLEFT-lipsync"  => {offsetX: -37, offsetY: -42.5, angle: 0.2},
-    "singDOWN-lipsync"  => {offsetX: -36, offsetY: -43.5, angle: 0.8},
-    "singUP-lipsync"    => {offsetX: -32, offsetY: -48, angle: 0.1},
+    "singLEFT-lipsync" => {offsetX: -37, offsetY: -42.5, angle: 0.2},
+    "singDOWN-lipsync" => {offsetX: -36, offsetY: -43.5, angle: 0.8},
+    "singUP-lipsync" => {offsetX: -32, offsetY: -48, angle: 0.1},
     "singRIGHT-lipsync" => {offsetX: -31, offsetY: -49, angle: -0.2}
   ];
 
   public function new()
   {
-    super('collab/cg5/cg5-collab'); 
+    super('collab/cg5/cg5-collab');
   }
 
   public override function onCreate(event:ScriptEvent):Void
   {
     super.onCreate(event);
-    
+
     lipSync = FunkinSprite.createTextureAtlas(0, 0, "characters/go-go-go/lipsync-cg5", "shared");
     lipSync.animation.addByPrefix("Lip Sync Full", "Lip Sync Full", 24, false);
     lipSync.animation.play("Lip Sync Full", true);
-    
+
     if (lipSync.animation.curAnim != null)
     {
       lipSync.animation.curAnim.paused = true;
     }
 
     lipSync.scale.set(customLipScaleX, customLipScaleY);
-    
+
     var element:FlxSpriteElement = new FlxSpriteElement(lipSync);
     element.active = false;
-    
+
     hideLipSyncPlaceholder();
 
     for (frame in this.getFramesWithKeyword("mouth lipsync placeholder"))
@@ -71,7 +72,7 @@ class CG5CollabCharacter extends MultiAnimateAtlasCharacter
   public override function onUpdate(event:UpdateScriptEvent):Void
   {
     super.onUpdate(event);
-    
+
     synchronizeShader();
 
     if (lipSync != null)
@@ -109,7 +110,7 @@ class CG5CollabCharacter extends MultiAnimateAtlasCharacter
   public override function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false):Void
   {
     super.playAnimation(name, restart, ignoreOther, reversed);
-    
+
     if (lipSync == null) return;
 
     var poseOffsetX:Float = 0;
@@ -123,10 +124,10 @@ class CG5CollabCharacter extends MultiAnimateAtlasCharacter
       poseOffsetY = data.offsetY;
       poseAngle = data.angle;
     }
-    
+
     lipSync.offset.set(poseOffsetX, poseOffsetY);
     lipSync.angle = poseAngle;
-    
+
     if (lipSync.frameWidth > 0 && lipSync.frameHeight > 0)
     {
       lipSync.origin.set((lipSync.frameWidth * 0.5) + lipSync.offset.x, (lipSync.frameHeight * 0.5) + lipSync.offset.y);
@@ -141,10 +142,8 @@ class CG5CollabCharacter extends MultiAnimateAtlasCharacter
       var layer = symbolItem.timeline.getLayer(0);
       if (layer != null)
       {
-        layer.forEachFrame(function(frame)
-        {
-          frame.forEachElement(function(element)
-          {
+        layer.forEachFrame(function(frame) {
+          frame.forEachElement(function(element) {
             element.visible = false;
           });
         });

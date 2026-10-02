@@ -39,11 +39,12 @@ class KillerByteCharacter extends MultiAnimateAtlasCharacter
     eyes.loadTextureAtlas("characters/kb_export/eyes", "shared");
     FlxAnimationUtil.addTextureAtlasAnimations(eyes, _data.animations);
     // no shaders
-    for (anim in _data.animations) (anim.offsets == null)
+    for (anim in _data.animations)
+      (anim.offsets == null)
     ?eyes.setAnimationOffsets
     (anim.name, 0, 0) : eyes.setAnimationOffsets
     (anim.name, anim.offsets[0], anim.offsets[1]);
-    
+
     startingSize.set(this.width, this.height);
 
     PlayState.instance.currentStage.add(eyes);
@@ -60,7 +61,7 @@ class KillerByteCharacter extends MultiAnimateAtlasCharacter
     this.cameraFocusPoint.x = charCenterX + _data.cameraOffsets[0];
     this.cameraFocusPoint.y = charCenterY + _data.cameraOffsets[1];
   }
-  
+
   public override function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false):Void
   {
     super.playAnimation(name, restart, ignoreOther, reversed);
@@ -93,7 +94,7 @@ class KillerByteCharacter extends MultiAnimateAtlasCharacter
     super.destroy();
     startingSize.put();
   }
-  
+
   override function onAnimationFinished(name:String)
   {
     switch (name)

@@ -49,9 +49,10 @@ class ObliteratedErectSong extends Song
 
   public function new()
   {
-    super('obliterated', {
-      variation: 'erect'
-    });
+    super('obliterated',
+      {
+        variation: 'erect'
+      });
   }
 
   override public function isSongNew(currentDifficulty:String, currentVariation:String):Bool
@@ -67,8 +68,7 @@ class ObliteratedErectSong extends Song
     huzzVideo = new FunkinVideoSprite(0, 0);
     huzzVideo.load(Paths.videos('obliteratedErectMid'));
 
-    huzzVideo.bitmap.onFormatSetup.add(() ->
-    {
+    huzzVideo.bitmap.onFormatSetup.add(() -> {
       if (huzzVideo.bitmap != null && huzzVideo.bitmap.bitmapData != null)
       {
         huzzVideo.setGraphicSize(FlxG.width);
@@ -85,8 +85,7 @@ class ObliteratedErectSong extends Song
     editVideo = new FunkinVideoSprite(0, 0);
     editVideo.load(Paths.videos('obliteratedErectEdit'));
 
-    editVideo.bitmap.onEndReached.add(() ->
-    {
+    editVideo.bitmap.onEndReached.add(() -> {
       editVideo.visible = false;
       shouldPlayEdit = false;
       PlayState.instance.currentStage.getDad().playAnimation('tsundere', true, true);
@@ -94,8 +93,7 @@ class ObliteratedErectSong extends Song
       inGhost = true;
     });
 
-    editVideo.bitmap.onFormatSetup.add(() ->
-    {
+    editVideo.bitmap.onFormatSetup.add(() -> {
       if (editVideo.bitmap != null && editVideo.bitmap.bitmapData != null)
       {
         editVideo.setGraphicSize(FlxG.width);
@@ -161,7 +159,7 @@ class ObliteratedErectSong extends Song
     if (shouldHuzz && huzzVideo != null) huzzVideo.resume();
     if (shouldPlayEdit && editVideo != null) editVideo.resume();
   }
-  
+
   override public function onSongRetry(event)
   {
     super.onSongRetry(event);
@@ -369,15 +367,16 @@ class ObliteratedErectSong extends Song
       else
       {
         if (targetAlpha > 0) obj.visible = true;
-        FlxTween.tween(obj, {
-          alpha: targetAlpha
-        }, duration, {
-          ease: FlxEase.quadInOut,
-          onComplete: _ ->
+        FlxTween.tween(obj,
           {
-            if (targetAlpha == 0) obj.visible = false;
-          }
-        });
+            alpha: targetAlpha
+          }, duration,
+          {
+            ease: FlxEase.quadInOut,
+            onComplete: _ -> {
+              if (targetAlpha == 0) obj.visible = false;
+            }
+          });
       }
     }
   }

@@ -25,8 +25,13 @@ class RecordingStudio extends Stage
   private var shakeIntensity:Float = 0;
 
   private final darkProps:Array<String> = [
-    'foregroundChairDark', 'deskDark', 'couchDark', 'chairDark', 
-    'overlayGlowDark', 'lightDark', 'wallsDark'
+    'foregroundChairDark',
+    'deskDark',
+    'couchDark',
+    'chairDark',
+    'overlayGlowDark',
+    'lightDark',
+    'wallsDark'
   ];
 
   function new()
@@ -112,8 +117,8 @@ class RecordingStudio extends Stage
   {
     FlxTween.cancelTweensOf(lightShader);
     lightShader.hue = targetHue;
-    
-    lightShader.brightness = 30; 
+
+    lightShader.brightness = 30;
 
     if (duration > 0)
     {
@@ -124,17 +129,15 @@ class RecordingStudio extends Stage
       lightShader.brightness = 0;
     }
   }
-  
+
   public function enableBlackScreen():Void
   {
-    if (PlayState.instance != null && PlayState.instance.camGame != null)
-      PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, false, null, true);
+    if (PlayState.instance != null && PlayState.instance.camGame != null) PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, false, null, true);
   }
 
   public function disableBlackScreen():Void
   {
-    if (PlayState.instance != null && PlayState.instance.camGame != null)
-      PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, true, null, true);
+    if (PlayState.instance != null && PlayState.instance.camGame != null) PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, true, null, true);
   }
 
   public function whiteFlash(duration:Float):Void
@@ -145,21 +148,22 @@ class RecordingStudio extends Stage
     flashSpr.blend = BlendMode.OVERLAY;
     flashSpr.cameras = [PlayState.instance.camGame];
     flashSpr.alpha = 0.8;
-    
+
     flashSpr.zIndex = 100000;
     add(flashSpr);
-    
+
     refresh();
 
     if (duration > 0)
     {
-      FlxTween.tween(flashSpr, {alpha: 0}, duration, {
-        ease: FlxEase.expoOut,
-        onComplete: function(_) {
-          remove(flashSpr);
-          flashSpr.destroy();
-        }
-      });
+      FlxTween.tween(flashSpr, {alpha: 0}, duration,
+        {
+          ease: FlxEase.expoOut,
+          onComplete: function(_) {
+            remove(flashSpr);
+            flashSpr.destroy();
+          }
+        });
     }
     else
     {
@@ -184,7 +188,7 @@ class RecordingStudio extends Stage
 
     isShaking = true;
     shakeIntensity = 0;
-    
+
     buildupTween = FlxTween.num(0, 0.0125, duration, {ease: FlxEase.expoIn}, function(val:Float) {
       shakeIntensity = val;
     });
@@ -194,7 +198,7 @@ class RecordingStudio extends Stage
   {
     isShaking = false;
     shakeIntensity = 0;
-    
+
     if (PlayState.instance != null && PlayState.instance.camGame != null)
     {
       PlayState.instance.camGame.shake(0, 0, null, true);
@@ -219,7 +223,7 @@ class RecordingStudio extends Stage
   {
     super.onSongLoaded(event);
     PlayState.instance.remove(PlayState.instance.comboPopUps);
-  
+
     if (PlayState.instance.opponentStrumline != null)
     {
       PlayState.instance.opponentStrumline.visible = false;

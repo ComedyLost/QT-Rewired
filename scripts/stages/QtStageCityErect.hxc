@@ -40,7 +40,8 @@ class QtStageCityErect extends Stage
   {
     super.onCreate(event);
 
-    for (snd in ['carPass0', 'carPass1']) FunkinMemory.cacheSound(Paths.sound(snd, "week4"));
+    for (snd in ['carPass0', 'carPass1'])
+      FunkinMemory.cacheSound(Paths.sound(snd, "week4"));
   }
 
   override function buildStage()
@@ -48,7 +49,8 @@ class QtStageCityErect extends Stage
     isPico = PlayState.instance.currentVariation == 'pico';
     var prefix = "erectCity" + (isPico ? "-pico" : "");
 
-    if (_data?.props != null) for (p in _data.props) p.assetPath = prefix + "/" + p.assetPath.split("/").pop();
+    if (_data?.props != null) for (p in _data.props)
+      p.assetPath = prefix + "/" + p.assetPath.split("/").pop();
 
     if (_data?.characters != null && isPico)
     {
@@ -197,8 +199,7 @@ class QtStageCityErect extends Stage
         rim.distance = 13;
 
         var bfPersist:BaseCharacter = c;
-        c.animation.onFrameChange.add(function()
-        {
+        c.animation.onFrameChange.add(function() {
           if (bfPersist != null && bfPersist.frame != null) rim.updateFrameInfo(bfPersist.frame);
         });
 
@@ -212,8 +213,7 @@ class QtStageCityErect extends Stage
         rim2.distance = 13;
 
         var dadPersist:BaseCharacter = c;
-        c.animation.onFrameChange.add(function()
-        {
+        c.animation.onFrameChange.add(function() {
           if (dadPersist != null && dadPersist.frame != null) rim2.updateFrameInfo(dadPersist.frame);
         });
 

@@ -17,14 +17,7 @@ class PicoQtCharacter extends PicoPlayerBaseCharacter
   {
     super('pico-qt');
 
-    ignoreExclusionPref = [
-      "cough",
-      "burp-long",
-      "preDance",
-      "hey",
-      "danceLeft-alt",
-      "danceRight-alt"
-    ];
+    ignoreExclusionPref = ["cough", "burp-long", "preDance", "hey", "danceLeft-alt", "danceRight-alt"];
   }
 
   var ps;

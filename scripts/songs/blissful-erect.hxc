@@ -58,9 +58,10 @@ class BlissfulErectSong extends Song
 
   public function new()
   {
-    super('blissful', {
-      variation: "erect"
-    });
+    super('blissful',
+      {
+        variation: "erect"
+      });
   }
 
   override public function isSongNew(currentDifficulty:String, currentVariation:String):Bool
@@ -113,13 +114,11 @@ class BlissfulErectSong extends Song
     danceQT.visible = false;
 
     var dadPersist = danceQT;
-    danceQT.animation.onFrameChange.add(function()
-    {
+    danceQT.animation.onFrameChange.add(function() {
       if (dadPersist != null && dadPersist.frame != null) qtRim.updateFrameInfo(dadPersist.frame);
     });
 
-    danceQT.animation.onFinish.add(name ->
-    {
+    danceQT.animation.onFinish.add(name -> {
       if (name == "end")
       {
         danceQT.visible = false;
@@ -138,11 +137,13 @@ class BlissfulErectSong extends Song
     pinkFlash.cameras = [targetCam];
     pinkFlash.alpha = flashStartAlpha;
 
-    FlxTween.tween(pinkFlash, {
-      alpha: 0
-    }, flashFadeTime, {
-      ease: FlxEase.linear
-    });
+    FlxTween.tween(pinkFlash,
+      {
+        alpha: 0
+      }, flashFadeTime,
+      {
+        ease: FlxEase.linear
+      });
   }
 
   function shouldHideRatings(beat:Int):Bool
@@ -168,7 +169,8 @@ class BlissfulErectSong extends Song
       carryOverPopUps.zIndex = PS.comboPopUps.zIndex;
       var popUpsIndex:Int = PS.members.indexOf(PS.comboPopUps);
       if (popUpsIndex >= 0) PS.insert(popUpsIndex + 1, carryOverPopUps);
-      else PS.add(carryOverPopUps);
+      else
+        PS.add(carryOverPopUps);
     }
     if (discardedPopUps == null) discardedPopUps = new FlxGroup();
 
@@ -197,41 +199,49 @@ class BlissfulErectSong extends Song
   {
     if (ev.beat == 222) PS.currentStage.getDad().visible = false;
 
-    if (ev.beat == 221) FlxTween.tween(PS.opponentStrumline, {
-      alpha: 0.3
-    }, 1.5, {
-      ease: FlxEase.quadInOut,
-      onStart : function (tween:FlxTween) {
+    if (ev.beat == 221) FlxTween.tween(PS.opponentStrumline,
+      {
+        alpha: 0.3
+      }, 1.5,
+      {
+        ease: FlxEase.quadInOut,
+        onStart: function(tween:FlxTween) {
           PS.comboPopUps.visible = false;
-      }
-    });
+        }
+      });
 
-    if (ev.beat == 348) FlxTween.tween(PS.opponentStrumline, {
-      alpha: 1
-    }, 1.5, {
-      ease: FlxEase.quadInOut,
-      onComplete : function (tween:FlxTween) {
-        PS.comboPopUps.visible = true;
-      }
-    });
+    if (ev.beat == 348) FlxTween.tween(PS.opponentStrumline,
+      {
+        alpha: 1
+      }, 1.5,
+      {
+        ease: FlxEase.quadInOut,
+        onComplete: function(tween:FlxTween) {
+          PS.comboPopUps.visible = true;
+        }
+      });
 
-    if (ev.beat == 478) FlxTween.tween(PS.opponentStrumline, {
-      alpha: 0.3
-    }, 1.5, {
-      ease: FlxEase.quadInOut,
-      onStart : function (tween:FlxTween) {
+    if (ev.beat == 478) FlxTween.tween(PS.opponentStrumline,
+      {
+        alpha: 0.3
+      }, 1.5,
+      {
+        ease: FlxEase.quadInOut,
+        onStart: function(tween:FlxTween) {
           PS.comboPopUps.visible = false;
-      }
-    });
+        }
+      });
 
-    if (ev.beat == 544) FlxTween.tween(PS.opponentStrumline, {
-      alpha: 1
-    }, 1.5, {
-      ease: FlxEase.quadInOut,
-      onComplete : function (tween:FlxTween) {
-        PS.comboPopUps.visible = true;
-      }
-    });
+    if (ev.beat == 544) FlxTween.tween(PS.opponentStrumline,
+      {
+        alpha: 1
+      }, 1.5,
+      {
+        ease: FlxEase.quadInOut,
+        onComplete: function(tween:FlxTween) {
+          PS.comboPopUps.visible = true;
+        }
+      });
 
     if (danceQT != null) danceQT.onBeatHit(ev.beat);
   }
@@ -269,13 +279,14 @@ class BlissfulErectSong extends Song
       {
         if (skipText != null && skipText.alpha == 0)
         {
-          FlxTween.tween(skipText, {
-            alpha: 1
-          }, 0.5, {
-            ease: FlxEase.quadOut
-          });
-          new FlxTimer().start(0.5, _ ->
-          {
+          FlxTween.tween(skipText,
+            {
+              alpha: 1
+            }, 0.5,
+            {
+              ease: FlxEase.quadOut
+            });
+          new FlxTimer().start(0.5, _ -> {
             canSkipCutscene = true;
           });
         }
@@ -321,8 +332,7 @@ class BlissfulErectSong extends Song
     if (qtSnd1 != null)
     {
       trace('succesfully loaded qtSnd1');
-      qtSnd1.onComplete = () ->
-      {
+      qtSnd1.onComplete = () -> {
         if (Preferences.subtitles && PS.subtitles.assignedSound == qtSnd1)
         {
           PS.subtitles.assignedSound = null;
@@ -335,8 +345,7 @@ class BlissfulErectSong extends Song
     if (qtSnd2 != null)
     {
       trace('succesfully loaded qtSnd2');
-      qtSnd2.onComplete = () ->
-      {
+      qtSnd2.onComplete = () -> {
         if (Preferences.subtitles && PS.subtitles.assignedSound == qtSnd2)
         {
           PS.subtitles.assignedSound = null;
@@ -366,8 +375,7 @@ class BlissfulErectSong extends Song
     var cutsceneSequenceData = [
       {
         time: 0,
-        callback: () ->
-        {
+        callback: () -> {
           opp.playAnimation("erectIntro1", true, false);
           opp.animation.pause();
           PS.tweenCameraToPosition(538, 923, 3.4, FlxEase.expoOut);
@@ -376,8 +384,7 @@ class BlissfulErectSong extends Song
       },
       {
         time: 0.90,
-        callback: () ->
-        {
+        callback: () -> {
           opp.playAnimation("erectIntro1", true, false);
           if (Preferences.subtitles) PlayState.instance.subtitles.assignSubtitles('subtitles/$lang/cutsceneErect/alright-cutie', qtSnd1);
           if (qtSnd1 != null) qtSnd1.play();
@@ -385,78 +392,68 @@ class BlissfulErectSong extends Song
       },
       {
         time: 2.59,
-        callback: () ->
-        {
+        callback: () -> {
           PS.tweenCameraToPosition(510, 923, 3, FlxEase.expoOut);
           PS.tweenCameraZoom(PS.stageZoom * 1.16, 3, true, FlxEase.expoOut);
         }
       },
       {
         time: 3.483,
-        callback: () ->
-        {
+        callback: () -> {
           PS.tweenCameraToPosition(1090, 931, 2.6, FlxEase.quartInOut);
           PS.tweenCameraZoom(PS.stageZoom * 1.30, 2.6, true, FlxEase.quartInOut);
         }
       },
       {
         time: 4.341,
-        callback: () ->
-        {
+        callback: () -> {
           player.playAnimation("superHey", true, false);
           if (bfSnd1 != null) bfSnd1.play();
         }
       },
       {
         time: 5.7,
-        callback: () ->
-        {
+        callback: () -> {
           PS.tweenCameraToPosition(1040, 931, 0.8, FlxEase.elasticOut);
           PS.tweenCameraZoom(PS.stageZoom * 1.16, 0.8, true, FlxEase.elasticOut);
         }
       },
       {
         time: 5.74,
-        callback: () ->
-        {
+        callback: () -> {
           triggerPinkFlash(PS.camCutscene);
         }
       },
       {
         time: 6.25,
-        callback: () ->
-        {
+        callback: () -> {
           PS.tweenCameraToPosition(510, 923, 2.5, FlxEase.quartInOut);
           PS.tweenCameraZoom(PS.stageZoom * 1.16, 2.5, true, FlxEase.quartInOut);
         }
       },
       {
         time: 6,
-        callback: () ->
-        {
+        callback: () -> {
           opp.playAnimation("erectIntro2", true, false);
         }
       },
       {
         time: 7.1,
-        callback: () ->
-        {
+        callback: () -> {
           if (Preferences.subtitles) PlayState.instance.subtitles.assignSubtitles('subtitles/$lang/cutsceneErect/well-see', qtSnd2);
           if (qtSnd2 != null) qtSnd2.play();
         }
       },
       {
         time: 8.4,
-        callback: () ->
-        {
+        callback: () -> {
           PS.tweenCameraToPosition(opp.cameraFocusPoint.x, opp.cameraFocusPoint.y, 4.5, FlxEase.quartInOut);
           PS.tweenCameraZoom(PS.stageZoom, 4.5, true, FlxEase.quartInOut);
         }
       },
       {
         time: 9.8,
-        callback: () ->
-        {
+        callback: () -> {
           canSkipCutscene = false;
           cutsceneSkipped = true;
           PS.isInCutscene = false;
@@ -506,8 +503,7 @@ class BlissfulErectSong extends Song
     qtSnd3 = FunkinSound.load(Paths.sound('gameplay/cutsceneSfx/$lang/bf/qt_erect_ending', 'shared'), true);
     if (qtSnd3 != null)
     {
-      qtSnd3.onComplete = () ->
-      {
+      qtSnd3.onComplete = () -> {
         if (Preferences.subtitles && PS.subtitles.assignedSound == qtSnd3)
         {
           PS.subtitles.assignedSound = null;
@@ -528,21 +524,21 @@ class BlissfulErectSong extends Song
     PS.isInCutscene = true;
 
     if (hudTween != null) hudTween.cancel();
-    hudTween = FlxTween.tween(PS.camHUD, {
-      alpha: 0
-    }, 1.2, {
-      ease: FlxEase.quadOut,
-      onComplete: _ ->
+    hudTween = FlxTween.tween(PS.camHUD,
       {
-        PS.camHUD.visible = false;
-      }
-    });
+        alpha: 0
+      }, 1.2,
+      {
+        ease: FlxEase.quadOut,
+        onComplete: _ -> {
+          PS.camHUD.visible = false;
+        }
+      });
 
     var cutsceneSequenceData = [
       {
         time: 0,
-        callback: () ->
-        {
+        callback: () -> {
           if (Preferences.subtitles) PlayState.instance.subtitles.assignSubtitles('subtitles/$lang/cutsceneErect/showoff', qtSnd3);
           if (qtSnd3 != null) qtSnd3.play();
           PS.tweenCameraToPosition(510, 923, 2.7, FlxEase.quartInOut);
@@ -551,83 +547,72 @@ class BlissfulErectSong extends Song
       },
       {
         time: 0.458,
-        callback: () ->
-        {
+        callback: () -> {
           PS.currentStage.getDad().playAnimation('erectEnding', true, false);
         }
       },
       {
         time: 2.35,
-        callback: () ->
-        {
+        callback: () -> {
           PS.tweenCameraToPosition(538, 923, 2, FlxEase.expoOut);
           PS.tweenCameraZoom(PS.stageZoom * 1.08, 2, true, FlxEase.expoOut);
         }
       },
       {
         time: 4.65,
-        callback: () ->
-        {
+        callback: () -> {
           PS.tweenCameraToPosition(538, 923, 0.8, FlxEase.quartIn);
           PS.tweenCameraZoom(PS.stageZoom * 1.16, 0.8, true, FlxEase.quartIn);
         }
       },
       {
         time: 4.95,
-        callback: () ->
-        {
+        callback: () -> {
           PS.tweenCameraToPosition(538, 923, 2.2, FlxEase.expoOut);
           PS.tweenCameraZoom(PS.stageZoom * 1.12, 2.2, true, FlxEase.expoOut);
         }
       },
       {
         time: 5.75,
-        callback: () ->
-        {
+        callback: () -> {
           PS.tweenCameraToPosition(538, 923, 1.4, FlxEase.expoOut);
           PS.tweenCameraZoom(PS.stageZoom * 1.0, 1.4, true, FlxEase.expoOut);
         }
       },
       {
         time: 6.4,
-        callback: () ->
-        {
+        callback: () -> {
           PS.tweenCameraToPosition(1040, 931, 2.1, FlxEase.quartInOut);
           PS.tweenCameraZoom(PS.stageZoom * 1.0, 2.1, true, FlxEase.quartInOut);
         }
       },
       {
         time: 7.942,
-        callback: () ->
-        {
+        callback: () -> {
           if (bfSnd2 != null) bfSnd2.play();
         }
       },
       {
         time: 7.958,
-        callback: () ->
-        {
+        callback: () -> {
           PS.currentStage.getBoyfriend().playAnimation('shoulderSwish', true, false);
         }
       },
       {
         time: 8.4,
-        callback: () ->
-        {
+        callback: () -> {
           PS.tweenCameraToPosition(1040, 320, 2.9, FlxEase.quartIn);
         }
       },
       {
         time: 9.3,
-        callback: () ->
-        {
+        callback: () -> {
           PS.camGame.fade(0xFF000000, 2.0, false, null, true);
         }
       },
       {
         time: 14,
-        callback: () ->
-        {
+        callback: () -> {
           PS.isInCutscene = false;
           PS.endSong();
         }
@@ -657,8 +642,7 @@ class BlissfulErectSong extends Song
 
     PS.camCutscene.fade(0xFF000000, 0.5, false, null, true);
 
-    new FlxTimer().start(0.5, _ ->
-    {
+    new FlxTimer().start(0.5, _ -> {
       PS.justUnpaused = true;
       PS.camCutscene.fade(0xFF000000, 0.5, true, null, true);
 
@@ -701,11 +685,13 @@ class BlissfulErectSong extends Song
 
     PS.camHUD.visible = true;
     PS.camHUD.alpha = 0;
-    hudTween = FlxTween.tween(PS.camHUD, {
-      alpha: 1
-    }, duration, {
-      ease: FlxEase.smoothStepInOut
-    });
+    hudTween = FlxTween.tween(PS.camHUD,
+      {
+        alpha: 1
+      }, duration,
+      {
+        ease: FlxEase.smoothStepInOut
+      });
   }
 
   function clearSkipText():Void
@@ -768,6 +754,7 @@ class BlissfulErectSong extends Song
 class QTErectDanceSprite extends FunkinSprite
 {
   public var curDanceState:Int = -1;
+
   var isPeak:Bool;
 
   public function new(x:Float, y:Float)
@@ -889,7 +876,7 @@ class QTErectDanceSprite extends FunkinSprite
     }
     else
     {
-      switch(beat)
+      switch (beat)
       {
         case 222:
           visible = true;

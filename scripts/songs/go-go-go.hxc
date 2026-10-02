@@ -8,7 +8,7 @@ import funkin.graphics.FunkinSprite;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxTimer;
 import flixel.FlxG;
-import openfl.display.BlendMode; 
+import openfl.display.BlendMode;
 import flixel.text.FlxText;
 import funkin.Paths;
 import funkin.play.PauseSubState;
@@ -20,7 +20,7 @@ class GoGoGoSong extends Song
   var coverScreen:FunkinSprite;
 
   var horsePNG:FunkinSprite;
-  
+
   var collabLogo:FunkinSprite;
   var cg5Logo:FunkinSprite;
 
@@ -59,7 +59,7 @@ class GoGoGoSong extends Song
   var pauseCreditCategory:String = 'Arrangement';
   var pauseMetadataRowHeight:Float = 32;
   var isPauseCreditHooked:Bool = false;
-  
+
   public function new()
   {
     super('go-go-go');
@@ -68,11 +68,10 @@ class GoGoGoSong extends Song
   override function onCreate(e)
   {
     super.onCreate(e);
-    if (PlayState.instance == null || PlayState.instance.currentStage == null)
-      return;
+    if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
 
     hasHiddenStrums = false;
-    hasDoneOutro = false; 
+    hasDoneOutro = false;
     curBeat = 0;
   }
 
@@ -96,7 +95,7 @@ class GoGoGoSong extends Song
 
     PlayState.instance.camGame.fade(FlxColor.BLACK, introFadeDuration, true, null, true);
   }
-  
+
   override function onUpdate(event)
   {
     super.onUpdate(event);
@@ -137,7 +136,7 @@ class GoGoGoSong extends Song
       logoFallTimer.cancel();
       logoFallTimer = null;
     }
-    
+
     if (horsePNG != null)
     {
       FlxTween.cancelTweensOf(horsePNG);
@@ -166,7 +165,7 @@ class GoGoGoSong extends Song
       FlxTween.cancelTweensOf(outroFlashSpr);
       outroFlashSpr.visible = false;
     }
-    
+
     PlayState.instance.camHUD.visible = true;
     PlayState.instance.isInCutscene = false;
     PlayState.instance.mayPauseGame = true;
@@ -174,7 +173,7 @@ class GoGoGoSong extends Song
 
     var gf = PlayState.instance.currentStage?.getGirlfriend();
     if (gf != null) gf.visible = false;
-    
+
     var stage:Dynamic = PlayState.instance.currentStage;
     if (stage?.id == 'recordingStudio')
     {
@@ -274,9 +273,9 @@ class GoGoGoSong extends Song
     }
 
     var stage:Dynamic = PlayState.instance.currentStage;
-    
+
     if (stage?.id != 'recordingStudio') return;
-    
+
     // erm... actually :nerd:
     // stage.enableDarkness()
     // stage.disableDarkness()
@@ -289,90 +288,91 @@ class GoGoGoSong extends Song
     switch (event.beat)
     {
       case 0:
-       stage.enableDarkness();
+        stage.enableDarkness();
       case 7:
-       stage.setLightHueInstant(0, 2.0);
+        stage.setLightHueInstant(0, 2.0);
       case 15:
-       stage.enableBlackScreen();
+        stage.enableBlackScreen();
       case 16:
-       stage.disableDarkness();
-       stage.disableBlackScreen();
-       stage.whiteFlash(6.0);
+        stage.disableDarkness();
+        stage.disableBlackScreen();
+        stage.whiteFlash(6.0);
       case 111:
-       stage.enableBlackScreen();
-       stage.enableDarkness();
+        stage.enableBlackScreen();
+        stage.enableDarkness();
       case 112:
-       stage.setLightHueInstant(75, 1.5);
-       stage.disableBlackScreen();
-       stage.whiteFlash(6.0);
+        stage.setLightHueInstant(75, 1.5);
+        stage.disableBlackScreen();
+        stage.whiteFlash(6.0);
       case 127:
-       stage.setLightHueInstant(-180, 1.5);
+        stage.setLightHueInstant(-180, 1.5);
       case 129:
-       stage.setLightHueInstant(-130, 1.5);
+        stage.setLightHueInstant(-130, 1.5);
       case 131:
-       stage.setLightHueInstant(-80, 1.5);
+        stage.setLightHueInstant(-80, 1.5);
       case 133:
-       stage.setLightHueInstant(-30, 1.5);
+        stage.setLightHueInstant(-30, 1.5);
       case 135:
-       stage.setLightHueInstant(20, 1.5);
+        stage.setLightHueInstant(20, 1.5);
       case 137:
-       stage.setLightHueInstant(70, 1.5);
+        stage.setLightHueInstant(70, 1.5);
       case 139:
-       stage.setLightHueInstant(120, 1.5);
+        stage.setLightHueInstant(120, 1.5);
       case 141:
-       stage.setLightHueInstant(170, 1.5);
+        stage.setLightHueInstant(170, 1.5);
       case 144:
-       stage.setLightHueInstant(75, 1.5);
-       if (gf != null) gf.setIdleState('idleCool');
+        stage.setLightHueInstant(75, 1.5);
+        if (gf != null) gf.setIdleState('idleCool');
       case 160:
-       stage.setLightHueInstant(100, 2.0);
-       stage.setLightHueLinear(0, 6.0);
+        stage.setLightHueInstant(100, 2.0);
+        stage.setLightHueLinear(0, 6.0);
       case 174:
-       stage.setLightHueInstant(0, 1.5);
+        stage.setLightHueInstant(0, 1.5);
       case 175:
-       stage.enableBlackScreen();
-       if (gf != null) gf.setIdleState('default');
+        stage.enableBlackScreen();
+        if (gf != null) gf.setIdleState('default');
       case 176:
-       stage.disableDarkness();
-       stage.disableBlackScreen();
-       stage.whiteFlash(6.0);
+        stage.disableDarkness();
+        stage.disableBlackScreen();
+        stage.whiteFlash(6.0);
       case 192:
-       if (gf != null) gf.setIdleState('idleCool');
+        if (gf != null) gf.setIdleState('idleCool');
       case 211:
-       if (gf != null) gf.setIdleState('dance2');
+        if (gf != null) gf.setIdleState('dance2');
       case 221:
-       if (gf != null) gf.setIdleState('danceCool1');
+        if (gf != null) gf.setIdleState('danceCool1');
       case 239:
-       stage.enableBlackScreen();
-       stage.enableDarkness();
+        stage.enableBlackScreen();
+        stage.enableDarkness();
       case 240:
-       if (gf != null) gf.setIdleState('danceCool2');
-       stage.disableBlackScreen();
-       stage.whiteFlash(6.0);
+        if (gf != null) gf.setIdleState('danceCool2');
+        stage.disableBlackScreen();
+        stage.whiteFlash(6.0);
       case 242:
-       stage.setLightHueInstant(120, 1.5);
+        stage.setLightHueInstant(120, 1.5);
       case 246:
-       stage.setLightHueInstant(100, 1.5);
+        stage.setLightHueInstant(100, 1.5);
       case 250:
-       stage.setLightHueInstant(80, 1.5);
+        stage.setLightHueInstant(80, 1.5);
       case 254:
-       stage.setLightHueInstant(120, 1.5);
+        stage.setLightHueInstant(120, 1.5);
       case 258:
-       stage.setLightHueInstant(80, 1.5);
+        stage.setLightHueInstant(80, 1.5);
       case 262:
-       if (gf != null) gf.setIdleState('dance2');
-       stage.setLightHueInstant(70, 1.5);
+        if (gf != null) gf.setIdleState('dance2');
+        stage.setLightHueInstant(70, 1.5);
       case 266:
-       stage.setLightHueInstant(120, 1.5);
-       stage.setLightHueLinear(0, 3.0);
+        stage.setLightHueInstant(120, 1.5);
+        stage.setLightHueLinear(0, 3.0);
       case 272:
-       stage.setLightHueInstant(0, 1.5);
-       stage.disableDarkness();
-       stage.whiteFlash(6.0);
+        stage.setLightHueInstant(0, 1.5);
+        stage.disableDarkness();
+        stage.whiteFlash(6.0);
       case 300:
-       stage.startOutroBuildup(2.5);
+        stage.startOutroBuildup(2.5);
     }
   }
+
   override function onNoteGhostMiss(event)
   {
     super.onNoteGhostMiss(event);
@@ -416,7 +416,8 @@ class GoGoGoSong extends Song
 
     if (cutsceneCam.width != FlxG.width || cutsceneCam.height != FlxG.height)
     {
-      trace('[go-go-go] camCutscene (' + cutsceneCam.width + 'x' + cutsceneCam.height + ') no coincide con FlxG (' + FlxG.width + 'x' + FlxG.height + '), se resincroniza.');
+      trace('[go-go-go] camCutscene (' + cutsceneCam.width + 'x' + cutsceneCam.height + ') no coincide con FlxG (' + FlxG.width + 'x' + FlxG.height
+        + '), se resincroniza.');
       cutsceneCam.setSize(FlxG.width, FlxG.height);
     }
 
@@ -429,7 +430,7 @@ class GoGoGoSong extends Song
     coverScreen.cameras = [PlayState.instance.camCutscene];
     coverScreen.zIndex = 99999;
     coverScreen.setPosition(centerX - coverScreen.width / 2, centerY - coverScreen.height / 2);
-  
+
     PlayState.instance.add(coverScreen);
 
     //if you rename this variable you go to hell <--- "horsePNG is love, horsePNG os life" <--- really got that eric soul
@@ -466,45 +467,50 @@ class GoGoGoSong extends Song
     outroFlashSpr.setPosition(centerX - outroFlashSpr.width / 2, centerY - outroFlashSpr.height / 2);
     PlayState.instance.add(outroFlashSpr);
 
-    FlxTween.tween(outroFlashSpr, {alpha: 0}, 2.0, {
-      onComplete: function(_) {
-        if (outroFlashSpr != null)
-        {
-          PlayState.instance.remove(outroFlashSpr);
-          outroFlashSpr.destroy();
-          outroFlashSpr = null;
+    FlxTween.tween(outroFlashSpr, {alpha: 0}, 2.0,
+      {
+        onComplete: function(_) {
+          if (outroFlashSpr != null)
+          {
+            PlayState.instance.remove(outroFlashSpr);
+            outroFlashSpr.destroy();
+            outroFlashSpr = null;
+          }
         }
-      }
-    });
+      });
 
-    FlxTween.tween(horsePNG.scale, {x: rewiredLogoEndScale, y: rewiredLogoEndScale}, rewiredLogoShrinkDuration, {
-      ease: FlxEase.expoOut,
-      onComplete: function(_) {
-        if (horseChance) return;
+    FlxTween.tween(horsePNG.scale, {x: rewiredLogoEndScale, y: rewiredLogoEndScale}, rewiredLogoShrinkDuration,
+      {
+        ease: FlxEase.expoOut,
+        onComplete: function(_) {
+          if (horseChance) return;
 
-        FlxTween.tween(horsePNG, {x: rewiredLogoTargetX + offsetX}, rewiredLogoMoveDuration, {ease: FlxEase.quartInOut});
-        FlxTween.tween(collabLogo, {alpha: 1}, collabLogoFadeInDuration, {startDelay: collabDelay});
-        FlxTween.tween(cg5Logo, {alpha: 1}, cg5LogoFadeInDuration, {ease: FlxEase.expoOut, startDelay: cg5LogoAppearDelay});
-        FlxTween.tween(cg5Logo, {x: cg5LogoEndX + offsetX}, cg5LogoMoveDuration, {ease: FlxEase.expoOut, startDelay: cg5LogoAppearDelay});
+          FlxTween.tween(horsePNG, {x: rewiredLogoTargetX + offsetX}, rewiredLogoMoveDuration, {ease: FlxEase.quartInOut});
+          FlxTween.tween(collabLogo, {alpha: 1}, collabLogoFadeInDuration, {startDelay: collabDelay});
+          FlxTween.tween(cg5Logo, {alpha: 1}, cg5LogoFadeInDuration, {ease: FlxEase.expoOut, startDelay: cg5LogoAppearDelay});
+          FlxTween.tween(cg5Logo, {x: cg5LogoEndX + offsetX}, cg5LogoMoveDuration, {ease: FlxEase.expoOut, startDelay: cg5LogoAppearDelay});
 
-        var settleDuration:Float = 2.6;
+          var settleDuration:Float = 2.6;
 
-        logoFallTimer = new FlxTimer().start(settleDuration + outroHoldDuration, function(_) {
-          if (horsePNG != null) {
-            FlxTween.cancelTweensOf(horsePNG);
-            FlxTween.tween(horsePNG, {alpha: 0}, outroFallFadeDuration, {ease: FlxEase.sineOut});
-          }
-          if (collabLogo != null) {
-            FlxTween.cancelTweensOf(collabLogo);
-            FlxTween.tween(collabLogo, {alpha: 0}, outroFallFadeDuration, {ease: FlxEase.sineOut});
-          }
-          if (cg5Logo != null) {
-            FlxTween.cancelTweensOf(cg5Logo);
-            FlxTween.tween(cg5Logo, {alpha: 0}, outroFallFadeDuration, {ease: FlxEase.sineOut});
-          }
-        });
-      }
-    });
+          logoFallTimer = new FlxTimer().start(settleDuration + outroHoldDuration, function(_) {
+            if (horsePNG != null)
+            {
+              FlxTween.cancelTweensOf(horsePNG);
+              FlxTween.tween(horsePNG, {alpha: 0}, outroFallFadeDuration, {ease: FlxEase.sineOut});
+            }
+            if (collabLogo != null)
+            {
+              FlxTween.cancelTweensOf(collabLogo);
+              FlxTween.tween(collabLogo, {alpha: 0}, outroFallFadeDuration, {ease: FlxEase.sineOut});
+            }
+            if (cg5Logo != null)
+            {
+              FlxTween.cancelTweensOf(cg5Logo);
+              FlxTween.tween(cg5Logo, {alpha: 0}, outroFallFadeDuration, {ease: FlxEase.sineOut});
+            }
+          });
+        }
+      });
 
     outroTimer = new FlxTimer().start(outroTotalDuration, function(_) {
       PlayState.instance.endSong();
@@ -515,10 +521,10 @@ class GoGoGoSong extends Song
   {
     super.onDestroy(event);
     this.hasHiddenStrums = false;
-    this.hasDoneOutro = false; 
+    this.hasDoneOutro = false;
     this.curBeat = 0;
     this.isPauseCreditHooked = false;
-    
+
     if (outroTimer != null)
     {
       outroTimer.cancel();

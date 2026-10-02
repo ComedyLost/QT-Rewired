@@ -32,7 +32,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
   public var stateTimer:Float = 0.0;
   public var hasActioned:Bool = false;
   public var bopTween:FlxTween;
-  
+
   public var isLooping:Bool = false;
   public var bopAccumulator:Float = 0.0;
   public var bopZoomOffset:Float = 0.0;
@@ -52,7 +52,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
   public override function onCreate(event)
   {
     super.onCreate(event);
-    
+
     GameOverSubState.musicSuffix = '-qt';
     GameOverSubState.blueBallSuffix = '-qt';
     PauseSubState.musicSuffix = '-qt';
@@ -69,7 +69,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       lockCamera = false;
       cg5DeathLine = 0;
       bopZoomOffset = 0.0;
-      
+
       isLooping = false;
       bopAccumulator = 0.0;
 
@@ -83,17 +83,17 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
 
         // firstDeath offsets
         final camPos = this.getMidpoint();
-        
-        final offsetX:Float = 100;  
-        final offsetY:Float = -60;  
-        
+
+        final offsetX:Float = 100;
+        final offsetY:Float = -60;
+
         final targetX = camPos.x + offsetX - (FlxG.width / 2);
         final targetY = camPos.y + offsetY - (FlxG.height / 2);
-        
+
         camPos.put();
 
         camTween = FlxTween.tween(customCamScroll, {x: targetX, y: targetY}, 2.5, {ease: FlxEase.expoOut});
-        
+
         zoomTween = FlxTween.num(customCamZoom, 0.85, 2.5, {ease: FlxEase.expoOut}, function(v:Float) {
           customCamZoom = v;
         });
@@ -101,8 +101,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
         if (this.getDeathQuote() != null) GameOverSubState.instance.hasPlayedDeathQuote = true;
       }
 
-      deathTimer = new FlxTimer().start(2.96, function(tmr:FlxTimer)
-      {
+      deathTimer = new FlxTimer().start(2.96, function(tmr:FlxTimer) {
         if (GameOverSubState.instance != null && !GameOverSubState.instance.isEnding)
         {
           if (camTween != null) camTween.cancel();
@@ -110,31 +109,30 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
 
           // Loop offsets
           final camPosLoop = this.getMidpoint();
-          final loopOffsetY:Float = 10; 
-          
+          final loopOffsetY:Float = 10;
+
           final dropY = camPosLoop.y + loopOffsetY - (FlxG.height / 2);
           camPosLoop.put();
-          
+
           camTween = FlxTween.tween(customCamScroll, {y: dropY}, 2.0, {ease: FlxEase.expoOut});
-        
+
           zoomTween = FlxTween.num(customCamZoom, 0.95, 2.0, {ease: FlxEase.expoOut}, function(v:Float) {
             customCamZoom = v;
           });
-          
+
           GameOverSubState.instance.startDeathMusic(1.0, false);
 
           final deathQuote:Null<String> = this.getDeathQuote();
           if (deathQuote != null)
           {
-            quoteTimer = new FlxTimer().start(cg5DeathQuoteDelay, function(quoteTmr:FlxTimer)
-            {
+            quoteTimer = new FlxTimer().start(cg5DeathQuoteDelay, function(quoteTmr:FlxTimer) {
               this.playDeathQuote(deathQuote);
             });
           }
 
           isLooping = true;
           bopAccumulator = 0.0;
-          
+
           bopZoomOffset = 0.015;
           if (bopTween != null) bopTween.cancel();
           bopTween = FlxTween.num(bopZoomOffset, 0.0, 0.35, {ease: FlxEase.quadOut}, function(v:Float) {
@@ -156,7 +154,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
     if (!GameOverSubState.instance.isEnding)
     {
       GameOverSubState.instance.mustNotExit = true;
-      
+
       if (stateTimer < 2.42)
       {
         GameOverSubState.instance.canInput = false;
@@ -178,7 +176,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
     if (isLooping && !GameOverSubState.instance.isEnding)
     {
       bopAccumulator += FlxG.elapsed;
-      final bopInterval:Float = (60.0 / 115.0) * 2.0; 
+      final bopInterval:Float = (60.0 / 115.0) * 2.0;
 
       if (bopAccumulator >= bopInterval)
       {
@@ -203,7 +201,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       if (bopTween != null) bopTween.cancel();
       if (camTween != null) camTween.cancel();
       if (zoomTween != null) zoomTween.cancel();
-      
+
       lockCamera = false;
       GameOverSubState.instance.mustNotExit = false;
       GameOverSubState.blueballed = true;
@@ -211,8 +209,8 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       return;
     }
 
-    final inputCondition = 
-      (GameOverSubState.instance.controls.ACCEPT || (FlxG.onMobile && TouchUtil.pressAction() && !TouchUtil.overlaps(GameOverSubState.instance.backButton))) 
+    final inputCondition = (GameOverSubState.instance.controls.ACCEPT
+      || (FlxG.onMobile && TouchUtil.pressAction() && !TouchUtil.overlaps(GameOverSubState.instance.backButton)))
       && canTrigger;
 
     if (inputCondition)
@@ -228,7 +226,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       // Confirm offsets
       final camPosConfirm = this.getMidpoint();
       final confirmOffsetY:Float = -25;
-      
+
       final confirmY = camPosConfirm.y + confirmOffsetY - (FlxG.height / 2);
       camPosConfirm.put();
 
@@ -258,11 +256,9 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       GameOverSubtitles.assignToQuote('subtitles/$language/gameover/qt/confirm-line-$confirmLine');
 
       this.playAnimation('deathConfirm', true, false);
-      
-      new FlxTimer().start(2.5, function(tmr:FlxTimer)
-      {
-        FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
-        {
+
+      new FlxTimer().start(2.5, function(tmr:FlxTimer) {
+        FlxG.camera.fade(FlxColor.BLACK, 2, false, function() {
           FlxG.camera.fade(FlxColor.BLACK, 1, true, null, true);
 
           if (GameOverSubState.instance.parentPlayState != null)
@@ -279,7 +275,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
 
           GameOverSubState.instance.resetCameraZoom();
           lockCamera = false;
-          
+
           if (GameOverSubState.instance.parentPlayState != null && GameOverSubState.instance.parentPlayState.camFollow != null)
           {
             FlxG.camera.target = GameOverSubState.instance.parentPlayState.camFollow;

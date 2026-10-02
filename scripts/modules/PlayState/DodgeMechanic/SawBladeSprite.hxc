@@ -16,7 +16,7 @@ class SawBladeSprite extends FunkinSprite
   {
     super(x, y);
     loadTextureAtlas("saw_mechanic/saw_assets", "shared");
-    animation.addBySymbolIndices("saw anim attack", [ for (i in 19...39) i ], this.getDefaultSymbol(), 24, false);
-    animation.addBySymbolIndices("saw anim alert", [ for (i in 0...19) i ], this.getDefaultSymbol(), 24, false);
+    animation.addBySymbolIndices("saw anim attack", [for (i in 19...39) i], this.getDefaultSymbol(), 24, false);
+    animation.addBySymbolIndices("saw anim alert", [for (i in 0...19) i], this.getDefaultSymbol(), 24, false);
   }
 }

@@ -6,12 +6,14 @@ import flixel.system.FlxAssets.FlxShader;
 import animate.internal.elements.FlxSpriteElement;
 import funkin.Conductor;
 
-typedef TailData = {
+typedef TailData =
+{
   offsetX:Float,
   offsetY:Float
 }
 
-typedef LipSyncPoseData = {
+typedef LipSyncPoseData =
+{
   offsetX:Float,
   offsetY:Float,
   angle:Float
@@ -30,78 +32,68 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
   var customLipScaleY:Float = 1;
 
   final TAIL_OFFSETS:Map<String, TailData> = [
-    "singLEFT"           => {offsetX: 5, offsetY: -9.5},
+    "singLEFT" => {offsetX: 5, offsetY: -9.5},
     "singLEFT-beautiful" => {offsetX: 5, offsetY: -9.5},
-    "singLEFT-cool"      => {offsetX: 5, offsetY: -10},
-    
-    "singDOWN"           => {offsetX: -4, offsetY: 6},
+    "singLEFT-cool" => {offsetX: 5, offsetY: -10},
+    "singDOWN" => {offsetX: -4, offsetY: 6},
     "singDOWN-beautiful" => {offsetX: -4, offsetY: 6},
-    "singDOWN-cool"      => {offsetX: -8, offsetY: 14},
-    "singDOWN-go"        => {offsetX: -8, offsetY: 14},
-    
-    "singUP"             => {offsetX: 8, offsetY: -15},
-    "singUP-beautiful"   => {offsetX: 8, offsetY: -15},
-    "singUP-cool"        => {offsetX: 1, offsetY: -1.5},
-    "mistakeAnimation"   => {offsetX: 8, offsetY: -15},
-    
-    "singRIGHT"          => {offsetX: -2, offsetY: 7},
-    "singRIGHT-beautiful"=> {offsetX: -2, offsetY: 7},
-    "singRIGHT-cool"     => {offsetX: -20, offsetY: 29}
+    "singDOWN-cool" => {offsetX: -8, offsetY: 14},
+    "singDOWN-go" => {offsetX: -8, offsetY: 14},
+    "singUP" => {offsetX: 8, offsetY: -15},
+    "singUP-beautiful" => {offsetX: 8, offsetY: -15},
+    "singUP-cool" => {offsetX: 1, offsetY: -1.5},
+    "mistakeAnimation" => {offsetX: 8, offsetY: -15},
+    "singRIGHT" => {offsetX: -2, offsetY: 7},
+    "singRIGHT-beautiful" => {offsetX: -2, offsetY: 7},
+    "singRIGHT-cool" => {offsetX: -20, offsetY: 29}
   ];
 
   final LIP_SYNC_OFFSETS:Map<String, LipSyncPoseData> = [
-    "singLEFT"                => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
-    "singDOWN"                => {offsetX: -45, offsetY: -73, angle: 0.3},
-    "singUP"                  => {offsetX: -42, offsetY: -76, angle: -0.8},
-    "singRIGHT"               => {offsetX: -42, offsetY: -76.5, angle: 0.2},
-
-    "singLEFTmiss"            => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
-    "singDOWNmiss"            => {offsetX: -45, offsetY: -73, angle: 0.3},
-    "singUPmiss"              => {offsetX: -42, offsetY: -76, angle: -0.8},
-    "singRIGHTmiss"           => {offsetX: -42, offsetY: -76.5, angle: 0.2},
-
-    "singLEFT-beautiful"      => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
-    "singDOWN-beautiful"      => {offsetX: -45, offsetY: -73, angle: 0.3},
-    "singUP-beautiful"        => {offsetX: -42, offsetY: -76, angle: -0.8},
-    "singRIGHT-beautiful"     => {offsetX: -42, offsetY: -76.5, angle: 0.2},
-
-    "singLEFTmiss-beautiful"  => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
-    "singDOWNmiss-beautiful"  => {offsetX: -45, offsetY: -73, angle: 0.3},
-    "singUPmiss-beautiful"    => {offsetX: -42, offsetY: -76, angle: -0.8},
+    "singLEFT" => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
+    "singDOWN" => {offsetX: -45, offsetY: -73, angle: 0.3},
+    "singUP" => {offsetX: -42, offsetY: -76, angle: -0.8},
+    "singRIGHT" => {offsetX: -42, offsetY: -76.5, angle: 0.2},
+    "singLEFTmiss" => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
+    "singDOWNmiss" => {offsetX: -45, offsetY: -73, angle: 0.3},
+    "singUPmiss" => {offsetX: -42, offsetY: -76, angle: -0.8},
+    "singRIGHTmiss" => {offsetX: -42, offsetY: -76.5, angle: 0.2},
+    "singLEFT-beautiful" => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
+    "singDOWN-beautiful" => {offsetX: -45, offsetY: -73, angle: 0.3},
+    "singUP-beautiful" => {offsetX: -42, offsetY: -76, angle: -0.8},
+    "singRIGHT-beautiful" => {offsetX: -42, offsetY: -76.5, angle: 0.2},
+    "singLEFTmiss-beautiful" => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
+    "singDOWNmiss-beautiful" => {offsetX: -45, offsetY: -73, angle: 0.3},
+    "singUPmiss-beautiful" => {offsetX: -42, offsetY: -76, angle: -0.8},
     "singRIGHTmiss-beautiful" => {offsetX: -42, offsetY: -76.5, angle: 0.2},
-
-    "singLEFT-cool"           => {offsetX: -43.25, offsetY: -75, angle: -0.8},
-    "singDOWN-cool"           => {offsetX: -46.75, offsetY: -71, angle: -0.6},
-    "singUP-cool"             => {offsetX: -44, offsetY: -74.75, angle: 0.2},
-    "singRIGHT-cool"          => {offsetX: -43.75, offsetY: -75, angle: -0.4},
-    "singDOWN-go"             => {offsetX: -46.75, offsetY: -71, angle: -0.6},
-
-    "mistakeAnimation"        => {offsetX: -40.75, offsetY: -78, angle: -0.6},
-    "stayAnimation"           => {offsetX: -47, offsetY: -72, angle: 1.2}
+    "singLEFT-cool" => {offsetX: -43.25, offsetY: -75, angle: -0.8},
+    "singDOWN-cool" => {offsetX: -46.75, offsetY: -71, angle: -0.6},
+    "singUP-cool" => {offsetX: -44, offsetY: -74.75, angle: 0.2},
+    "singRIGHT-cool" => {offsetX: -43.75, offsetY: -75, angle: -0.4},
+    "singDOWN-go" => {offsetX: -46.75, offsetY: -71, angle: -0.6},
+    "mistakeAnimation" => {offsetX: -40.75, offsetY: -78, angle: -0.6},
+    "stayAnimation" => {offsetX: -47, offsetY: -72, angle: 1.2}
   ];
 
   public function new()
   {
-    super('collab/cg5/ironmouse-collab'); 
+    super('collab/cg5/ironmouse-collab');
   }
 
   public override function onCreate(event:ScriptEvent):Void
   {
     super.onCreate(event);
-    
+
     tail = FunkinSprite.createTextureAtlas(0, 0, "characters/go-go-go/tail-ironmouse", "shared");
-    
-    var prefixes:Array<String> = [
-      "Wiggle Loop" 
-    ];
-    
+
+    var prefixes:Array<String> = ["Wiggle Loop"];
+
     for (prefix in prefixes)
     {
       tail.animation.addByPrefix(prefix, prefix, 24, true);
     }
 
     tail.animation.play("Wiggle Loop", true);
-    
+
     var element:FlxSpriteElement = new FlxSpriteElement(tail);
     element.active = false;
 
@@ -125,17 +117,17 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
     lipSync = FunkinSprite.createTextureAtlas(0, 0, "characters/go-go-go/lipsync-ironmouse", "shared");
     lipSync.animation.addByPrefix("Lip Sync Full", "Lip Sync Full", 24, false);
     lipSync.animation.play("Lip Sync Full", true);
-    
+
     if (lipSync.animation.curAnim != null)
     {
       lipSync.animation.curAnim.paused = true;
     }
 
     lipSync.scale.set(customLipScaleX, customLipScaleY);
-    
+
     var lipSyncElement:FlxSpriteElement = new FlxSpriteElement(lipSync);
     lipSyncElement.active = false;
-    
+
     hideLipSyncPlaceholder();
 
     for (frame in this.getFramesWithKeyword("mouth lipsync placeholder"))
@@ -159,7 +151,7 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
   public override function onUpdate(event:UpdateScriptEvent):Void
   {
     super.onUpdate(event);
-    
+
     synchronizeShader();
 
     if (tail != null)
@@ -197,7 +189,7 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
   }
 
   function synchronizeShader():Void
-  { 
+  {
     if (currentShader == this.shader) return;
 
     currentShader = cast this.shader;
@@ -208,7 +200,7 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
   public override function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false):Void
   {
     super.playAnimation(name, restart, ignoreOther, reversed);
-    
+
     if (tail != null)
     {
       var tailOffsetX:Float = 0;
@@ -220,9 +212,9 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
         tailOffsetX = data.offsetX;
         tailOffsetY = data.offsetY;
       }
-      
+
       tail.offset.set(tailOffsetX + tailGlobalOffsetX, tailOffsetY + tailGlobalOffsetY);
-      
+
       if (tail.frameWidth > 0 && tail.frameHeight > 0)
       {
         tail.origin.set((tail.frameWidth * 0.5) + tail.offset.x, (tail.frameHeight * 0.5) + tail.offset.y);
@@ -242,10 +234,10 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
         poseOffsetY = data.offsetY;
         poseAngle = data.angle;
       }
-      
+
       lipSync.offset.set(poseOffsetX, poseOffsetY);
       lipSync.angle = poseAngle;
-      
+
       if (lipSync.frameWidth > 0 && lipSync.frameHeight > 0)
       {
         lipSync.origin.set((lipSync.frameWidth * 0.5) + lipSync.offset.x, (lipSync.frameHeight * 0.5) + lipSync.offset.y);
@@ -261,23 +253,23 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
       case 'dance1':
         this.shouldAlternate = true;
         this.idleSuffix = '-1';
-        
+
       case 'dance2':
         this.shouldAlternate = true;
         this.idleSuffix = '-2';
-        
+
       case 'danceCool1':
         this.shouldAlternate = true;
         this.idleSuffix = 'Cool-1';
-        
+
       case 'danceCool2':
         this.shouldAlternate = true;
         this.idleSuffix = 'Cool-2';
-        
+
       case 'idleCool':
         this.shouldAlternate = false;
         this.idleSuffix = '-cool';
-        
+
       default:
         this.shouldAlternate = false;
         this.idleSuffix = '';
@@ -287,7 +279,7 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
   public override function resetCharacter(resetCamera:Bool):Void
   {
     super.resetCharacter(resetCamera);
-    
+
     setIdleState('idle');
   }
 
@@ -299,10 +291,8 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
       var layer = symbolItem.timeline.getLayer(0);
       if (layer != null)
       {
-        layer.forEachFrame(function(frame)
-        {
-          frame.forEachElement(function(element)
-          {
+        layer.forEachFrame(function(frame) {
+          frame.forEachElement(function(element) {
             element.visible = false;
           });
         });
@@ -318,10 +308,8 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
       var layer = symbolItem.timeline.getLayer(0);
       if (layer != null)
       {
-        layer.forEachFrame(function(frame)
-        {
-          frame.forEachElement(function(element)
-          {
+        layer.forEachFrame(function(frame) {
+          frame.forEachElement(function(element) {
             element.visible = false;
           });
         });
