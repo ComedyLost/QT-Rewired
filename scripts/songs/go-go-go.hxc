@@ -3,6 +3,7 @@ import funkin.play.PlayState;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import funkin.play.character.CharacterType;
+import funkin.util.SongSequence;
 import flixel.FlxSprite;
 import funkin.graphics.FunkinSprite;
 import flixel.tweens.FlxEase;
@@ -12,6 +13,7 @@ import openfl.display.BlendMode;
 import flixel.text.FlxText;
 import funkin.Paths;
 import funkin.play.PauseSubState;
+import funkin.Conductor;
 
 class GoGoGoSong extends Song
 {
@@ -53,7 +55,7 @@ class GoGoGoSong extends Song
   var outroFlashSpr:FunkinSprite;
 
   var hasDoneOutro:Bool;
-  var curBeat:Int = 0;
+  var sequence:SongSequence;
   var introGhostTapEndBeat:Int = 16;
 
   var pauseCreditCategory:String = 'Arrangement';
@@ -72,15 +74,195 @@ class GoGoGoSong extends Song
 
     hasHiddenStrums = false;
     hasDoneOutro = false;
-    curBeat = 0;
   }
 
   override function onSongLoaded(event)
   {
     super.onSongLoaded(event);
 
-    var gf = PlayState.instance.currentStage?.getGirlfriend();
-    if (gf != null) gf.visible = false;
+    var stage:Stage = PlayState.instance?.currentStage;
+    if (stage?.id != 'recordingStudio') return;
+
+    var gf:BaseCharacter = stage?.getGirlfriend();
+    gf?.visible = false;
+
+    sequence?.destroy();
+    sequence = new SongSequence([
+      {
+        time: 0,
+        callback: () -> stage.enableDarkness()
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(7) / 1000,
+        callback: () -> stage.setLightHueInstant(0, 2.0)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(15) / 1000,
+        callback: () -> stage.enableBlackScreen()
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(16) / 1000,
+        callback: () -> {
+          stage.setLightHueInstant(75, 1.5);
+          stage.disableBlackScreen();
+          stage.whiteFlash(6.0);
+        }
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(111) / 1000,
+        callback: () -> {
+          stage.enableBlackScreen();
+          stage.enableDarkness();
+        }
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(112) / 1000,
+        callback: () -> {
+          stage.setLightHueInstant(75, 1.5);
+          stage.disableBlackScreen();
+          stage.whiteFlash(6.0);
+        }
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(127) / 1000,
+        callback: () -> stage.setLightHueInstant(-180, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(129) / 1000,
+        callback: () -> stage.setLightHueInstant(-130, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(131) / 1000,
+        callback: () -> stage.setLightHueInstant(-80, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(133) / 1000,
+        callback: () -> stage.setLightHueInstant(-30, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(135) / 1000,
+        callback: () -> stage.setLightHueInstant(20, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(137) / 1000,
+        callback: () -> stage.setLightHueInstant(70, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(139) / 1000,
+        callback: () -> stage.setLightHueInstant(120, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(141) / 1000,
+        callback: () -> stage.setLightHueInstant(170, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(144) / 1000,
+        callback: () -> {
+          stage.setLightHueInstant(75, 1.5);
+          gf?.setIdleState('idleCool');
+        }
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(160) / 1000,
+        callback: () -> {
+          stage.setLightHueInstant(100, 2.0);
+          stage.setLightHueLinear(0, 6.0);
+        }
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(174) / 1000,
+        callback: () -> stage.setLightHueInstant(0, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(175) / 1000,
+        callback: () -> {
+          stage.setLightHueInstant(0, 1.5);
+          gf?.setIdleState('default');
+        }
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(176) / 1000,
+        callback: () -> {
+          stage.disableDarkness();
+          stage.disableBlackScreen();
+          stage.whiteFlash(6.0);
+        }
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(192) / 1000,
+        callback: () -> gf?.setIdleState('idleCool')
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(211) / 1000,
+        callback: () -> gf?.setIdleState('dance2')
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(221) / 1000,
+        callback: () -> gf?.setIdleState('danceCool1')
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(239) / 1000,
+        callback: () -> {
+          stage.enableBlackScreen();
+          stage.enableDarkness();
+        }
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(240) / 1000,
+        callback: () -> {
+          gf?.setIdleState('danceCool2');
+          stage.disableBlackScreen();
+          stage.whiteFlash(6.0);
+        }
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(242) / 1000,
+        callback: () -> stage.setLightHueInstant(120, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(246) / 1000,
+        callback: () -> stage.setLightHueInstant(100, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(250) / 1000,
+        callback: () -> stage.setLightHueInstant(80, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(254) / 1000,
+        callback: () -> stage.setLightHueInstant(120, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(258) / 1000,
+        callback: () -> stage.setLightHueInstant(80, 1.5)
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(262) / 1000,
+        callback: () -> {
+          gf?.setIdleState('dance2');
+          stage.setLightHueInstant(70, 1.5);
+        }
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(266) / 1000,
+        callback: () -> {
+          stage.setLightHueInstant(120, 1.5);
+          stage.setLightHueLinear(0, 3.0);
+        }
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(272) / 1000,
+        callback: () -> {
+          stage.setLightHueInstant(0, 1.5);
+          stage.disableDarkness();
+          stage.whiteFlash(6.0);
+        }
+      },
+      {
+        time: Conductor.instance.getBeatTimeInMs(300) / 1000,
+        callback: () -> stage.startOutroBuildup(2.5)
+      }
+    ]);
+    sequence.startTime = 0;
 
     if (PlayState.instance.isChartingMode) return;
 
@@ -123,7 +305,6 @@ class GoGoGoSong extends Song
     super.onSongRetry(event);
 
     hasDoneOutro = false;
-    curBeat = 0;
 
     if (outroTimer != null)
     {
@@ -260,7 +441,6 @@ class GoGoGoSong extends Song
   override function onBeatHit(event)
   {
     super.onBeatHit(event);
-    curBeat = event.beat;
 
     var gf = PlayState.instance.currentStage?.getGirlfriend();
     if (gf != null)
@@ -271,113 +451,13 @@ class GoGoGoSong extends Song
         gf.visible = shouldBeVisible;
       }
     }
-
-    var stage:Dynamic = PlayState.instance.currentStage;
-
-    if (stage?.id != 'recordingStudio') return;
-
-    // erm... actually :nerd:
-    // stage.enableDarkness()
-    // stage.disableDarkness()
-    // stage.setLightHueLinear(hue, sec)
-    // stage.setLightHueInstant(hue, sec)
-    // stage.enableBlackScreen()
-    // stage.disableBlackScreen()
-    // stage.whiteFlash(sec)
-
-    switch (event.beat)
-    {
-      case 0:
-        stage.enableDarkness();
-      case 7:
-        stage.setLightHueInstant(0, 2.0);
-      case 15:
-        stage.enableBlackScreen();
-      case 16:
-        stage.disableDarkness();
-        stage.disableBlackScreen();
-        stage.whiteFlash(6.0);
-      case 111:
-        stage.enableBlackScreen();
-        stage.enableDarkness();
-      case 112:
-        stage.setLightHueInstant(75, 1.5);
-        stage.disableBlackScreen();
-        stage.whiteFlash(6.0);
-      case 127:
-        stage.setLightHueInstant(-180, 1.5);
-      case 129:
-        stage.setLightHueInstant(-130, 1.5);
-      case 131:
-        stage.setLightHueInstant(-80, 1.5);
-      case 133:
-        stage.setLightHueInstant(-30, 1.5);
-      case 135:
-        stage.setLightHueInstant(20, 1.5);
-      case 137:
-        stage.setLightHueInstant(70, 1.5);
-      case 139:
-        stage.setLightHueInstant(120, 1.5);
-      case 141:
-        stage.setLightHueInstant(170, 1.5);
-      case 144:
-        stage.setLightHueInstant(75, 1.5);
-        if (gf != null) gf.setIdleState('idleCool');
-      case 160:
-        stage.setLightHueInstant(100, 2.0);
-        stage.setLightHueLinear(0, 6.0);
-      case 174:
-        stage.setLightHueInstant(0, 1.5);
-      case 175:
-        stage.enableBlackScreen();
-        if (gf != null) gf.setIdleState('default');
-      case 176:
-        stage.disableDarkness();
-        stage.disableBlackScreen();
-        stage.whiteFlash(6.0);
-      case 192:
-        if (gf != null) gf.setIdleState('idleCool');
-      case 211:
-        if (gf != null) gf.setIdleState('dance2');
-      case 221:
-        if (gf != null) gf.setIdleState('danceCool1');
-      case 239:
-        stage.enableBlackScreen();
-        stage.enableDarkness();
-      case 240:
-        if (gf != null) gf.setIdleState('danceCool2');
-        stage.disableBlackScreen();
-        stage.whiteFlash(6.0);
-      case 242:
-        stage.setLightHueInstant(120, 1.5);
-      case 246:
-        stage.setLightHueInstant(100, 1.5);
-      case 250:
-        stage.setLightHueInstant(80, 1.5);
-      case 254:
-        stage.setLightHueInstant(120, 1.5);
-      case 258:
-        stage.setLightHueInstant(80, 1.5);
-      case 262:
-        if (gf != null) gf.setIdleState('dance2');
-        stage.setLightHueInstant(70, 1.5);
-      case 266:
-        stage.setLightHueInstant(120, 1.5);
-        stage.setLightHueLinear(0, 3.0);
-      case 272:
-        stage.setLightHueInstant(0, 1.5);
-        stage.disableDarkness();
-        stage.whiteFlash(6.0);
-      case 300:
-        stage.startOutroBuildup(2.5);
-    }
   }
 
   override function onNoteGhostMiss(event)
   {
     super.onNoteGhostMiss(event);
 
-    if (curBeat <= introGhostTapEndBeat)
+    if (Conductor.instance.currentBeat <= introGhostTapEndBeat)
     {
       event.cancel();
       event.stopPropagation();
@@ -522,7 +602,6 @@ class GoGoGoSong extends Song
     super.onDestroy(event);
     this.hasHiddenStrums = false;
     this.hasDoneOutro = false;
-    this.curBeat = 0;
     this.isPauseCreditHooked = false;
 
     if (outroTimer != null)
@@ -536,5 +615,7 @@ class GoGoGoSong extends Song
       logoFallTimer.cancel();
       logoFallTimer = null;
     }
+
+    sequence?.destroy();
   }
 }
