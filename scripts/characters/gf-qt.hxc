@@ -24,8 +24,7 @@ class GirlfriendCharacterQtAnims extends MultiAnimateAtlasCharacter
     boomBoxSpeakers = new SpeakerSprite(0, 0);
 
     var element:FlxSpriteElement = new FlxSpriteElement(boomBoxSpeakers);
-    for (frame in this.getFramesWithKeyword("placeholder"))
-      frame.add(element);
+    for (frame in this.getFramesWithKeyword("placeholder")) frame.add(element);
     speakerShader = new AdjustColorShader();
   }
 
