@@ -10,8 +10,6 @@ YCbCr Matrix: None
 [Aegisub Project Garbage]
 Export Encoding: Unicode (UTF-8)
 Audio File: ../../songs/go-go-go/Voices.ogg
-Scroll Position: 20
-Active Line: 49
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
@@ -25,7 +23,8 @@ Dialogue: 0,0:00:09.77,0:00:11.67,Default,,0,0,0,,Where's the love in your life?
 Dialogue: 0,0:00:11.67,0:00:15.35,Default,,0,0,0,,I see dark and no light, you're not in sight
 Dialogue: 0,0:00:22.92,0:00:26.92,Default,,0,0,0,,But walk my way, walk my way
 Dialogue: 0,0:00:26.92,0:00:30.47,Default,,0,0,0,,Oh, 'cause you need, yeah you need, to stay
-Dialogue: 0,0:00:34.24,0:00:38.03,Default,,0,0,0,,Oh-oh, oh! You need to stay, and don't let
+Dialogue: 0,0:00:34.24,0:00:37.09,Default,,0,0,0,,Oh-oh, oh! You need to stay
+Dialogue: 0,0:00:37.09,0:00:38.03,Default,,0,0,0,,And don't let,
 Dialogue: 0,0:00:38.03,0:00:40.87,Default,,0,0,0,,GO, GO, GO, GO, GO, GO
 Dialogue: 0,0:00:40.87,0:00:41.11,Default,,0,0,0,,Don't-
 Dialogue: 0,0:00:41.11,0:00:41.58,Default,,0,0,0,,Don't let
@@ -69,13 +68,13 @@ Dialogue: 0,0:01:49.13,0:01:49.61,Default,,0,0,0,,Don't let
 Dialogue: 0,0:01:49.85,0:01:50.56,Default,,0,0,0,,GO!
 Dialogue: 0,0:01:50.79,0:01:51.50,Default,,0,0,0,,GO!
 Dialogue: 0,0:01:52.45,0:01:53.39,Default,,0,0,0,,DON'T LET GO!
-Dialogue: 0,0:01:53.86,0:01:55.51,Default,,0,0,0,,Rockin' their BEATS, YEAH!
+Dialogue: 0,0:01:53.86,0:01:55.51,Default,,0,0,0,,Rockin' them BEATS, YEAH!
 Dialogue: 0,0:01:55.51,0:01:57.17,Default,,0,0,0,,We, rockin' them, rockin' them BEATS!
-Dialogue: 0,0:01:57.64,0:01:59.30,Default,,0,0,0,,Rockin' their BEATS, YEAH!
+Dialogue: 0,0:01:57.64,0:01:59.30,Default,,0,0,0,,Rockin' them BEATS, YEAH!
 Dialogue: 0,0:01:59.30,0:02:01.00,Default,,0,0,0,,We rockin' them, rockin' them, rockin' them
-Dialogue: 0,0:02:01.42,0:02:02.84,Default,,0,0,0,,Rockin' their BEATS, YEAH!
+Dialogue: 0,0:02:01.42,0:02:02.84,Default,,0,0,0,,Rockin' them BEATS, YEAH!
 Dialogue: 0,0:02:03.07,0:02:04.96,Default,,0,0,0,,We, rockin' them, rockin' them BEATS!
-Dialogue: 0,0:02:05.20,0:02:06.61,Default,,0,0,0,,Rockin' their BEATS, YEAH!
+Dialogue: 0,0:02:05.20,0:02:06.61,Default,,0,0,0,,Rockin' them BEATS, YEAH!
 Dialogue: 0,0:02:06.80,0:02:08.51,Default,,0,0,0,,We rockin' them, rockin' them, rockin' them
 Dialogue: 0,0:02:09.00,0:02:10.63,Default,,0,0,0,,Walk my way
 Dialogue: 0,0:02:16.45,0:02:18.07,Default,,0,0,0,,Where's the love in your life?
