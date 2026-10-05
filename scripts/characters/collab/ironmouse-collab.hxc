@@ -153,6 +153,7 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
     super.onUpdate(event);
 
     synchronizeShader();
+    applyLipSyncPose();
 
     if (tail != null)
     {
@@ -221,28 +222,7 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
       }
     }
 
-    if (lipSync != null)
-    {
-      var poseOffsetX:Float = 0;
-      var poseOffsetY:Float = 0;
-      var poseAngle:Float = 0;
-
-      var data:LipSyncPoseData = LIP_SYNC_OFFSETS.get(name);
-      if (data != null)
-      {
-        poseOffsetX = data.offsetX;
-        poseOffsetY = data.offsetY;
-        poseAngle = data.angle;
-      }
-
-      lipSync.offset.set(poseOffsetX, poseOffsetY);
-      lipSync.angle = poseAngle;
-
-      if (lipSync.frameWidth > 0 && lipSync.frameHeight > 0)
-      {
-        lipSync.origin.set((lipSync.frameWidth * 0.5) + lipSync.offset.x, (lipSync.frameHeight * 0.5) + lipSync.offset.y);
-      }
-    }
+    applyLipSyncPose();
   }
 
   public function setIdleState(state:String):Void
@@ -298,6 +278,41 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
         });
       }
     }
+  }
+
+  function applyLipSyncPose():Void
+  {
+    if (lipSync == null) return;
+
+    var poseOffsetX:Float = 0;
+    var poseOffsetY:Float = 0;
+    var poseAngle:Float = 0;
+
+    var data:LipSyncPoseData = getLipSyncPose(this.getCurrentAnimation());
+    if (data != null)
+    {
+      poseOffsetX = data.offsetX;
+      poseOffsetY = data.offsetY;
+      poseAngle = data.angle;
+    }
+
+    lipSync.offset.set(poseOffsetX, poseOffsetY);
+    lipSync.angle = poseAngle;
+
+    if (lipSync.frameWidth > 0 && lipSync.frameHeight > 0)
+    {
+      lipSync.origin.set((lipSync.frameWidth * 0.5) + lipSync.offset.x, (lipSync.frameHeight * 0.5) + lipSync.offset.y);
+    }
+  }
+
+  function getLipSyncPose(animationName:String):LipSyncPoseData
+  {
+    if (animationName == null) return null;
+
+    var data:LipSyncPoseData = LIP_SYNC_OFFSETS.get(animationName);
+    if (data != null) return data;
+
+    return LIP_SYNC_OFFSETS.get(animationName.split("miss").join(""));
   }
 
   function hideLipSyncPlaceholder():Void

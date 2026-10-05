@@ -14,14 +14,13 @@ import funkin.play.PauseSubState;
 import funkin.play.character.CharacterType;
 import funkin.util.TouchUtil;
 import funkin.audio.FunkinSound;
+import funkin.graphics.FunkinSprite;
 import funkin.Paths;
 import funkin.Preferences;
 import funkin.save.Save;
 
 class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
 {
-  public var deathTimer:FlxTimer;
-
   public var camTween:FlxTween;
   public var zoomTween:FlxTween;
   public final customCamScroll:FlxPoint;
@@ -43,10 +42,25 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
   public var cg5DeathQuoteDelay:Float = 0.3;
   public var quoteTimer:FlxTimer;
 
+  public var retrySprite:FunkinSprite;
+  public var smokeSprite:FunkinSprite;
+  public var flashSprite:FunkinSprite;
+  public var lastIntroFrame:Int = -1;
+
+  public final introPos:FlxPoint;
+  public final introOffset:FlxPoint;
+  public final introOrigin:FlxPoint;
+  public final introScale:FlxPoint;
+  public var stageShader:Dynamic;
+  public var stageColor:FlxColor;
   public function new()
   {
     super('collab/cg5/qt-playable-collab');
     customCamScroll = new FlxPoint();
+    introPos = new FlxPoint();
+    introOffset = new FlxPoint();
+    introOrigin = new FlxPoint();
+    introScale = new FlxPoint(1, 1);
   }
 
   public override function onCreate(event)
@@ -72,9 +86,12 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
 
       isLooping = false;
       bopAccumulator = 0.0;
+      lastIntroFrame = -1;
 
       if (GameOverSubState.instance != null)
       {
+        GameOverSubState.instance.startDeathMusic(1.0, false);
+        GameOverSubState.instance.gameOverMusic?.pause();
         FlxG.camera.target = null;
 
         customCamScroll.set(FlxG.camera.scroll.x, FlxG.camera.scroll.y);
@@ -84,7 +101,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
         // firstDeath offsets
         final camPos = this.getMidpoint();
 
-        final offsetX:Float = 100;
+        final offsetX:Float = 20;
         final offsetY:Float = -60;
 
         final targetX = camPos.x + offsetX - (FlxG.width / 2);
@@ -99,48 +116,52 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
         });
 
         if (this.getDeathQuote() != null) GameOverSubState.instance.hasPlayedDeathQuote = true;
+        stageShader = this.shader;
+        this.shader = null;
+        stageColor = this.color;
+        this.color = FlxColor.WHITE;
+
+        prepareOverlays();
       }
+    }
+  }
 
-      deathTimer = new FlxTimer().start(2.96, function(tmr:FlxTimer) {
-        if (GameOverSubState.instance != null && !GameOverSubState.instance.isEnding)
-        {
-          if (camTween != null) camTween.cancel();
-          if (zoomTween != null) zoomTween.cancel();
+  public function startDeathLoop():Void
+  {
+    if (camTween != null) camTween.cancel();
+    if (zoomTween != null) zoomTween.cancel();
 
-          // Loop offsets
-          final camPosLoop = this.getMidpoint();
-          final loopOffsetY:Float = 10;
+    // Loop offsets
+    final camPosLoop = this.getMidpoint();
+    final loopOffsetY:Float = 10;
 
-          final dropY = camPosLoop.y + loopOffsetY - (FlxG.height / 2);
-          camPosLoop.put();
+    final dropY = camPosLoop.y + loopOffsetY - (FlxG.height / 2);
+    camPosLoop.put();
 
-          camTween = FlxTween.tween(customCamScroll, {y: dropY}, 2.0, {ease: FlxEase.expoOut});
+    camTween = FlxTween.tween(customCamScroll, {y: dropY}, 2.0, {ease: FlxEase.expoOut});
 
-          zoomTween = FlxTween.num(customCamZoom, 0.95, 2.0, {ease: FlxEase.expoOut}, function(v:Float) {
-            customCamZoom = v;
-          });
+    zoomTween = FlxTween.num(customCamZoom, 0.95, 2.0, {ease: FlxEase.expoOut}, function(v:Float) {
+      customCamZoom = v;
+    });
 
-          GameOverSubState.instance.startDeathMusic(1.0, false);
+    GameOverSubState.instance.gameOverMusic?.resume();
 
-          final deathQuote:Null<String> = this.getDeathQuote();
-          if (deathQuote != null)
-          {
-            quoteTimer = new FlxTimer().start(cg5DeathQuoteDelay, function(quoteTmr:FlxTimer) {
-              this.playDeathQuote(deathQuote);
-            });
-          }
-
-          isLooping = true;
-          bopAccumulator = 0.0;
-
-          bopZoomOffset = 0.015;
-          if (bopTween != null) bopTween.cancel();
-          bopTween = FlxTween.num(bopZoomOffset, 0.0, 0.35, {ease: FlxEase.quadOut}, function(v:Float) {
-            bopZoomOffset = v;
-          });
-        }
+    final deathQuote:Null<String> = this.getDeathQuote();
+    if (deathQuote != null)
+    {
+      quoteTimer = new FlxTimer().start(cg5DeathQuoteDelay, function(quoteTmr:FlxTimer) {
+        this.playDeathQuote(deathQuote);
       });
     }
+
+    isLooping = true;
+    bopAccumulator = 0.0;
+
+    bopZoomOffset = 0.015;
+    if (bopTween != null) bopTween.cancel();
+    bopTween = FlxTween.num(bopZoomOffset, 0.0, 0.35, {ease: FlxEase.quadOut}, function(v:Float) {
+      bopZoomOffset = v;
+    });
   }
 
   public override function onUpdate(event)
@@ -190,13 +211,19 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       }
     }
 
+    updateOverlays();
+
+    if (!GameOverSubState.instance.isEnding && this.getCurrentAnimation() == 'firstDeath' && this.isAnimationFinished())
+    {
+      this.playAnimation('deathLoop', true, true);
+    }
+
     final canTrigger = stateTimer >= 2.2 && !hasActioned && !GameOverSubState.instance.isEnding;
 
     if (GameOverSubState.instance.controls.BACK && canTrigger)
     {
       hasActioned = true;
       isLooping = false;
-      if (deathTimer != null) deathTimer.cancel();
       if (quoteTimer != null) quoteTimer.cancel();
       if (bopTween != null) bopTween.cancel();
       if (camTween != null) camTween.cancel();
@@ -205,6 +232,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       lockCamera = false;
       GameOverSubState.instance.mustNotExit = false;
       GameOverSubState.blueballed = true;
+      detachOverlays();
       GameOverSubState.instance.goBack();
       return;
     }
@@ -217,7 +245,6 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
     {
       hasActioned = true;
       isLooping = false;
-      if (deathTimer != null) deathTimer.cancel();
       if (quoteTimer != null) quoteTimer.cancel();
       if (bopTween != null) bopTween.cancel();
       if (camTween != null) camTween.cancel();
@@ -255,7 +282,10 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       GameOverSubState.instance.deathQuoteSound = FunkinSound.playOnce(Paths.sound('qtgameover/$language/qt/qtConfirm-$confirmLine'), 1.0);
       GameOverSubtitles.assignToQuote('subtitles/$language/gameover/qt/confirm-line-$confirmLine');
 
+      canPlayOtherAnims = true;
       this.playAnimation('deathConfirm', true, false);
+
+      playOverlay(retrySprite, 'deathConfirm');
 
       new FlxTimer().start(2.5, function(tmr:FlxTimer) {
         FlxG.camera.fade(FlxColor.BLACK, 2, false, function() {
@@ -268,6 +298,8 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
             if (!(GameOverSubState.instance.parentPlayState.isMinimalMode ?? true))
             {
               GameOverSubState.instance.boyfriend.isDead = false;
+              this.shader = stageShader;
+              this.color = stageColor;
               GameOverSubState.instance.remove(GameOverSubState.instance.boyfriend);
               GameOverSubState.instance.parentPlayState.currentStage.addCharacter(GameOverSubState.instance.boyfriend, CharacterType.BF);
             }
@@ -282,6 +314,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
             FlxG.camera.snapToTarget();
           }
 
+          detachOverlays();
           GameOverSubState.instance.close();
         });
       });
@@ -315,5 +348,103 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
 
     final language:String = Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT);
     GameOverSubtitles.assignToQuote('subtitles/$language/gameover/qt/cg5/gameover-line-$cg5DeathLine');
+  }
+
+  public override function onGameOver(event)
+  {
+    super.onGameOver(event);
+    retrySprite = createOverlaySprite();
+    smokeSprite = createOverlaySprite();
+
+    final fps:Float = this.animation.getByName('firstDeath')?.frameRate ?? 24.0;
+    retrySprite.anim.addByFrameLabel('firstDeath', 'Retry Intro', fps, false);
+    retrySprite.anim.addByFrameLabel('deathLoop', 'Retry Loop', fps, true);
+    retrySprite.anim.addByFrameLabel('deathConfirm', 'Retry Confirm', fps, false);
+    smokeSprite.anim.addByFrameLabel('firstDeath', 'Smoke Boom', fps, false);
+
+    flashSprite = new FunkinSprite().makeSolidColor(Std.int(FlxG.width * 3.0), Std.int(FlxG.height * 3.0), FlxColor.WHITE);
+    flashSprite.scrollFactor.set(0, 0);
+    flashSprite.screenCenter();
+    flashSprite.visible = false;
+  }
+
+  public function createOverlaySprite():FunkinSprite
+  {
+    final overlay:FunkinSprite = FunkinSprite.createTextureAtlas(0, 0, 'characters/QT_assets/qt-playable/death', 'shared', this.getAtlasSettings());
+    overlay.visible = false;
+    overlay.flipX = this.flipX;
+    overlay.antialiasing = this.antialiasing;
+    overlay.scrollFactor.set(this.scrollFactor.x, this.scrollFactor.y);
+    return overlay;
+  }
+
+  public function captureIntroTransform():Void
+  {
+    introPos.set(this.x, this.y);
+    introOffset.set(this.offset.x, this.offset.y);
+    introOrigin.set(this.origin.x, this.origin.y);
+    introScale.set(this.scale.x, this.scale.y);
+  }
+
+  public function alignOverlay(overlay:FunkinSprite):Void
+  {
+    final jsonOffset:Array<Float> = this.animationOffsets.get(overlay.animation.name) ?? [0.0, 0.0];
+
+    overlay.x = introPos.x - jsonOffset[0];
+    overlay.y = introPos.y - jsonOffset[1];
+    overlay.scale.set(introScale.x, introScale.y);
+    overlay.origin.set(introOrigin.x, introOrigin.y);
+    overlay.offset.set(introOffset.x, introOffset.y);
+  }
+
+  public function playOverlay(overlay:FunkinSprite, animName:String):Void
+  {
+    overlay.visible = true;
+    overlay.animation.play(animName, true);
+    alignOverlay(overlay);
+  }
+
+  public function prepareOverlays():Void
+  {
+    retrySprite.zIndex = this.zIndex + 1;
+    flashSprite.zIndex = this.zIndex + 2;
+    smokeSprite.zIndex = this.zIndex + 3;
+
+    final gameOver = GameOverSubState.instance;
+    gameOver.add(retrySprite);
+    gameOver.add(flashSprite);
+    gameOver.add(smokeSprite);
+  }
+
+  public function detachOverlays():Void
+  {
+    final gameOver = GameOverSubState.instance;
+    gameOver.remove(retrySprite);
+    gameOver.remove(flashSprite);
+    gameOver.remove(smokeSprite);
+  }
+
+  public function updateOverlays():Void
+  {
+    final isIntro:Bool = this.getCurrentAnimation() == 'firstDeath';
+
+    if (isIntro) captureIntroTransform();
+    final introFrame:Int = (isIntro && this.animation.curAnim != null) ? this.animation.curAnim.curFrame : -1;
+
+    flashSprite.visible = introFrame == 55;
+
+    if (lastIntroFrame < 56 && introFrame >= 56) playOverlay(smokeSprite, 'firstDeath');
+    if (lastIntroFrame < 72 && introFrame >= 72) playOverlay(retrySprite, 'firstDeath');
+    if (!hasActioned && lastIntroFrame < 73 && introFrame >= 73) startDeathLoop();
+    lastIntroFrame = introFrame;
+    if (retrySprite.visible) alignOverlay(retrySprite);
+    if (smokeSprite.visible) alignOverlay(smokeSprite);
+    if (retrySprite.visible && retrySprite.animation.finished)
+    {
+      if (retrySprite.animation.name == 'firstDeath') playOverlay(retrySprite, 'deathLoop');
+      else if (retrySprite.animation.name == 'deathConfirm') retrySprite.visible = false;
+    }
+
+    if (smokeSprite.visible && smokeSprite.animation.finished) smokeSprite.visible = false;
   }
 }

@@ -363,6 +363,18 @@ class GoGoGoSong extends Song
       stage.disableBlackScreen();
       stage.stopOutroBuildup();
     }
+
+    sequence?.running = true;
+    if (PlayState.instance.isChartingMode) return;
+    PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, false, null, true);
+  }
+
+  override function onGameOver(event)
+  {
+    super.onGameOver(event);
+    PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, true, null, true);
+
+    sequence?.running = false;
   }
 
   override function onPause(event)
