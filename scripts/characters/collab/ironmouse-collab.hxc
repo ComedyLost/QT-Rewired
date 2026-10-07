@@ -25,8 +25,8 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
   var lipSync:FunkinSprite;
   var currentShader:FlxShader = null;
 
-  var tailGlobalOffsetX:Float = -1;
-  var tailGlobalOffsetY:Float = 73.5;
+  var tailGlobalOffsetX:Float = 2;
+  var tailGlobalOffsetY:Float = 68;
 
   var customLipScaleX:Float = 1;
   var customLipScaleY:Float = 1;
@@ -42,17 +42,17 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
     "singUP" => {offsetX: 8, offsetY: -15},
     "singUP-beautiful" => {offsetX: 8, offsetY: -15},
     "singUP-cool" => {offsetX: 1, offsetY: -1.5},
-    "mistakeAnimation" => {offsetX: 8, offsetY: -15},
+    "mistakeAnimation" => {offsetX: 12, offsetY: -24},
     "singRIGHT" => {offsetX: -2, offsetY: 7},
     "singRIGHT-beautiful" => {offsetX: -2, offsetY: 7},
     "singRIGHT-cool" => {offsetX: -20, offsetY: 29}
   ];
 
   final LIP_SYNC_OFFSETS:Map<String, LipSyncPoseData> = [
-    "singLEFT" => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
-    "singDOWN" => {offsetX: -45, offsetY: -73, angle: 0.3},
-    "singUP" => {offsetX: -42, offsetY: -76, angle: -0.8},
-    "singRIGHT" => {offsetX: -42, offsetY: -76.5, angle: 0.2},
+    "singLEFT" => {offsetX: -43.5, offsetY: -75, angle: -0.2},
+    "singDOWN" => {offsetX: -45, offsetY: -74.5, angle: 0.3},
+    "singUP" => {offsetX: -42, offsetY: -76.5, angle: -0.8},
+    "singRIGHT" => {offsetX: -42, offsetY: -77, angle: 0.2},
     "singLEFTmiss" => {offsetX: -43.5, offsetY: -74.5, angle: -0.2},
     "singDOWNmiss" => {offsetX: -45, offsetY: -73, angle: 0.3},
     "singUPmiss" => {offsetX: -42, offsetY: -76, angle: -0.8},
@@ -70,6 +70,10 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
     "singUP-cool" => {offsetX: -44, offsetY: -74.75, angle: 0.2},
     "singRIGHT-cool" => {offsetX: -43.75, offsetY: -75, angle: -0.4},
     "singDOWN-go" => {offsetX: -46.75, offsetY: -71, angle: -0.6},
+    "singLEFTmiss-cool" => {offsetX: -43.25, offsetY: -75, angle: -0.8},
+    "singDOWNmiss-cool" => {offsetX: -46.75, offsetY: -71, angle: -0.6},
+    "singUPmiss-cool" => {offsetX: -44, offsetY: -74.75, angle: 0.2},
+    "singRIGHTmiss-cool" => {offsetX: -43.75, offsetY: -75, angle: -0.4},
     "mistakeAnimation" => {offsetX: -40.75, offsetY: -78, angle: -0.6},
     "stayAnimation" => {offsetX: -47, offsetY: -72, angle: 1.2}
   ];
@@ -97,20 +101,9 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
     var element:FlxSpriteElement = new FlxSpriteElement(tail);
     element.active = false;
 
-    hideTailPlaceholder();
-
-    for (frame in this.getFramesWithKeyword("tail placeholder"))
+    for (frame in this.getFramesWithKeyword("Tail Placeholder"))
     {
-      var i:Int = frame.elements.length - 1;
-      while (i >= 0)
-      {
-        if (Std.isOfType(frame.elements[i], FlxSpriteElement))
-        {
-          frame.elements.splice(i, 1);
-        }
-        i--;
-      }
-
+      frame.elements.splice(0, frame.elements.length);
       frame.add(element);
     }
 
@@ -128,20 +121,9 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
     var lipSyncElement:FlxSpriteElement = new FlxSpriteElement(lipSync);
     lipSyncElement.active = false;
 
-    hideLipSyncPlaceholder();
-
-    for (frame in this.getFramesWithKeyword("mouth lipsync placeholder"))
+    for (frame in this.getFramesWithKeyword("Mouth Placeholder"))
     {
-      var i:Int = frame.elements.length - 1;
-      while (i >= 0)
-      {
-        if (Std.isOfType(frame.elements[i], FlxSpriteElement))
-        {
-          frame.elements.splice(i, 1);
-        }
-        i--;
-      }
-
+      frame.elements.splice(0, frame.elements.length);
       frame.add(lipSyncElement);
     }
 
@@ -263,23 +245,6 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
     setIdleState('idle');
   }
 
-  function hideTailPlaceholder():Void
-  {
-    var symbolItem = this.library.getSymbol('tail placeholder');
-    if (symbolItem != null)
-    {
-      var layer = symbolItem.timeline.getLayer(0);
-      if (layer != null)
-      {
-        layer.forEachFrame(function(frame) {
-          frame.forEachElement(function(element) {
-            element.visible = false;
-          });
-        });
-      }
-    }
-  }
-
   function applyLipSyncPose():Void
   {
     if (lipSync == null) return;
@@ -313,22 +278,5 @@ class IronmouseCollabCharacter extends MultiAnimateAtlasCharacter
     if (data != null) return data;
 
     return LIP_SYNC_OFFSETS.get(animationName.split("miss").join(""));
-  }
-
-  function hideLipSyncPlaceholder():Void
-  {
-    var symbolItem = this.library.getSymbol('mouth lipsync placeholder');
-    if (symbolItem != null)
-    {
-      var layer = symbolItem.timeline.getLayer(0);
-      if (layer != null)
-      {
-        layer.forEachFrame(function(frame) {
-          frame.forEachElement(function(element) {
-            element.visible = false;
-          });
-        });
-      }
-    }
   }
 }

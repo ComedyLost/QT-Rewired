@@ -140,14 +140,14 @@ class GoGoGoNoteKind extends NoteKind
   {
     char.characterType = doPlayer ? CharacterType.BF : CharacterType.DAD;
 
-    this.suffixShit = getSingSuffix(char, note, singType);
+    this.suffixShit = getSingSuffix(char, note, singType, miss);
 
     char.playSingAnimation(note.noteData.getDirection(), miss, this.suffixShit);
     char.holdTimer = 0;
     if (miss) unHookChar(char);
   }
 
-  function getSingSuffix(char:Dynamic, note:Dynamic, singType:Int):String
+  function getSingSuffix(char:Dynamic, note:Dynamic, singType:Int, miss:Bool):String
   {
     if (char == cg5) return singType == 1 ? "lipsync" : "";
 
@@ -158,7 +158,7 @@ class GoGoGoNoteKind extends NoteKind
       case 3:
         return "cool";
       case 4:
-        return (char == irmouse && note.noteData.getDirection() == 1) ? "go" : "cool";
+        return (!miss && char == irmouse && note.noteData.getDirection() == 1) ? "go" : "cool";
       default:
         return "";
     }

@@ -133,6 +133,26 @@
       "offsets": [0, 0]
     },
     {
+      "name": "singLEFTmiss-cool",
+      "prefix": "Left Miss Cool",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singDOWNmiss-cool",
+      "prefix": "Down Miss Cool",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singUPmiss-cool",
+      "prefix": "Up Miss Cool",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singRIGHTmiss-cool",
+      "prefix": "Right Miss Cool",
+      "offsets": [0, 0]
+    },
+    {
       "name": "danceLeft-1",
       "prefix": "Dance Left 1",
       "offsets": [0, 0]
