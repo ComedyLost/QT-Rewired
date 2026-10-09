@@ -48,8 +48,6 @@ class BlissfulErectSong extends Song
   var currentFlashIndex:Int = 0;
   var ratingHideWindows:Array<Array<Int>> = [[222, 355], [480, 543]];
   var ratingPopUpsHidden:Bool = false;
-  var carryOverPopUps:FlxGroup = null;
-  var discardedPopUps:FlxGroup = null;
 
   function get_PS()
   {
@@ -79,8 +77,6 @@ class BlissfulErectSong extends Song
     canSkipCutscene = false;
     currentFlashIndex = 0;
     ratingPopUpsHidden = false;
-    carryOverPopUps = null;
-    discardedPopUps = null;
     lang = Save.instance.modOptions.get("qt-rewiredLang");
 
     var qt = PS.currentStage.getDad();
@@ -162,37 +158,7 @@ class BlissfulErectSong extends Song
     if (PS == null || PS.comboPopUps == null || hide == ratingPopUpsHidden) return;
     ratingPopUpsHidden = hide;
 
-    if (carryOverPopUps == null)
-    {
-      carryOverPopUps = new FlxGroup();
-      carryOverPopUps.cameras = PS.comboPopUps.cameras;
-      carryOverPopUps.zIndex = PS.comboPopUps.zIndex;
-      var popUpsIndex:Int = PS.members.indexOf(PS.comboPopUps);
-      if (popUpsIndex >= 0) PS.insert(popUpsIndex + 1, carryOverPopUps);
-      else
-        PS.add(carryOverPopUps);
-    }
-    if (discardedPopUps == null) discardedPopUps = new FlxGroup();
-
-    var destination:FlxGroup = hide ? carryOverPopUps : discardedPopUps;
-    pruneDeadPopUps(destination);
-
-    for (popUp in PS.comboPopUps.members.copy())
-    {
-      if (popUp == null || !popUp.exists) continue;
-      PS.comboPopUps.remove(popUp, true);
-      destination.add(popUp);
-    }
-
     PS.comboPopUps.visible = !hide;
-  }
-
-  function pruneDeadPopUps(group:FlxGroup):Void
-  {
-    for (popUp in group.members.copy())
-    {
-      if (popUp != null && !popUp.exists) group.remove(popUp, true);
-    }
   }
 
   override function onBeatHit(ev):Void
@@ -713,17 +679,6 @@ class BlissfulErectSong extends Song
     }
 
     setRatingPopUpsHidden(false);
-    if (carryOverPopUps != null)
-    {
-      if (PS != null) PS.remove(carryOverPopUps, true);
-      carryOverPopUps.destroy();
-      carryOverPopUps = null;
-    }
-    if (discardedPopUps != null)
-    {
-      discardedPopUps.destroy();
-      discardedPopUps = null;
-    }
 
     super.onDestroy(event);
 
