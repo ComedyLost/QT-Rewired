@@ -37,10 +37,12 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
   public var bopZoomOffset:Float = 0.0;
 
   public var confirmLineCount:Int = 1;
-  public var cg5DeathLineCount:Int = 3;
+  public var confirmLine:Int = 0;
+  public var cg5DeathLineCount:Int = 6;
   public var cg5DeathLine:Int = 0;
-  public var cg5DeathQuoteDelay:Float = 0.3;
+  public var cg5DeathQuoteDelay:Float = 0.9;
   public var quoteTimer:FlxTimer;
+  public var musicTween:FlxTween;
 
   public var retrySprite:FunkinSprite;
   public var smokeSprite:FunkinSprite;
@@ -218,6 +220,17 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       this.playAnimation('deathLoop', true, true);
     }
 
+    if (GameOverSubState.instance.isEnding
+      && GameOverSubState.instance.deathQuoteSound == null
+      && this.getCurrentAnimation().indexOf('deathConfirm') == 0
+      && this.animation.curAnim.curFrame >= 5)
+    {
+      final language:String = Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT);
+
+      GameOverSubState.instance.deathQuoteSound = FunkinSound.playOnce(Paths.sound('qtgameover/$language/qt/qtConfirm-$confirmLine'), 1.0);
+      GameOverSubtitles.assignToQuote('subtitles/$language/gameover/qt/confirm-line-$confirmLine');
+    }
+
     final canTrigger = stateTimer >= 2.2 && !hasActioned && !GameOverSubState.instance.isEnding;
 
     if (GameOverSubState.instance.controls.BACK && canTrigger)
@@ -225,6 +238,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       hasActioned = true;
       isLooping = false;
       if (quoteTimer != null) quoteTimer.cancel();
+      if (musicTween != null) musicTween.cancel();
       if (bopTween != null) bopTween.cancel();
       if (camTween != null) camTween.cancel();
       if (zoomTween != null) zoomTween.cancel();
@@ -246,6 +260,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       hasActioned = true;
       isLooping = false;
       if (quoteTimer != null) quoteTimer.cancel();
+      if (musicTween != null) musicTween.cancel();
       if (bopTween != null) bopTween.cancel();
       if (camTween != null) camTween.cancel();
       if (zoomTween != null) zoomTween.cancel();
@@ -276,16 +291,10 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       if (FlxG.sound.music != null) FlxG.sound.music.stop();
       GameOverSubState.instance.startDeathMusic(1.0, true);
 
-      final confirmLine:Int = FlxG.random.int(1, confirmLineCount);
+      confirmLine = FlxG.random.int(1, confirmLineCount);
       final language:String = Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT);
 
-      GameOverSubState.instance.deathQuoteSound = FunkinSound.playOnce(Paths.sound('qtgameover/$language/qt/qtConfirm-$confirmLine'), 1.0);
-      GameOverSubtitles.assignToQuote('subtitles/$language/gameover/qt/confirm-line-$confirmLine');
-
-      canPlayOtherAnims = true;
-      this.playAnimation('deathConfirm', true, false);
-
-      playOverlay(retrySprite, 'deathConfirm');
+      playConfirm(language, confirmLine);
 
       new FlxTimer().start(2.5, function(tmr:FlxTimer) {
         FlxG.camera.fade(FlxColor.BLACK, 2, false, function() {
@@ -343,11 +352,20 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
     if (currentQuote == null || currentQuote == FlxG.sound.music || !currentQuote.isPlaying)
     {
       gameOver.hasPlayedDeathQuote = true;
-      gameOver.deathQuoteSound = FunkinSound.playOnce(quotePath, 1.0, null, null, true);
+      gameOver.deathQuoteSound = FunkinSound.playOnce(quotePath, 1.0, function() {
+        this.fadeMusic(1.0, 2.0);
+      }, null, true);
+      this.fadeMusic(0.5, 0.5);
     }
 
     final language:String = Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT);
     GameOverSubtitles.assignToQuote('subtitles/$language/gameover/qt/cg5/gameover-line-$cg5DeathLine');
+  }
+
+  public function fadeMusic(targetVolume:Float, duration:Float):Void
+  {
+    if (musicTween != null) musicTween.cancel();
+    musicTween = FlxTween.tween(GameOverSubState.instance.gameOverMusic, {volume: targetVolume}, duration, {ease: FlxEase.linear});
   }
 
   public override function onGameOver(event)
@@ -359,7 +377,6 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
     final fps:Float = this.animation.getByName('firstDeath')?.frameRate ?? 24.0;
     retrySprite.anim.addByFrameLabel('firstDeath', 'Retry Intro', fps, false);
     retrySprite.anim.addByFrameLabel('deathLoop', 'Retry Loop', fps, true);
-    retrySprite.anim.addByFrameLabel('deathConfirm', 'Retry Confirm', fps, false);
     smokeSprite.anim.addByFrameLabel('firstDeath', 'Smoke Boom', fps, false);
 
     flashSprite = new FunkinSprite().makeSolidColor(Std.int(FlxG.width * 3.0), Std.int(FlxG.height * 3.0), FlxColor.WHITE);
@@ -404,6 +421,19 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
     alignOverlay(overlay);
   }
 
+  public function playConfirm(language:String, line:Int):Void
+  {
+    final languageName:String = language.charAt(0).toUpperCase() + language.substr(1);
+    final confirmAnim:String = 'deathConfirm$languageName-$line';
+
+    canPlayOtherAnims = true;
+    this.playAnimation(confirmAnim, true, false);
+
+    final fps:Float = this.animation.getByName(confirmAnim)?.frameRate ?? 24.0;
+    retrySprite.anim.addByFrameLabel(confirmAnim, 'Retry Confirm', fps, false);
+    playOverlay(retrySprite, confirmAnim);
+  }
+
   public function prepareOverlays():Void
   {
     retrySprite.zIndex = this.zIndex + 1;
@@ -442,7 +472,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
     if (retrySprite.visible && retrySprite.animation.finished)
     {
       if (retrySprite.animation.name == 'firstDeath') playOverlay(retrySprite, 'deathLoop');
-      else if (retrySprite.animation.name == 'deathConfirm') retrySprite.visible = false;
+      else retrySprite.visible = false;
     }
 
     if (smokeSprite.visible && smokeSprite.animation.finished) smokeSprite.visible = false;

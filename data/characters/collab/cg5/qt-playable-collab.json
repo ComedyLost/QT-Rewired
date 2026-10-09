@@ -76,8 +76,14 @@
     },
     {
       "assetPath": "shared:characters/QT_assets/qt-playable/death",
-      "name": "deathConfirm",
-      "prefix": "Confirm",
+      "name": "deathConfirmEnglish-1",
+      "prefix": "Confirm English 1",
+      "offsets": [140, 405]
+    },
+    {
+      "assetPath": "shared:characters/QT_assets/qt-playable/death",
+      "name": "deathConfirmSpanish-1",
+      "prefix": "Confirm Spanish 1",
       "offsets": [140, 405]
     }
   ]
