@@ -71,6 +71,11 @@ class GoGoGoSong extends Song
     super('go-go-go');
   }
 
+  override public function isSongNew(currentDifficulty:String, currentVariation:String):Bool
+  {
+    return !Save.instance.hasSongScore(this.id, null, this.variation);
+  }
+
   override function onCreate(e)
   {
     super.onCreate(e);
