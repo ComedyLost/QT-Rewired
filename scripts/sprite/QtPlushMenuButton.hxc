@@ -65,8 +65,6 @@ class QtPlushMenuButton extends Module
       {
         state: MainMenuState
       });
-
-    cacheJumpscare();
   }
 
   function cacheJumpscare()
@@ -83,6 +81,8 @@ class QtPlushMenuButton extends Module
   override public function onCreate(event)
   {
     super.onCreate(event);
+    cacheJumpscare();
+
     if (FlxG.state == MainMenuState)
     {
       if (plushButton != null && plushButton.exists) plushButton.kill();
