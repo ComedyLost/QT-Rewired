@@ -48,15 +48,15 @@ class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
     playAnimation('sing${animName}miss-caramella', true, false);
   }
 
-  override public function playAnimation(name:String, restart:Bool, ignoreOther:Bool)
+  override public function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false)
   {
     if (name.startsWith('dodge-'))
     {
       this.superClass.canPlayOtherAnims = true;
-      super.playAnimation(name, restart, true);
+      super.playAnimation(name, restart, true, reversed);
       return;
     }
-    super.playAnimation(name + suffix, restart, ignoreOther);
+    super.playAnimation(name + suffix, restart, ignoreOther, reversed);
 
     switch (name + suffix)
     {
