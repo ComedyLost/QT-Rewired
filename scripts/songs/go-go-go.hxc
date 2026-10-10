@@ -399,6 +399,8 @@ class GoGoGoSong extends Song
   {
     super.onPause(event);
 
+    FlxG.camera.active = false;
+
     if (event.eventCanceled || isPauseCreditHooked || PlayState.instance == null) return;
     if (getPauseCreditee(pauseCreditCategory) == null) return;
 
@@ -407,6 +409,13 @@ class GoGoGoSong extends Song
       isPauseCreditHooked = false;
       if (Std.isOfType(subState, PauseSubState)) addPauseCredit(subState);
     });
+  }
+
+  override function onResume(event)
+  {
+    super.onResume(event);
+
+    FlxG.camera.active = true;
   }
 
   function getPauseCreditee(category:String):String
@@ -521,7 +530,7 @@ class GoGoGoSong extends Song
 
   public function doOutro()
   {
-    var horseChance:Bool = FlxG.random.bool(5);
+    var horseChance:Bool = FlxG.random.bool(10);
 
     var stage:Dynamic = PlayState.instance.currentStage;
     if (stage != null && stage.id == 'recordingStudio')
