@@ -11,6 +11,7 @@ import flixel.FlxG;
 import flixel.text.FlxText;
 import flixel.text.FlxTextBorderStyle;
 import flixel.text.FlxTextFormat;
+import funkin.util.FlxTweenUtil;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
@@ -83,6 +84,28 @@ class AwesomeSubtitles extends Module
   public override function onDestroy(event:ScriptEvent):Void
   {
     releaseState();
+  }
+
+  public override function onPause(event:PauseScriptEvent):Void
+  {
+    super.onPause(event);
+
+    for (text in pool)
+    {
+      FlxTweenUtil.pauseTweensOf(text);
+      FlxTweenUtil.pauseTweensOf(text.scale);
+    }
+  }
+
+  public override function onResume(event:ScriptEvent):Void
+  {
+    super.onResume(event);
+
+    for (text in pool)
+    {
+      FlxTweenUtil.resumeTweensOf(text);
+      FlxTweenUtil.resumeTweensOf(text.scale);
+    }
   }
 
   public override function onUpdate(event:UpdateScriptEvent):Void

@@ -11,6 +11,7 @@ import flixel.tweens.FlxEase;
 import flixel.util.FlxColor;
 import openfl.display.BlendMode;
 import funkin.graphics.FunkinSprite;
+import funkin.util.FlxTweenUtil;
 import flixel.FlxG;
 
 class RecordingStudio extends Stage
@@ -261,5 +262,17 @@ class RecordingStudio extends Stage
   {
     super.addCharacter(character, charType);
     character.shader = colorShader;
+  }
+
+  override public function onPause(event:PauseScriptEvent):Void
+  {
+    super.onPause(event);
+    FlxTweenUtil.pauseTweensOf(lightShader);
+  }
+
+  override public function onResume(event:ScriptEvent):Void
+  {
+    super.onResume(event);
+    FlxTweenUtil.resumeTweensOf(lightShader);
   }
 }
