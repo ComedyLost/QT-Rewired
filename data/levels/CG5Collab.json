@@ -9,7 +9,7 @@
     {
       "assetPath": "storymenu/props/CG5",
       "scale": 0.465,
-      "offsets": [-130, -600],
+      "offsets": [-130, -165],
       "animations": [
         {
           "name": "idle",

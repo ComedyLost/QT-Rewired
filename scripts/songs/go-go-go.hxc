@@ -16,6 +16,9 @@ import funkin.play.PauseSubState;
 import funkin.Conductor;
 import funkin.audio.FunkinSound;
 import funkin.save.Save;
+import funkin.play.PlayStatePlaylist;
+import funkin.play.Countdown;
+import funkin.Preferences;
 
 class GoGoGoSong extends Song
 {
@@ -63,6 +66,11 @@ class GoGoGoSong extends Song
   var clapSfx:FunkinSound;
   var outroSfx:FunkinSound;
 
+  var hasPlayedCutscene:Bool;
+  var lang:String;
+  var introDuration:Float;
+  var introTimeline:Array<Dynamic>;
+  var introLines:Array<FunkinSound> = [];
   var pauseCreditCategory:String = 'Arrangement';
   var pauseMetadataRowHeight:Float = 32;
   var isPauseCreditHooked:Bool = false;
@@ -84,12 +92,43 @@ class GoGoGoSong extends Song
 
     hasHiddenStrums = false;
     hasDoneOutro = false;
+    hasPlayedCutscene = false;
+    lang = Save.instance.modOptions.get('qt-rewiredLang');
+
+    var intro:Dynamic = getIntroData(lang);
+    introDuration = intro.duration;
+    introTimeline = intro.timeline;
 
     clapSfx = FunkinSound.load(Paths.sound('gameplay/collabClapClap'), 1.0);
     outroSfx = FunkinSound.load(Paths.sound('gameplay/collabSongEnd'), 1.0);
 
     clapSfx.pitch = PlayState.instance.playbackRate;
     outroSfx.pitch = PlayState.instance.playbackRate;
+  }
+
+  function getIntroData(language:String):Dynamic
+  {
+    switch (language)
+    {
+      case 'spanish':
+        return {
+          duration: 5.700,
+          timeline: [
+            {time: 0.020, line: 'cg5-line-1'},
+            {time: 1.550, line: 'qt-line-1'},
+            {time: 3.035, line: 'cg5-line-2'}
+          ]
+        };
+      default:
+        return {
+          duration: 5.450,
+          timeline: [
+            {time: 0.000, line: 'cg5-line-1'},
+            {time: 1.240, line: 'qt-line-1'},
+            {time: 2.900, line: 'cg5-line-2'}
+          ]
+        };
+    }
   }
 
   override function onSongLoaded(event)
@@ -283,6 +322,71 @@ class GoGoGoSong extends Song
     if (PlayState.instance.isChartingMode) return;
 
     PlayState.instance.camGame.fade(FlxColor.BLACK, 0, false, null, true);
+  }
+
+  override function onCountdownStart(event)
+  {
+    super.onCountdownStart(event);
+
+    if (PlayState.instance.isChartingMode || !PlayStatePlaylist.isStoryMode) return;
+
+    if (hasPlayedCutscene)
+    {
+      event.cancel();
+      Countdown.stopCountdown();
+      PlayState.instance.isInCountdown = true;
+      Conductor.instance.update(PlayState.instance.startTimestamp);
+      return;
+    }
+
+    hasPlayedCutscene = true;
+    PlayState.instance.isInCutscene = true;
+    PlayState.instance.camHUD.visible = false;
+
+    event.cancel();
+
+    introLines = [for (entry in introTimeline) FunkinSound.load(Paths.sound('gameplay/introGoGoGo/$lang/${entry.line}', 'shared'), 1.0)];
+
+    for (i in 0...introTimeline.length) queueIntroLine(i);
+    FlxTimer.wait(introDuration, () -> endIntro());
+  }
+
+  function queueIntroLine(index:Int)
+  {
+    FlxTimer.wait(introTimeline[index].time, () -> playIntroLine(index));
+  }
+
+  function playIntroLine(index:Int)
+  {
+    var line:FunkinSound = introLines[index];
+    if (line == null) return;
+
+    line.onComplete = () -> {
+      if (Preferences.subtitles && PlayState.instance.subtitles.assignedSound == line)
+      {
+        PlayState.instance.subtitles.assignedSound = null;
+        PlayState.instance.subtitles.setText([], true);
+      }
+    };
+
+    if (Preferences.subtitles) PlayState.instance.subtitles.assignSubtitles('subtitles/$lang/introGoGoGo/${introTimeline[index].line}', line);
+    line.play();
+  }
+
+  function endIntro()
+  {
+    if (Preferences.subtitles)
+    {
+      PlayState.instance.subtitles.assignedSound = null;
+      PlayState.instance.subtitles.setText([], true);
+    }
+
+    PlayState.instance.camHUD.alpha = 0;
+    PlayState.instance.camHUD.visible = true;
+    FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1, {ease: FlxEase.smoothStepInOut});
+
+    PlayState.instance.isInCutscene = false;
+    PlayState.instance.startCountdown();
   }
 
   override function onSongStart(event)
@@ -530,7 +634,7 @@ class GoGoGoSong extends Song
 
   public function doOutro()
   {
-    var horseChance:Bool = FlxG.random.bool(10);
+    var horseChance:Bool = FlxG.random.bool(0.5);
 
     var stage:Dynamic = PlayState.instance.currentStage;
     if (stage != null && stage.id == 'recordingStudio')
@@ -564,7 +668,7 @@ class GoGoGoSong extends Song
 
     PlayState.instance.add(coverScreen);
 
-    // if you rename this variable you go to hell <--- "horsePNG is love, horsePNG os life" <--- really got that eric soul
+    // if you rename this variable you go to hell <--- "horsePNG is love, horsePNG os life" <--- really got that eric soul <--- Hi friend
     horsePNG = new FunkinSprite().loadTexture(horseChance ? 'recordingStudio/endSequence/placeholder' : 'recordingStudio/endSequence/rewiredLogo');
     horsePNG.cameras = [PlayState.instance.camCutscene];
     horsePNG.zIndex = coverScreen.zIndex + 1;
@@ -663,6 +767,12 @@ class GoGoGoSong extends Song
     {
       logoFallTimer.cancel();
       logoFallTimer = null;
+    }
+
+    for (line in introLines)
+    {
+      line?.stop();
+      line?.destroy();
     }
 
     sequence?.destroy();

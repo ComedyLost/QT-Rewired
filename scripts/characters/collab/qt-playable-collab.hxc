@@ -287,6 +287,8 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
       {
         GameOverSubState.instance.deathQuoteSound.stop();
         GameOverSubState.instance.deathQuoteSound = null;
+        // DIE
+        GameOverSubtitles.instance.subtitles?.kill();
       }
 
       if (FlxG.sound.music != null) FlxG.sound.music.stop();
