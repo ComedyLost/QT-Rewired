@@ -74,9 +74,9 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
     PauseSubState.musicSuffix = '-qt';
   }
 
-  public override function playAnimation(name:String, restart:Bool, ignoreOther:Bool)
+  public override function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false)
   {
-    super.playAnimation(name, restart, ignoreOther);
+    super.playAnimation(name, restart, ignoreOther, reversed);
 
     if (name == "firstDeath")
     {
