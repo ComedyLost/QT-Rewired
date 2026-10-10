@@ -119,14 +119,17 @@ class AwesomeSubtitles extends Module
     }
 
     var songPosition:Float = Conductor.instance.songPosition;
-    while (cursor < entries.length && entries[cursor].start <= songPosition) cursor++;
-    while (cursor > 0 && entries[cursor - 1].start > songPosition) cursor--;
+    while (cursor < entries.length && entries[cursor].start <= songPosition)
+      cursor++;
+    while (cursor > 0 && entries[cursor - 1].start > songPosition)
+      cursor--;
 
     var currentIdx:Int = (cursor > 0 && songPosition < entries[cursor - 1].end) ? cursor - 1 : -1;
     var nextIdx:Int = (cursor < entries.length && canPreview(cursor, songPosition)) ? cursor : -1;
     syncLines(currentIdx, nextIdx);
 
-    for (text in pool) text.offset.set(text.origin.x * (1 - text.scale.x), text.origin.y * (1 - text.scale.y));
+    for (text in pool)
+      text.offset.set(text.origin.x * (1 - text.scale.x), text.origin.y * (1 - text.scale.y));
   }
 
   function setupForCurrentSong():Void
@@ -160,8 +163,8 @@ class AwesomeSubtitles extends Module
   {
     for (i in 0...6)
     {
-      var text:FlxText = new FlxText(0, 0, 0, '').setFormat(Paths.font(FONT_NAME), FONT_SIZE, FlxColor.WHITE, 'left', FlxTextBorderStyle.OUTLINE,
-        OUTLINE_COLOR);
+      var text:FlxText = new FlxText(0, 0, 0,
+        '').setFormat(Paths.font(FONT_NAME), FONT_SIZE, FlxColor.WHITE, 'left', FlxTextBorderStyle.OUTLINE, OUTLINE_COLOR);
       text.borderSize = OUTLINE_SIZE;
       text.antialiasing = true;
       text.scrollFactor.set();
@@ -245,7 +248,8 @@ class AwesomeSubtitles extends Module
 
     text.clearFormats();
     text.text = entry.text;
-    for (run in entry.runs) text.addFormat(new FlxTextFormat(run.color, run.bold, run.italic, OUTLINE_COLOR), run.start, run.end);
+    for (run in entry.runs)
+      text.addFormat(new FlxTextFormat(run.color, run.bold, run.italic, OUTLINE_COLOR), run.start, run.end);
 
     var lineScale:Float = (isTop ? TOP_TEXT_SCALE : BOTTOM_TEXT_SCALE) * mobileScale();
     var targetY:Float = slotY(isTop);
@@ -272,13 +276,13 @@ class AwesomeSubtitles extends Module
 
     cancelTweens(text);
 
-    FlxTween.tween(text, {alpha: 0}, FADE_OUT_TIME, {
-      ease: FlxEase.quadOut,
-      onComplete: function(_):Void
+    FlxTween.tween(text, {alpha: 0}, FADE_OUT_TIME,
       {
-        text.visible = false;
-      }
-    });
+        ease: FlxEase.quadOut,
+        onComplete: function(_):Void {
+          text.visible = false;
+        }
+      });
   }
 
   function acquireText():FlxText
@@ -362,7 +366,14 @@ class AwesomeSubtitles extends Module
       var rich:Dynamic = parseRichText(content);
       if (rich.text.length == 0) continue;
 
-      parsed.push({start: start, end: end, text: rich.text, runs: rich.runs, font: rich.font});
+      parsed.push(
+        {
+          start: start,
+          end: end,
+          text: rich.text,
+          runs: rich.runs,
+          font: rich.font
+        });
     }
 
     parsed.sort((c, d) -> Std.int(c.start - d.start));
@@ -398,11 +409,11 @@ class AwesomeSubtitles extends Module
           if (!isClosing)
           {
             stack.push(style);
-            style = {
-              color: style.color,
-              bold: style.bold || tagName == 'b' || tagName == 'strong',
-              italic: style.italic || tagName == 'i' || tagName == 'em'
-            };
+            style =
+              {
+                color: style.color,
+                bold: style.bold || tagName == 'b' || tagName == 'strong',
+                italic: style.italic || tagName == 'i' || tagName == 'em'};
 
             if (tagName == 'font')
             {
@@ -434,7 +445,14 @@ class AwesomeSubtitles extends Module
   {
     if (end > start && (style.color != null || style.bold || style.italic))
     {
-      runs.push({start: start, end: end, color: style.color, bold: style.bold, italic: style.italic});
+      runs.push(
+        {
+          start: start,
+          end: end,
+          color: style.color,
+          bold: style.bold,
+          italic: style.italic
+        });
     }
   }
 

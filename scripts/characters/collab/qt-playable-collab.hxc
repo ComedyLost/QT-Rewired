@@ -55,6 +55,7 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
   public final introScale:FlxPoint;
   public var stageShader:Dynamic;
   public var stageColor:FlxColor;
+
   public function new()
   {
     super('collab/cg5/qt-playable-collab');
@@ -472,7 +473,8 @@ class QtCollabPlayableCharacter extends MultiAnimateAtlasCharacter
     if (retrySprite.visible && retrySprite.animation.finished)
     {
       if (retrySprite.animation.name == 'firstDeath') playOverlay(retrySprite, 'deathLoop');
-      else retrySprite.visible = false;
+      else
+        retrySprite.visible = false;
     }
 
     if (smokeSprite.visible && smokeSprite.animation.finished) smokeSprite.visible = false;

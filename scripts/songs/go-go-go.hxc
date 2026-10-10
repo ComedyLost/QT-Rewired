@@ -564,7 +564,7 @@ class GoGoGoSong extends Song
 
     PlayState.instance.add(coverScreen);
 
-    //if you rename this variable you go to hell <--- "horsePNG is love, horsePNG os life" <--- really got that eric soul
+    // if you rename this variable you go to hell <--- "horsePNG is love, horsePNG os life" <--- really got that eric soul
     horsePNG = new FunkinSprite().loadTexture(horseChance ? 'recordingStudio/endSequence/placeholder' : 'recordingStudio/endSequence/rewiredLogo');
     horsePNG.cameras = [PlayState.instance.camCutscene];
     horsePNG.zIndex = coverScreen.zIndex + 1;

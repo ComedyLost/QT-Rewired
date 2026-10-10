@@ -114,6 +114,7 @@ class CG5CollabCharacter extends MultiAnimateAtlasCharacter
 
     applyLipSyncPose();
   }
+
   function applyLipSyncPose():Void
   {
     if (lipSync == null) return;

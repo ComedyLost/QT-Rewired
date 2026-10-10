@@ -61,9 +61,10 @@ class QtPlushMenuButton extends Module
 
   public function new()
   {
-    super('QtPlushMenuButton', 1, {
-      state: MainMenuState
-    });
+    super('QtPlushMenuButton', 1,
+      {
+        state: MainMenuState
+      });
 
     cacheJumpscare();
   }
@@ -438,32 +439,35 @@ class QtPlushMenuButton extends Module
     var startY = currentOffsetY;
 
     if (offsetTween != null) offsetTween.cancel();
-    offsetTween = FlxTween.num(0, 1, 0.3, {
-      ease: FlxEase.cubeOut
-    }, function(v:Float)
-    {
-      currentOffsetX = startX + (selectOffsetX - startX) * v;
-      currentOffsetY = startY + (selectOffsetY - startY) * v;
-    });
+    offsetTween = FlxTween.num(0, 1, 0.3,
+      {
+        ease: FlxEase.cubeOut
+      }, function(v:Float) {
+        currentOffsetX = startX + (selectOffsetX - startX) * v;
+        currentOffsetY = startY + (selectOffsetY - startY) * v;
+      });
 
     if (scaleTween != null) scaleTween.cancel();
-    scaleTween = FlxTween.tween(plushButton.scale, {
-      x: selectScale,
-      y: selectScale
-    }, 0.3, {
-      ease: FlxEase.cubeOut,
-      onUpdate: function(tween)
+    scaleTween = FlxTween.tween(plushButton.scale,
       {
-        updatePlushPosition();
-      }
-    });
+        x: selectScale,
+        y: selectScale
+      }, 0.3,
+      {
+        ease: FlxEase.cubeOut,
+        onUpdate: function(tween) {
+          updatePlushPosition();
+        }
+      });
 
     if (gradientTween != null) gradientTween.cancel();
-    gradientTween = FlxTween.tween(gradient, {
-      alpha: 1
-    }, 0.45, {
-      ease: FlxEase.cubeOut
-    });
+    gradientTween = FlxTween.tween(gradient,
+      {
+        alpha: 1
+      }, 0.45,
+      {
+        ease: FlxEase.cubeOut
+      });
 
     if (FlxG.onMobile) HapticUtil.vibrate(0, 0.01, 0.5);
   }
@@ -483,32 +487,35 @@ class QtPlushMenuButton extends Module
     var startY = currentOffsetY;
 
     if (offsetTween != null) offsetTween.cancel();
-    offsetTween = FlxTween.num(0, 1, 0.3, {
-      ease: FlxEase.cubeOut
-    }, function(v:Float)
-    {
-      currentOffsetX = startX + (idleOffsetX - startX) * v;
-      currentOffsetY = startY + (idleOffsetY - startY) * v;
-    });
+    offsetTween = FlxTween.num(0, 1, 0.3,
+      {
+        ease: FlxEase.cubeOut
+      }, function(v:Float) {
+        currentOffsetX = startX + (idleOffsetX - startX) * v;
+        currentOffsetY = startY + (idleOffsetY - startY) * v;
+      });
 
     if (scaleTween != null) scaleTween.cancel();
-    scaleTween = FlxTween.tween(plushButton.scale, {
-      x: idleScale,
-      y: idleScale
-    }, 0.3, {
-      ease: FlxEase.cubeOut,
-      onUpdate: function(tween)
+    scaleTween = FlxTween.tween(plushButton.scale,
       {
-        updatePlushPosition();
-      }
-    });
+        x: idleScale,
+        y: idleScale
+      }, 0.3,
+      {
+        ease: FlxEase.cubeOut,
+        onUpdate: function(tween) {
+          updatePlushPosition();
+        }
+      });
 
     if (gradientTween != null) gradientTween.cancel();
-    gradientTween = FlxTween.tween(gradient, {
-      alpha: 0
-    }, 0.45, {
-      ease: FlxEase.cubeOut
-    });
+    gradientTween = FlxTween.tween(gradient,
+      {
+        alpha: 0
+      }, 0.45,
+      {
+        ease: FlxEase.cubeOut
+      });
   }
 
   function onPlushClick()
@@ -529,8 +536,7 @@ class QtPlushMenuButton extends Module
 
     if (Preferences.flashingLights)
     {
-      FlxFlicker.flicker(plushButton, 1, 0.06, true, false, function(_)
-      {
+      FlxFlicker.flicker(plushButton, 1, 0.06, true, false, function(_) {
         busy = false;
         WindowUtil.openURL("https://www.makeship.com/products/halloween-qt-plush");
       });
@@ -546,44 +552,47 @@ class QtPlushMenuButton extends Module
   {
     jumpscareDim.visible = true;
 
-    FlxTween.tween(jumpscareDim, {
-      alpha: jumpscareDimAlpha
-    }, 0.125, {
-      startDelay: 0.1,
-      onComplete: function(_)
+    FlxTween.tween(jumpscareDim,
       {
-        FlxTween.num(jumpscareMusicVolume, menuMusicVolume, 1.5, {
-          startDelay: 0.625
-        }, function(v:Float)
-        {
-          FlxG.sound.music.volume = v;
-        });
+        alpha: jumpscareDimAlpha
+      }, 0.125,
+      {
+        startDelay: 0.1,
+        onComplete: function(_) {
+          FlxTween.num(jumpscareMusicVolume, menuMusicVolume, 1.5,
+            {
+              startDelay: 0.625
+            }, function(v:Float) {
+              FlxG.sound.music.volume = v;
+            });
 
-        FlxTween.tween(jumpscareDim, {
-          alpha: 0
-        }, 1.5, {
-          startDelay: 0.625,
-          onComplete: function(_)
-          {
-            FlxG.state.remove(jumpscareDim, true);
-            jumpscareDim.destroy();
-            jumpscareDim = null;
-          }
-        });
-      }
-    });
+          FlxTween.tween(jumpscareDim,
+            {
+              alpha: 0
+            }, 1.5,
+            {
+              startDelay: 0.625,
+              onComplete: function(_) {
+                FlxG.state.remove(jumpscareDim, true);
+                jumpscareDim.destroy();
+                jumpscareDim = null;
+              }
+            });
+        }
+      });
 
     ominousLoop.fadeTween.cancel();
-    FlxTween.tween(ominousLoop, {
-      volume: 0
-    }, 0.125, {
-      startDelay: 0.1,
-      onComplete: function(_)
+    FlxTween.tween(ominousLoop,
       {
-        ominousLoop.destroy();
-        ominousLoop = null;
-      }
-    });
+        volume: 0
+      }, 0.125,
+      {
+        startDelay: 0.1,
+        onComplete: function(_) {
+          ominousLoop.destroy();
+          ominousLoop = null;
+        }
+      });
 
     FunkinSound.playOnce(Paths.sound('jumpscareHalloween'));
     jumpscare.visible = true;
@@ -602,17 +611,16 @@ class QtPlushMenuButton extends Module
     currentOffsetY = FlxG.height - plushButton.y + currentOffsetY;
     updatePlushPosition();
     plushButton.visible = true;
-    offsetTween = FlxTween.num(currentOffsetY, idleOffsetY, plushSlideDuration, {
-      startDelay: 0.125,
-      ease: FlxEase.expoOut
-    }, function(v:Float)
-    {
-      currentOffsetY = v;
-      updatePlushPosition();
-    });
+    offsetTween = FlxTween.num(currentOffsetY, idleOffsetY, plushSlideDuration,
+      {
+        startDelay: 0.125,
+        ease: FlxEase.expoOut
+      }, function(v:Float) {
+        currentOffsetY = v;
+        updatePlushPosition();
+      });
 
-    new FlxTimer().start(1.0, function(_)
-    {
+    new FlxTimer().start(1.0, function(_) {
       busy = false;
 
       var stateDyn:Dynamic = FlxG.state;
@@ -633,8 +641,7 @@ class QtPlushMenuButton extends Module
       plushButton.kill();
       plushButton.destroy();
       plushButton = null;
-      new FlxTimer().start(0.1, function(_)
-      {
+      new FlxTimer().start(0.1, function(_) {
         FlxG.switchState(new MainMenuState());
       });
     }
