@@ -20,18 +20,11 @@ import funkin.save.Save;
 class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
 {
   public var gameoverSound;
-  public var randomInt:Int;
 
   function new()
   {
     super('bf-qt');
-    ignoreExclusionPref = [
-      "danceLeft-alt",
-      "danceRight-alt",
-      "preDance",
-      "hey",
-      "intro"
-    ];
+    ignoreExclusionPref = ["danceLeft-alt", "danceRight-alt", "preDance", "hey", "intro"];
   }
 
   public var suffix = "";
@@ -55,15 +48,15 @@ class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
     playAnimation('sing${animName}miss-caramella', true, false);
   }
 
-  override public function playAnimation(name:String, restart:Bool, ignoreOther:Bool)
+  override public function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false)
   {
     if (name.startsWith('dodge-'))
     {
       this.superClass.canPlayOtherAnims = true;
-      super.playAnimation(name, restart, true);
+      super.playAnimation(name, restart, true, reversed);
       return;
     }
-    super.playAnimation(name + suffix, restart, ignoreOther);
+    super.playAnimation(name + suffix, restart, ignoreOther, reversed);
 
     switch (name + suffix)
     {
@@ -99,11 +92,14 @@ class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
       GameOverSubState.instance.goBack();
     }
 
-    var inputCondition =
-      (GameOverSubState.instance.controls.ACCEPT || (FlxG.onMobile && TouchUtil.pressAction() && !TouchUtil.overlaps(GameOverSubState.instance.backButton)))
-        && GameOverSubState.instance.canInput;
+    var inputCondition = (GameOverSubState.instance.controls.ACCEPT
+      || (FlxG.onMobile && TouchUtil.pressAction() && !TouchUtil.overlaps(GameOverSubState.instance.backButton)))
+      && GameOverSubState.instance.canInput;
 
-    if (GameOverSubState.blueBallSuffix == '-sawblade' && inputCondition && GameOverSubState.blueballed && !GameOverSubState.instance.isEnding)
+    if (GameOverSubState.blueBallSuffix == '-sawblade'
+      && inputCondition
+      && GameOverSubState.blueballed
+      && !GameOverSubState.instance.isEnding)
     {
       GameOverSubState.blueballed = false;
       GameOverSubState.instance.isEnding = true;
@@ -118,10 +114,8 @@ class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
 
       GameOverSubState.instance.startDeathMusic(1.0, true);
       GameOverSubState.instance.boyfriend.playAnimation('deathConfirm' + suffix, true);
-      new FlxTimer().start(3, function(tmr:FlxTimer)
-      {
-        FlxG.camera.fade(0xFF000000, 2, false, function()
-        {
+      new FlxTimer().start(3, function(tmr:FlxTimer) {
+        FlxG.camera.fade(0xFF000000, 2, false, function() {
           FlxG.camera.fade(0xFF000000, 1, true, null, true);
 
           if (GameOverSubState.instance.parentPlayState != null)
@@ -199,8 +193,7 @@ class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
     FunkinSound.playOnce(Paths.sound("gameplay/gameover/fakeout_death"), 1.0);
 
     GameOverSubState.instance.mustNotExit = true;
-    this.animation.onFinish.addOnce(() ->
-    {
+    this.animation.onFinish.addOnce(() -> {
       GameOverSubState.instance.mustNotExit = false;
       this.playAnimation('firstDeath', true);
       GameOverSubState.playBlueBalledSFX();
@@ -212,9 +205,10 @@ class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
     switch (PlayState.instance?.currentStage?.getDad()?.characterId)
     {
       case "qt":
-        randomInt = FlxG.random.int(1, 7);
-        gameoverSound = Paths.sound('qtgameover/' + Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT) + '/bf/qtGameover-' + randomInt);
-        return gameoverSound;
+        var language:String = Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT);
+        var randomInt:Int = FlxG.random.int(1, 7);
+        GameOverSubtitles.assignToQuote('subtitles/$language/gameover/bf-qt/gameover-line-$randomInt');
+        return Paths.sound('qtgameover/$language/bf/qtGameover-$randomInt');
       case "tankman":
         var randomCensor:Array<Int> = [];
 
@@ -226,14 +220,7 @@ class BoyfriendQTCharacter extends MultiAnimateAtlasCharacter
           // 13 - fuck
           // 17 - shit, asshole
           // 21 - fucking
-          randomCensor = [
-            1,
-            3,
-            8,
-            13,
-            17,
-            21
-          ];
+          randomCensor = [1, 3, 8, 13, 17, 21];
         }
         else if (Constants.CENSOR_EXPLETIVES)
         {

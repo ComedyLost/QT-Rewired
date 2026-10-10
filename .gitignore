@@ -1,0 +1,6 @@
+.DS_STORE
+.vs/
+.idea/
+*.iml
+astc-textures/
+extras/ignore/

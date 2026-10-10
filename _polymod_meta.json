@@ -1,5 +1,6 @@
 {
   "title": "QT: Rewired",
+  "id": "qt-rewired",
   "description": "You hear music coming from the alleyway and you go to investigate. You see the cute girl you saw some years ago listening to music. She asks if you want to sing with her and you agree...",
   "author": "JoaDash",
   "contributors": [
@@ -10,7 +11,7 @@
     },
     {
       "name": "FatzFries",
-      "role": "Director & Gameplay Designer",
+      "role": "Director + Gameplay Designer & Programmer",
       "url": "https://x.com/FatzFries"
     },
     {
@@ -104,9 +105,15 @@
       "url": "https://x.com/PurSnake"
     },
     {
+      "name": "TechnikTil",
+      "role": "Programmer",
+      "url": "https://techniktil.tilnotdrip.org",
+      "email": "techniktil@tilnotdrip.org"
+    },
+    {
       "name": "NNovasaur",
       "role": "Voice Actor",
-      "url": "https://x.com/NNovasaur"
+      "url": "https://www.tumblr.com/nnovasaur"
     },
     {
       "name": "Mokkitah",
@@ -144,7 +151,7 @@
       "url": "https://x.com/Arcad3zz"
     }
   ],
-  "api_version": "0.8.4",
-  "mod_version": "2.0.1",
+  "api_version": "0.8.6",
+  "mod_version": "2.1.0",
   "license": "CC BY 4.0,MIT"
 }

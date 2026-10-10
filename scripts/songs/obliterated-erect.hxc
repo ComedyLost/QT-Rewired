@@ -10,8 +10,10 @@ import flixel.tweens.FlxEase;
 import funkin.mobile.input.ControlsHandler;
 import lime.app.Application;
 import funkin.ui.FullScreenScaleMode as FSSM;
+import funkin.save.Save;
 import funkin.Conductor;
 import funkin.play.Countdown;
+import funkin.audio.FunkinSound;
 
 class ObliteratedErectSong extends Song
 {
@@ -46,11 +48,15 @@ class ObliteratedErectSong extends Song
   var camFade3Triggered:Bool = false;
   var camFade4Triggered:Bool = false;
 
+  var introSfx:FunkinSound;
+  var endingSfx:FunkinSound;
+
   public function new()
   {
-    super('obliterated', {
-      variation: 'erect'
-    });
+    super('obliterated',
+      {
+        variation: 'erect'
+      });
   }
 
   override public function onCreate(event)
@@ -61,8 +67,7 @@ class ObliteratedErectSong extends Song
     huzzVideo = new FunkinVideoSprite(0, 0);
     huzzVideo.load(Paths.videos('obliteratedErectMid'));
 
-    huzzVideo.bitmap.onFormatSetup.add(() ->
-    {
+    huzzVideo.bitmap.onFormatSetup.add(() -> {
       if (huzzVideo.bitmap != null && huzzVideo.bitmap.bitmapData != null)
       {
         huzzVideo.setGraphicSize(FlxG.width);
@@ -79,9 +84,7 @@ class ObliteratedErectSong extends Song
     editVideo = new FunkinVideoSprite(0, 0);
     editVideo.load(Paths.videos('obliteratedErectEdit'));
 
-    editVideo.bitmap.onEndReached.add(() ->
-    {
-      editVideo.stop();
+    editVideo.bitmap.onEndReached.add(() -> {
       editVideo.visible = false;
       shouldPlayEdit = false;
       PlayState.instance.currentStage.getDad().playAnimation('tsundere', true, true);
@@ -89,8 +92,7 @@ class ObliteratedErectSong extends Song
       inGhost = true;
     });
 
-    editVideo.bitmap.onFormatSetup.add(() ->
-    {
+    editVideo.bitmap.onFormatSetup.add(() -> {
       if (editVideo.bitmap != null && editVideo.bitmap.bitmapData != null)
       {
         editVideo.setGraphicSize(FlxG.width);
@@ -111,6 +113,12 @@ class ObliteratedErectSong extends Song
 
     PlayState.instance.currentStage.refresh();
     // setupFocusHandling();
+
+    introSfx = FunkinSound.load(Paths.sound('gameplay/introObliteratedErect'), 1.0);
+    endingSfx = FunkinSound.load(Paths.sound('gameplay/endingObliteratedErect'), 1.0);
+
+    introSfx?.pitch = PlayState.instance.playbackRate;
+    endingSfx?.pitch = PlayState.instance.playbackRate;
   }
 
   override public function onSongLoaded(event)
@@ -143,11 +151,27 @@ class ObliteratedErectSong extends Song
     camFade4Triggered = false;
   }
 
+  override function onPause(event:PauseScriptEvent):Void
+  {
+    super.onPause(event);
+    if (shouldHuzz && huzzVideo != null) huzzVideo.pause();
+    if (shouldPlayEdit && editVideo != null) editVideo.pause();
+  }
+
+  override function onResume(event:ScriptEvent):Void
+  {
+    super.onResume(event);
+    if (shouldHuzz && huzzVideo != null) huzzVideo.resume();
+    if (shouldPlayEdit && editVideo != null) editVideo.resume();
+  }
+
   override public function onSongRetry(event)
   {
     super.onSongRetry(event);
+    huzzVideo.bitmap.time = 0;
     huzzVideo.pause();
     huzzVideo.visible = false;
+    editVideo.bitmap.time = 0;
     editVideo.pause();
     editVideo.visible = false;
 
@@ -166,7 +190,19 @@ class ObliteratedErectSong extends Song
     camFade4Triggered = false;
 
     PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, false, null, true);
+    #if !mobile
     PlayState.instance.playerStrumline.x = (FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET) + ((FSSM.gameCutoutSize / 2.5) / 2.0);
+    #end
+  }
+
+  function onGameOver(event:ScriptEvent)
+  {
+    super.onGameOver(event);
+    PlayState.instance.camGame.fade(FlxColor.BLACK, 0.001, true, null, true);
+    huzzVideo.visible = false;
+    editVideo.visible = false;
+    introSfx?.stop();
+    endingSfx?.stop();
   }
 
   override public function onCountdownStart(event)
@@ -184,6 +220,7 @@ class ObliteratedErectSong extends Song
   override function onSongStart(event)
   {
     super.onSongStart(event);
+    if (PlayState.instance.startTimestamp <= 0) introSfx?.play();
     doHudFade(0, 0, true);
     PlayState.instance.mayPauseGame = true;
 
@@ -220,6 +257,12 @@ class ObliteratedErectSong extends Song
         doHudFade(1, 2.5, true);
         inGhost = false;
     }
+  }
+
+  override public function onBeatHit(event)
+  {
+    super.onBeatHit(event);
+    if (event.beat == 456) endingSfx?.play(false, Conductor.instance.songPosition - Conductor.instance.getBeatTimeInMs(event.beat));
   }
 
   override public function onUpdate(event)
@@ -282,7 +325,7 @@ class ObliteratedErectSong extends Song
       huzzVideo.bitmap.time = 0;
       huzzVideo.resume();
       shouldHuzz = true;
-      PlayState.instance.mayPauseGame = false;
+      // PlayState.instance.mayPauseGame = false;
     }
 
     if (!video2Triggered && currentTime >= timeVideo2)
@@ -338,15 +381,16 @@ class ObliteratedErectSong extends Song
       else
       {
         if (targetAlpha > 0) obj.visible = true;
-        FlxTween.tween(obj, {
-          alpha: targetAlpha
-        }, duration, {
-          ease: FlxEase.quadInOut,
-          onComplete: _ ->
+        FlxTween.tween(obj,
           {
-            if (targetAlpha == 0) obj.visible = false;
-          }
-        });
+            alpha: targetAlpha
+          }, duration,
+          {
+            ease: FlxEase.quadInOut,
+            onComplete: _ -> {
+              if (targetAlpha == 0) obj.visible = false;
+            }
+          });
       }
     }
   }
@@ -376,6 +420,9 @@ class ObliteratedErectSong extends Song
 
   function centerPlayerStrumline()
   {
+    #if mobile
+    return
+    #end
     if (Preferences.controlsScheme == "Arrows" && !ControlsHandler.usingExternalInputDevice) return;
 
     var playerStrumline = PlayState.instance.playerStrumline;
@@ -387,6 +434,9 @@ class ObliteratedErectSong extends Song
 
   function hideOpponentStrumline()
   {
+    #if mobile
+    return
+    #end
     var opponentStrumline = PlayState.instance.opponentStrumline;
     if (opponentStrumline != null)
     {
@@ -416,9 +466,17 @@ class ObliteratedErectSong extends Song
 
   function focusGainedCallback(?_)
   {
-    if (!Preferences.autoPause) return;
+    if (!Preferences.autoPause || PlayState.instance.isGamePaused) return;
     if (shouldHuzz && huzzVideo != null) huzzVideo.resume();
     if (shouldPlayEdit && editVideo != null) editVideo.resume();
+  }
+
+  override public function onDestroy(event)
+  {
+    super.onDestroy(event);
+
+    introSfx?.destroy();
+    endingSfx?.destroy();
   }
 
   // If you tab out, that's on YOU.

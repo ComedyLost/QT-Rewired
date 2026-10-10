@@ -12,6 +12,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import funkin.Conductor;
 import funkin.data.song.SongRegistry;
+import flixel.group.FlxGroup;
 #if mobile
 import funkin.util.TouchUtil;
 #end
@@ -28,12 +29,18 @@ class BlissfulPicoSong extends Song
   var picoSfx:FunkinSound;
   var conduct;
   var cutsceneSeq;
+  var ratingHideWindows:Array<Array<Int>> = [[288, 320]];
+  var ratingHideSkipVariation:String = '';
+  var ratingPopUpsHidden:Bool = false;
+  var carryOverPopUps:FlxGroup = null;
+  var discardedPopUps:FlxGroup = null;
 
   public function new()
   {
-    super('blissful', {
-      variation: 'pico'
-    });
+    super('blissful',
+      {
+        variation: 'pico'
+      });
   }
 
   override public function onSongStart(event)
@@ -47,6 +54,10 @@ class BlissfulPicoSong extends Song
     super.onCreate(event);
     lang = Save.instance.modOptions.get("qt-rewiredLang");
     hasPlayedCutscene = false;
+    cutsceneSkipped = false;
+    ratingPopUpsHidden = false;
+    carryOverPopUps = null;
+    discardedPopUps = null;
   }
 
   override public function onUpdate(event)
@@ -58,6 +69,8 @@ class BlissfulPicoSong extends Song
       conduct.update(cutsceneMusic.time);
     }
 
+    setRatingPopUpsHidden(shouldHideRatings(Conductor.instance.currentBeat));
+
     #if mobile
     var mobilePausePressed = TouchUtil.overlapsComplex(PlayState.instance.pauseButton) && TouchUtil.justPressed;
     #end
@@ -68,13 +81,14 @@ class BlissfulPicoSong extends Song
       {
         if (skipText != null)
         {
-          FlxTween.tween(skipText, {
-            alpha: 1
-          }, 0.5, {
-            ease: FlxEase.quadOut
-          });
-          new FlxTimer().start(0.5, _ ->
-          {
+          FlxTween.tween(skipText,
+            {
+              alpha: 1
+            }, 0.5,
+            {
+              ease: FlxEase.quadOut
+            });
+          new FlxTimer().start(0.5, _ -> {
             canSkipCutscene = true;
           });
         }
@@ -85,6 +99,30 @@ class BlissfulPicoSong extends Song
     {
       skipCutscene();
     }
+  }
+
+  override public function onSongRetry(event)
+  {
+    super.onSongRetry(event);
+    setRatingPopUpsHidden(false);
+  }
+
+  override function onDestroy(event)
+  {
+    setRatingPopUpsHidden(false);
+    if (carryOverPopUps != null)
+    {
+      if (PlayState.instance != null) PlayState.instance.remove(carryOverPopUps, true);
+      carryOverPopUps.destroy();
+      carryOverPopUps = null;
+    }
+    if (discardedPopUps != null)
+    {
+      discardedPopUps.destroy();
+      discardedPopUps = null;
+    }
+
+    super.onDestroy(event);
   }
 
   override public function onCountdownStart(event)
@@ -135,8 +173,7 @@ class BlissfulPicoSong extends Song
     cutsceneMusic.volume = 0.1;
 
     conduct = new Conductor();
-    var songData = SongRegistry.instance.parseMusicDataRaw(
-      '{
+    var songData = SongRegistry.instance.parseMusicDataRaw('{
   "timeFormat": "ms",
   "artist": "Pohsan",
   "songName": "Intro Countdown (Pico Mix)",
@@ -153,8 +190,7 @@ class BlissfulPicoSong extends Song
   "looped": false,
   "version": "2.0.0"
 }
-'
-    );
+');
     if (songData != null)
     {
       conduct.mapTimeChanges(songData.timeChanges);
@@ -180,23 +216,20 @@ class BlissfulPicoSong extends Song
       cutsceneSequenceData = [
         {
           time: 0.5,
-          callback: () ->
-          {
+          callback: () -> {
             PlayState.instance.currentStage.getDad().playAnimation("intro", true, false);
           }
         },
         {
           time: 1.09,
-          callback: () ->
-          {
+          callback: () -> {
             cutieSfx.play();
             cutieSfx.volume = 1;
           }
         },
         {
           time: 3.5,
-          callback: () ->
-          {
+          callback: () -> {
             stoneMovingSound = FunkinSound.load(Paths.sound("gameplay/stoneMoving"), true);
             stoneMovingSound.volume = 0.6;
             stoneMovingSound.play();
@@ -206,16 +239,13 @@ class BlissfulPicoSong extends Song
         },
         {
           time: 4,
-          callback: () ->
-          {
+          callback: () -> {
             opp.playAnimation("disgust", true, true);
           }
         },
         {
           time: 7,
-          callback: () ->
-          {
-            FlxG.openURL("https://youtu.be/SpEf-YtSwwc");
+          callback: () -> {
             FlxG.switchState(new MainMenuState());
           }
         }
@@ -226,23 +256,20 @@ class BlissfulPicoSong extends Song
       cutsceneSequenceData = [
         {
           time: 0.5,
-          callback: () ->
-          {
+          callback: () -> {
             PlayState.instance.currentStage.getDad().playAnimation("intro", true, false);
           }
         },
         {
           time: 0.98,
-          callback: () ->
-          {
+          callback: () -> {
             cutieSfx.play();
             cutieSfx.volume = 1;
           }
         },
         {
           time: 3.5,
-          callback: () ->
-          {
+          callback: () -> {
             PlayState.instance.tweenCameraToPosition(player.cameraFocusPoint.x + 100, player.cameraFocusPoint.y, 3, FlxEase.quadInOut);
             player.playAnimation('introbl', false, false, false);
             canSkipCutscene = false;
@@ -250,23 +277,20 @@ class BlissfulPicoSong extends Song
         },
         {
           time: 4.15,
-          callback: () ->
-          {
+          callback: () -> {
             picoSfx = FunkinSound.load(Paths.sound("gameplay/cutsceneSfx/pico/introCutscene/picoWave"), true);
             picoSfx.play();
           }
         },
         {
           time: 6.35,
-          callback: () ->
-          {
+          callback: () -> {
             PlayState.instance.tweenCameraZoom(PlayState.instance.stageZoom * 1.25, 1.5, true, FlxEase.quadInOut);
           }
         },
         {
           time: 11,
-          callback: () ->
-          {
+          callback: () -> {
             PlayState.instance.startCountdown();
             showHUD();
             skipText.kill();
@@ -287,15 +311,16 @@ class BlissfulPicoSong extends Song
 
     if (skipText != null)
     {
-      FlxTween.tween(skipText, {
-        alpha: 0
-      }, 0.5, {
-        ease: FlxEase.quadIn,
-        onComplete: _ ->
+      FlxTween.tween(skipText,
         {
-          skipText.visible = false;
-        }
-      });
+          alpha: 0
+        }, 0.5,
+        {
+          ease: FlxEase.quadIn,
+          onComplete: _ -> {
+            skipText.visible = false;
+          }
+        });
     }
   }
 
@@ -311,8 +336,7 @@ class BlissfulPicoSong extends Song
     }
 
     PlayState.instance.camCutscene.fade(0xFF000000, 0.5, false, null, true);
-    new FlxTimer().start(0.5, _ ->
-    {
+    new FlxTimer().start(0.5, _ -> {
       PlayState.instance.justUnpaused = true;
       PlayState.instance.camCutscene.fade(0xFF000000, 0.5, true, null, true);
 
@@ -339,15 +363,68 @@ class BlissfulPicoSong extends Song
   {
     PlayState.instance.camHUD.visible = true;
     PlayState.instance.camHUD.alpha = 0;
-    FlxTween.tween(PlayState.instance.camHUD, {
-      alpha: 1
-    }, duration, {
-      ease: FlxEase.smoothStepInOut
-    });
+    FlxTween.tween(PlayState.instance.camHUD,
+      {
+        alpha: 1
+      }, duration,
+      {
+        ease: FlxEase.smoothStepInOut
+      });
   }
 
   function bopGf()
   {
     PlayState?.instance?.currentStage?.getGirlfriend()?.dance(true);
+  }
+
+  function shouldHideRatings(beat:Int):Bool
+  {
+    var ps = PlayState.instance;
+    if (ps.isMinimalMode || ps.currentVariation == ratingHideSkipVariation) return false;
+
+    for (range in ratingHideWindows)
+    {
+      if (beat >= range[0] && beat < range[1]) return true;
+    }
+    return false;
+  }
+
+  function setRatingPopUpsHidden(hide:Bool):Void
+  {
+    var ps = PlayState.instance;
+    if (ps == null || ps.comboPopUps == null || hide == ratingPopUpsHidden) return;
+    ratingPopUpsHidden = hide;
+
+    if (carryOverPopUps == null)
+    {
+      carryOverPopUps = new FlxGroup();
+      carryOverPopUps.cameras = ps.comboPopUps.cameras;
+      carryOverPopUps.zIndex = ps.comboPopUps.zIndex;
+      var popUpsIndex:Int = ps.members.indexOf(ps.comboPopUps);
+      if (popUpsIndex >= 0) ps.insert(popUpsIndex + 1, carryOverPopUps);
+      else
+        ps.add(carryOverPopUps);
+    }
+    if (discardedPopUps == null) discardedPopUps = new FlxGroup();
+
+    var destination:FlxGroup = hide ? carryOverPopUps : discardedPopUps;
+    pruneDeadPopUps(destination);
+
+    for (popUp in ps.comboPopUps.members.copy())
+    {
+      if (popUp == null || !popUp.exists) continue;
+      ps.comboPopUps.remove(popUp, true);
+      destination.add(popUp);
+    }
+
+    ps.comboPopUps.visible = !hide;
+  }
+
+  function pruneDeadPopUps(group:FlxGroup):Void
+  {
+    for (popUp in group.members.copy())
+    {
+      if (popUp != null && !popUp.exists) group.remove(popUp, true);
+    }
   }
 }

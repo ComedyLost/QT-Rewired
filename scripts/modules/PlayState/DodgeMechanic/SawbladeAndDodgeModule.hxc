@@ -49,8 +49,6 @@ class SawbladeAndDodgeModule extends Module
   var touchAreaSprite:FlxSprite;
   var warningVfx:FunkinSprite;
   var sawSprite:FlxAtlasSprite;
-  var warnSound:FunkinSound;
-  var attackSound:FunkinSound;
   var playState;
   var dodgeText:FlxText;
   var dodgeText2:FlxText;
@@ -62,18 +60,20 @@ class SawbladeAndDodgeModule extends Module
   var hitTime:Float;
   var eventReady:Bool;
   var canDie:Bool = true;
-  var spinVibrationPreset:VibrationPreset = {
-    period: 0.05,
-    duration: 0.2,
-    amplitude: 0.6,
-    sharpness: 0.7
-  };
-  var attackVibrationPreset:VibrationPreset = {
-    period: 0,
-    duration: 0.3,
-    amplitude: 1.0,
-    sharpness: 0.9
-  };
+  var spinVibrationPreset:VibrationPreset =
+    {
+      period: 0.05,
+      duration: 0.2,
+      amplitude: 0.6,
+      sharpness: 0.7
+    };
+  var attackVibrationPreset:VibrationPreset =
+    {
+      period: 0,
+      duration: 0.3,
+      amplitude: 1.0,
+      sharpness: 0.9
+    };
 
   static inline var BASE_BEAT_COOLDOWN:Int = 1;
   static inline var MIN_COOLDOWN_MS:Float = 300;
@@ -82,9 +82,10 @@ class SawbladeAndDodgeModule extends Module
 
   public function new()
   {
-    super('SawbladeAndDodgeModule', 1, {
-      state: PlayState
-    });
+    super('SawbladeAndDodgeModule', 1,
+      {
+        state: PlayState
+      });
   }
 
   function destroyAssets():Void
@@ -114,16 +115,6 @@ class SawbladeAndDodgeModule extends Module
       dodgeTextSwapTimer.cancel();
       dodgeTextSwapTimer = null;
     }
-    if (warnSound != null)
-    {
-      warnSound.destroy();
-      warnSound = null;
-    }
-    if (attackSound != null)
-    {
-      attackSound.destroy();
-      attackSound = null;
-    }
     if (touchAreaSprite != null)
     {
       touchAreaSprite.destroy();
@@ -134,15 +125,12 @@ class SawbladeAndDodgeModule extends Module
       dimOverlay.destroy();
       dimOverlay = null;
     }
-    isAllowed = false;
   }
 
   function initializeAssets():Void
   {
     var stage = playState.currentStage;
 
-    warnSound = FunkinSound.load(Paths.sound('sawblades/alerts/alert'), 1.0, false, false, false);
-    attackSound = FunkinSound.load(Paths.sound('sawblades/attacks/attack'), 1.0, false, false, false);
     dimOverlay = new FlxSprite();
     dimOverlay.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
     dimOverlay.scrollFactor.set();
@@ -152,9 +140,10 @@ class SawbladeAndDodgeModule extends Module
     playState.add(dimOverlay);
 
     warningVfx = new FunkinSprite();
-    warningVfx.loadTextureAtlas("saw_mechanic/warning", "shared", {
-      cacheOnLoad: true
-    });
+    warningVfx.loadTextureAtlas("saw_mechanic/warning", "shared",
+      {
+        cacheOnLoad: true
+      });
     warningVfx.animation.addByFrameLabel('1-alert-1', "alert 1 beat 1", 24, false);
     warningVfx.animation.addByFrameLabel('2-alert-1', "alert 1 beat 2", 24, false);
     warningVfx.animation.addByFrameLabel('attack-1', "alert 1 attack", 24, false);
@@ -169,7 +158,7 @@ class SawbladeAndDodgeModule extends Module
     playState.add(warningVfx);
 
     var dadMidpoint = stage.getDad().getGraphicMidpoint();
-    sawSprite = new SawBladeSprite(dadMidpoint.x - 50, dadMidpoint.y - 275);
+    sawSprite = new SawBladeSprite(dadMidpoint.x + getSawSpriteNudge(), dadMidpoint.y - 275);
     sawSprite.visible = false;
     sawSprite.shader = stage.getDad().shader;
     stage.add(sawSprite);
@@ -191,8 +180,7 @@ class SawbladeAndDodgeModule extends Module
 
     playWarningStep('1-alert' + postfx, 0, 0);
 
-    new FlxTimer().start(interval, (_) ->
-    {
+    new FlxTimer().start(interval, (_) -> {
       if (activeEvent.amntSaws > 1)
       {
         playWarningStep('2-alert' + postfx, 0, 0, true, 2);
@@ -213,31 +201,39 @@ class SawbladeAndDodgeModule extends Module
   function darkenScreen():Void
   {
     var blackScreen = playState.currentStage.getNamedProp("blackScreen");
-    if (blackScreen != null) FlxTween.tween(blackScreen, {
-      alpha: 0.3
-    }, 0.35, {
-      ease: FlxEase.linear
-    });
-    else if (dimOverlay != null) FlxTween.tween(dimOverlay, {
-      alpha: 0.3
-    }, 0.35, {
-      ease: FlxEase.linear
-    });
+    if (blackScreen != null) FlxTween.tween(blackScreen,
+      {
+        alpha: 0.3
+      }, 0.35,
+      {
+        ease: FlxEase.linear
+      });
+    else if (dimOverlay != null) FlxTween.tween(dimOverlay,
+      {
+        alpha: 0.3
+      }, 0.35,
+      {
+        ease: FlxEase.linear
+      });
   }
 
   function undarkenScreen():Void
   {
     var blackScreen = playState.currentStage.getNamedProp("blackScreen");
-    if (blackScreen != null) FlxTween.tween(blackScreen, {
-      alpha: 0
-    }, 0.35, {
-      ease: FlxEase.quadInOut
-    });
-    else if (dimOverlay != null) FlxTween.tween(dimOverlay, {
-      alpha: 0
-    }, 0.35, {
-      ease: FlxEase.quadInOut
-    });
+    if (blackScreen != null) FlxTween.tween(blackScreen,
+      {
+        alpha: 0
+      }, 0.35,
+      {
+        ease: FlxEase.quadInOut
+      });
+    else if (dimOverlay != null) FlxTween.tween(dimOverlay,
+      {
+        alpha: 0
+      }, 0.35,
+      {
+        ease: FlxEase.quadInOut
+      });
   }
 
   public function playWarningStep(animName:String, offsetX:Float, offsetY:Float, showVfx:Bool = true, suffix:Int = 1):Void
@@ -264,13 +260,14 @@ class SawbladeAndDodgeModule extends Module
   {
     if (playState.health <= 0) return;
 
+    var dadMidpoint = playState.currentStage.getDad().getGraphicMidpoint();
+    sawSprite?.setPosition(dadMidpoint.x + getSawSpriteNudge(), dadMidpoint.y - 275);
     sawSprite?.zIndex = dodgeToggleAnim == 0 ? 299 : 199;
     sawSprite?.animation?.play('saw anim alert', true, false, 0);
     sawSprite?.offset?.y = 0;
     HapticUtil.vibrateByPreset(spinVibrationPreset);
 
-    sawSprite?.animation?.onFinish?.addOnce((_) ->
-    {
+    sawSprite?.animation?.onFinish?.addOnce((_) -> {
       if (_ == "saw anim attack")
       {
         hideAllVisuals();
@@ -298,8 +295,9 @@ class SawbladeAndDodgeModule extends Module
     bfCanDodge = true;
     doSawAnimation();
 
-    new FlxTimer().start(interval, (_) ->
-    {
+    new FlxTimer().start(interval, (_) -> {
+      var dadMidpoint = playState.currentStage.getDad().getGraphicMidpoint();
+      sawSprite.setPosition(dadMidpoint.x + getSawSpriteNudge(), dadMidpoint.y - 275);
       sawSprite?.animation?.play("saw anim attack", true, false, 0);
       sawSprite?.offset?.y = -300;
       playState.camGame.shake(0.007, 0.25);
@@ -307,8 +305,7 @@ class SawbladeAndDodgeModule extends Module
 
       playState.currentStage.getGirlfriend().playAnimation("dodge", true, true);
 
-      new FlxTimer().start(hitWindow / 1000, (_) ->
-      {
+      new FlxTimer().start(hitWindow / 1000, (_) -> {
         trace('[EXECUTE ATTACK] can you pause the game? ${playState.mayPauseGame}');
         if (!playState.mayPauseGame) onBadHit();
         playState.mayPauseGame = true;
@@ -327,32 +324,36 @@ class SawbladeAndDodgeModule extends Module
     bfCanDodge = true;
 
     if (dodgeText == null) return;
-    FlxTween.tween(dodgeText, {
-      alpha: 0
-    }, 1, {
-      ease: FlxEase.smoothStepInOut
-    }, {
-      onComplete: function(_)
+    FlxTween.tween(dodgeText,
       {
-        dodgeText.kill();
-        playState.remove(dodgeText, true);
-        dodgeText = null;
-      }
-    });
-    if (dodgeText2 != null)
-    {
-      FlxTween.tween(dodgeText2, {
         alpha: 0
-      }, 1, {
+      }, 1,
+      {
         ease: FlxEase.smoothStepInOut
-      }, {
-        onComplete: function(_)
-        {
-          dodgeText2.kill();
-          playState.remove(dodgeText2, true);
-          dodgeText2 = null;
+      },
+      {
+        onComplete: function(_) {
+          dodgeText.kill();
+          playState.remove(dodgeText, true);
+          dodgeText = null;
         }
       });
+    if (dodgeText2 != null)
+    {
+      FlxTween.tween(dodgeText2,
+        {
+          alpha: 0
+        }, 1,
+        {
+          ease: FlxEase.smoothStepInOut
+        },
+        {
+          onComplete: function(_) {
+            dodgeText2.kill();
+            playState.remove(dodgeText2, true);
+            dodgeText2 = null;
+          }
+        });
     }
   }
 
@@ -414,6 +415,11 @@ class SawbladeAndDodgeModule extends Module
     destroyAssets();
   }
 
+  function getSawSpriteNudge():Float
+  {
+    return (PlayState?.instance?.currentStage?.id == "qtStageObliteratedErect") ? 100 : -50; // does this works? yes! should i feel bad about this code? maybe!
+  }
+
   override public function onSongStart(event)
   {
     super.onSongStart(event);
@@ -442,15 +448,13 @@ class SawbladeAndDodgeModule extends Module
     {
       dodgeText = new FlxText().setFormat(Paths.font('vcr.ttf'), 28, 0xFF0000, "center", FlxTextBorderStyle.OUTLINE, 0xFF000000);
       dodgeText.scrollFactor.set();
-      dodgeFormat =
-        FlxG.onMobile ? "TAP the sign" : "Press "
-          + InputUtil.getKeyName(Save.instance.modOptions[QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND][0]).toUpperCase();
+      dodgeFormat = FlxG.onMobile ? "TAP the sign" : "Press "
+        + InputUtil.getKeyName(Save.instance.modOptions[QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND][0]).toUpperCase();
       var isErectVariation = playState.currentVariation == "erect";
       dodgeText.text = dodgeFormat + ' on third beat to dodge' + (isErectVariation ? '...' : '!');
       dodgeText.screenCenter();
-      dodgeText.y =
-        (FlxG.onMobile || Preferences.downscroll) ? FlxG.height - dodgeText.height - 15 - FullScreenScaleMode.cutoutSize.y : PlayState.instance.healthBarBG.y
-          - 90;
+      dodgeText.y = (FlxG.onMobile || Preferences.downscroll) ? FlxG.height - dodgeText.height - 15 - FullScreenScaleMode.cutoutSize.y : PlayState.instance.healthBarBG.y
+        - 90;
       dodgeText.zIndex = 999;
       dodgeText.alpha = 1;
       playState.add(dodgeText);
@@ -468,18 +472,21 @@ class SawbladeAndDodgeModule extends Module
         playState.add(dodgeText2);
         dodgeText2.cameras = [playState.camHUD];
 
-        dodgeTextSwapTimer = new FlxTimer().start(DODGE_TEXT_SWAP_DELAY, (_) ->
-        {
-          if (dodgeText != null) FlxTween.tween(dodgeText, {
-            alpha: 0
-          }, DODGE_TEXT_FADE_DURATION, {
-            ease: FlxEase.smoothStepInOut
-          });
-          if (dodgeText2 != null) FlxTween.tween(dodgeText2, {
-            alpha: 1
-          }, DODGE_TEXT_FADE_DURATION, {
-            ease: FlxEase.smoothStepInOut
-          });
+        dodgeTextSwapTimer = new FlxTimer().start(DODGE_TEXT_SWAP_DELAY, (_) -> {
+          if (dodgeText != null) FlxTween.tween(dodgeText,
+            {
+              alpha: 0
+            }, DODGE_TEXT_FADE_DURATION,
+            {
+              ease: FlxEase.smoothStepInOut
+            });
+          if (dodgeText2 != null) FlxTween.tween(dodgeText2,
+            {
+              alpha: 1
+            }, DODGE_TEXT_FADE_DURATION,
+            {
+              ease: FlxEase.smoothStepInOut
+            });
           dodgeTextSwapTimer = null;
         });
       }
@@ -504,8 +511,7 @@ class SawbladeAndDodgeModule extends Module
 
   function setupBeatListener():Void
   {
-    beatListener = () ->
-    {
+    beatListener = () -> {
       var beatMs = Conductor.instance.beatLengthMs;
       var beatsForMin = Std.int(Math.ceil(MIN_COOLDOWN_MS / beatMs));
       dodgeBeatsCooldown = Math.max(BASE_BEAT_COOLDOWN, beatsForMin);
@@ -588,7 +594,8 @@ class SawbladeAndDodgeModule extends Module
     super.onUpdate(elapsed);
     if (PlayState.instance == null || Conductor.instance == null) return;
 
-    if (!PlayState.instance.isGamePaused && ((FlxG.onMobile && TouchUtil.overlapsComplex(touchAreaSprite) && TouchUtil.justPressed) || dodgeBindJustPressed()))
+    if (!PlayState.instance.isGamePaused
+      && ((FlxG.onMobile && TouchUtil.overlapsComplex(touchAreaSprite) && TouchUtil.justPressed) || dodgeBindJustPressed()))
     {
       bfDodge();
     }

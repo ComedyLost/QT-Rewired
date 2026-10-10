@@ -55,15 +55,13 @@ class SawbladeEvent extends SongEvent
     var singleSequenceData = [
       {
         time: 0,
-        callback: () ->
-        {
+        callback: () -> {
           dodgeModule.executeWarning(interval, amntSaws);
         }
       },
       {
         time: interval,
-        callback: () ->
-        {
+        callback: () -> {
           // dodgeModule.executeWarning(interval, amntSaws);
           dodgeModule.executeAttack(interval);
           dodgeModule.animSuffix = 0;
@@ -72,8 +70,7 @@ class SawbladeEvent extends SongEvent
       },
       {
         time: interval * 2,
-        callback: () ->
-        {
+        callback: () -> {
           PlayState.instance.mayPauseGame = false;
           dodgeModule.playWarningStep('attack-1', 0, 0);
           dodgeModule.eventReady = false;
@@ -84,15 +81,13 @@ class SawbladeEvent extends SongEvent
     var tripleSequenceData = [
       {
         time: 0,
-        callback: () ->
-        {
+        callback: () -> {
           dodgeModule.executeWarning(interval, amntSaws);
         }
       },
       {
         time: interval * 2,
-        callback: () ->
-        {
+        callback: () -> {
           PlayState.instance.mayPauseGame = false;
           // dodgeModule.executeWarning(interval, 1);
           dodgeModule.playWarningStep('attack-2-1', 0, 0, true, 1);
@@ -100,8 +95,7 @@ class SawbladeEvent extends SongEvent
       },
       {
         time: interval * 3,
-        callback: () ->
-        {
+        callback: () -> {
           PlayState.instance.mayPauseGame = false;
           dodgeModule.playWarningStep('attack-2-1', 0, 0, true, 1);
           hitTime = Conductor.instance.songPosition + interval * 1000;
@@ -111,8 +105,7 @@ class SawbladeEvent extends SongEvent
       },
       {
         time: interval * 4,
-        callback: () ->
-        {
+        callback: () -> {
           PlayState.instance.mayPauseGame = false;
           dodgeModule.playWarningStep('attack-2-2', 0, 0, true, 2);
           hitTime = Conductor.instance.songPosition + interval * 1000;
@@ -122,8 +115,7 @@ class SawbladeEvent extends SongEvent
       },
       {
         time: interval * 5,
-        callback: () ->
-        {
+        callback: () -> {
           PlayState.instance.mayPauseGame = false;
           hitTime = Conductor.instance.songPosition + interval * 1000;
           dodgeModule.playWarningStep('attack-2-2', 0, 0, true, 3);
@@ -135,15 +127,13 @@ class SawbladeEvent extends SongEvent
     var doubleSequenceData = [
       {
         time: 0,
-        callback: () ->
-        {
+        callback: () -> {
           dodgeModule.executeWarning(interval, amntSaws);
         }
       },
       {
         time: interval,
-        callback: () ->
-        {
+        callback: () -> {
           hitTime = Conductor.instance.songPosition + interval * 1000;
           dodgeModule.executeAttack(interval);
           dodgeModule.animSuffix = 0;
@@ -151,8 +141,7 @@ class SawbladeEvent extends SongEvent
       },
       {
         time: interval * 2,
-        callback: () ->
-        {
+        callback: () -> {
           PlayState.instance.mayPauseGame = false;
           dodgeModule.playWarningStep('attack-2-1', 0, 0);
           dodgeModule.executeAttack(interval);
@@ -162,8 +151,7 @@ class SawbladeEvent extends SongEvent
       },
       {
         time: interval * 3,
-        callback: () ->
-        {
+        callback: () -> {
           PlayState.instance.mayPauseGame = false;
           dodgeModule.playWarningStep('attack-2-2', 0, 0, true, 2);
           // dodgeModule.executeAttack(interval);
@@ -204,17 +192,15 @@ class SawbladeEvent extends SongEvent
 
   override public function getEventSchema()
   {
-    var sawblade_schema = {
-      name: "num_sawblades",
-      title: "Attack Sequence",
-      type: "enum",
-      keys: [
-        "Single" => 1,
-        "Double" => 2, // Haxe maps how i hate you
-        "Triple" => 3
-      ],
-      defaultValue: 1
-    };
+    var sawblade_schema =
+      {
+        name: "num_sawblades",
+        title: "Attack Sequence",
+        type: "enum",
+        keys: ["Single" => 1, "Double" => 2, // Haxe maps how i hate you
+          "Triple" => 3],
+        defaultValue: 1
+      };
 
     return [sawblade_schema];
   }

@@ -19,9 +19,10 @@ class QtOptionsCategory extends Module
 {
   public function new()
   {
-    super('QtOptionsCategory', 1, {
-      state: OptionsState
-    });
+    super('QtOptionsCategory', 1,
+      {
+        state: OptionsState
+      });
 
     if (!Save.instance.modOptions.exists(QtOptionsCategory.SAVE_KEY_QT_DODGE_KEYBIND))
     {
@@ -69,7 +70,7 @@ class QtOptionsCategory extends Module
     var preferencesPage = optionsState.optionsCodex.pages.get("qt-rewired");
     if (preferencesPage != null)
     {
-      var versionText = new FlxText(10, FlxG.height - 25, FlxG.width, 'QT: Rewired v2.0.1', 16);
+      var versionText = new FlxText(10, FlxG.height - 25, FlxG.width, 'QT: Rewired v2.1.0', 16);
       versionText.zIndex = 100000;
       versionText.scrollFactor.set(0, 0);
       versionText.setFormat("VCR OSD Mono", 16, 0xFFffffff, "left", FlxTextBorderStyle.OUTLINE, 0xFF000000);
@@ -80,8 +81,7 @@ class QtOptionsCategory extends Module
   function addCustomCategory(state)
   {
     var prefs:PreferencesMenu = state.optionsCodex.addPage('qt-rewired', new PreferencesMenu());
-    prefs.onExit.add(() ->
-    {
+    prefs.onExit.add(() -> {
       FlxG.state.optionsCodex.switchPage('options');
     });
     prefs.preferenceDesc = [];
@@ -119,8 +119,7 @@ class QtOptionsCategory extends Module
     var preferencesPage = optionsState.optionsCodex.pages.get("qt-rewired");
     if (preferencesPage != null)
     {
-      preferencesPage.createPrefItemEnum('QT Rewired Version', "", ["1.3.0" => "1.3.0"], (value:String, oValue:String) -> {
-      }, "1.3.0");
+      preferencesPage.createPrefItemEnum('QT Rewired Version', "", ["1.3.0" => "1.3.0"], (value:String, oValue:String) -> {}, "1.3.0");
     }
   }
 
@@ -153,19 +152,13 @@ class QtOptionsCategory extends Module
       var keyName:String = InputUtil.getKeyName(currentKeys[i]);
       var keyNameReal:String = (currentKeys[i] == 0 ? UNBOUND_TEXT : keyName);
 
-      var item:TextMenuItem = new TextMenuItem(
-        label.x + ControlsMenu.CONTROL_MARGIN_X + i * ControlsMenu.CONTROL_SPACING_X,
-        lastItemY,
-        keyNameReal,
-        "default",
-        () -> openPrompt(i)
-      );
+      var item:TextMenuItem = new TextMenuItem(label.x + ControlsMenu.CONTROL_MARGIN_X + i * ControlsMenu.CONTROL_SPACING_X, lastItemY, keyNameReal,
+        "default", () -> openPrompt(i));
       item.fireInstantly = true;
       cPage.controlGrid.addItem(item.name, item);
     }
     cPage.controlGrid.onChange.removeAll();
-    cPage.controlGrid.onChange.add((selected:TextMenuItem) ->
-    {
+    cPage.controlGrid.onChange.add((selected:TextMenuItem) -> {
       cPage.camFollow.y = selected.y;
 
       labels.forEach((label:FlxSprite) -> label.alpha = 0.6);
@@ -178,15 +171,12 @@ class QtOptionsCategory extends Module
     var preferencesPage = optionsState.optionsCodex.pages.get("qt-rewired");
     if (preferencesPage != null)
     {
-      preferencesPage.createPrefItemEnum('Sawblade Mode', "Changes how the Sawblade Mechanic works.", [
-        "Default" => "default",
-        "Instakill" => "instakill",
-        "Disabled" => "disabled"
-      ], function(value:String, oValue:String):Void
-      {
-        Save.instance.modOptions.set(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT, oValue);
-        Save.instance.flush();
-      }, getSawbladeModeDisplay(Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT)));
+      preferencesPage.createPrefItemEnum('Sawblade Mode', "Changes how the Sawblade Mechanic works.",
+        ["Default" => "default", "Instakill" => "instakill", "Disabled" => "disabled"], function(value:String, oValue:String):Void {
+          Save.instance.modOptions.set(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT, oValue);
+          Save.instance.flush();
+      },
+        getSawbladeModeDisplay(Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_SAWBLADE_MODE_QT)));
     }
   }
 
@@ -195,16 +185,11 @@ class QtOptionsCategory extends Module
     var preferencesPage = options.optionsCodex.pages.get("qt-rewired");
     if (preferencesPage != null)
     {
-      preferencesPage.createPrefItemCheckbox(
-        "Plushie Button",
-        "When enabled, a button to the QT: Rewired X Makeship campaign is shown in the Main Menu.",
-        function(value:Bool):Void
-        {
+      preferencesPage.createPrefItemCheckbox("Plushie Button", "When enabled, a button to the QT: Rewired X Makeship campaign is shown in the Main Menu.",
+        function(value:Bool):Void {
           Save.instance.modOptions.set("com.rewired.plush-show-plush-advert", value);
           Save.instance.flush();
-        },
-        getQtPlush()
-      );
+        }, getQtPlush());
     }
   }
 
@@ -213,11 +198,8 @@ class QtOptionsCategory extends Module
     var preferencesPage = optionsState.optionsCodex.pages.get("qt-rewired");
     if (preferencesPage != null)
     {
-      preferencesPage.createPrefItemEnum('Language', "Changes the language used in the mod.", [
-        "English" => "english",
-        "Spanish" => "spanish"
-      ], (value:String, oValue:String) ->
-        {
+      preferencesPage.createPrefItemEnum('Language', "Changes the language used in the mod.", ["English" => "english", "Spanish" => "spanish"],
+        (value:String, oValue:String) -> {
           Save.instance.modOptions.set("qt-rewiredLang", oValue);
           Save.instance.flush();
         }, getCoolQtLang(Save.instance.modOptions.get("qt-rewiredLang")));

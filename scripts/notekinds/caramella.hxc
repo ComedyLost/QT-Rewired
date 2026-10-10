@@ -6,6 +6,6 @@ class BfCaramellaNoteKind extends NoteKind
 {
   public function new()
   {
-    super('caramella', 'BF Caramelldansen (Blissful Erect)', 'rewired-caramella', [], false, 'caramella');
+    super('caramella', 'BF Caramelldansen (Blissful Erect)', null, [], false, 'caramella');
   }
 }

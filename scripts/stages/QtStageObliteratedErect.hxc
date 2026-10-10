@@ -143,8 +143,7 @@ class QtStageObliteratedErect extends Stage
         rimDad.distance = 13;
 
         var dadPersist:BaseCharacter = c;
-        c.animation.onFrameChange.add(function()
-        {
+        c.animation.onFrameChange.add(function() {
           if (dadPersist != null && dadPersist.frame != null) rimDad.updateFrameInfo(dadPersist.frame);
         });
 
@@ -158,8 +157,7 @@ class QtStageObliteratedErect extends Stage
         rimGf.distance = 13;
 
         var gfPersist:BaseCharacter = c;
-        c.animation.onFrameChange.add(function()
-        {
+        c.animation.onFrameChange.add(function() {
           if (gfPersist != null && gfPersist.frame != null) rimGf.updateFrameInfo(gfPersist.frame);
         });
 

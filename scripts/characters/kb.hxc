@@ -8,6 +8,7 @@ import funkin.graphics.FunkinSprite;
 import funkin.play.stage.Bopper;
 import funkin.util.assets.FlxAnimationUtil;
 import funkin.audio.FunkinSound;
+import flixel.math.FlxPoint;
 
 class KillerByteCharacter extends MultiAnimateAtlasCharacter
 {
@@ -18,17 +19,19 @@ class KillerByteCharacter extends MultiAnimateAtlasCharacter
 
   public var eyes:FunkinSprite;
 
+  public var startingSize:FlxPoint;
+
   var snd;
 
   function onCreate(event:ScriptEvent)
   {
     super.onCreate(event);
-
+    startingSize = FlxPoint.get();
     // snd = FunkinSound.load(Paths.sound('sfxfkberect'), true); //we have the curse of eric
     // snd.volume = 0;
     // snd.play();
 
-    if (debug) return;
+    if (this.debug) return;
 
     eyes = new Bopper();
     eyes.shouldBop = false;
@@ -36,13 +39,27 @@ class KillerByteCharacter extends MultiAnimateAtlasCharacter
     eyes.loadTextureAtlas("characters/kb_export/eyes", "shared");
     FlxAnimationUtil.addTextureAtlasAnimations(eyes, _data.animations);
     // no shaders
-    for (anim in _data.animations) (anim.offsets == null)
+    for (anim in _data.animations)
+      (anim.offsets == null)
     ?eyes.setAnimationOffsets
     (anim.name, 0, 0) : eyes.setAnimationOffsets
     (anim.name, anim.offsets[0], anim.offsets[1]);
 
+    startingSize.set(this.width, this.height);
+
     PlayState.instance.currentStage.add(eyes);
     PlayState.instance.currentStage.refresh();
+  }
+
+  public function resetCameraFocusPoint():Void
+  {
+    // Calculate the camera focus point
+    var charCenterX = this.originalPosition.x + (startingSize?.x ?? this.width) / 2;
+    var charCenterY = this.originalPosition.y + (startingSize?.y ?? this.height) / 2;
+    super.resetCameraFocusPoint();
+
+    this.cameraFocusPoint.x = charCenterX + _data.cameraOffsets[0];
+    this.cameraFocusPoint.y = charCenterY + _data.cameraOffsets[1];
   }
 
   public override function playAnimation(name:String, restart:Bool = false, ignoreOther:Bool = false, reversed:Bool = false):Void
@@ -70,6 +87,12 @@ class KillerByteCharacter extends MultiAnimateAtlasCharacter
       eyes.playAnimation(name, restart, ignoreOther);
       eyes.setPosition(this.x + 254, this.y + 275 - 44);
     }
+  }
+
+  override function destroy()
+  {
+    super.destroy();
+    startingSize.put();
   }
 
   override function onAnimationFinished(name:String)

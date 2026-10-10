@@ -1,72 +1,81 @@
 package rewired.modules.playstate;
 
+import flixel.FlxG;
+import funkin.play.components.SubtitlesAlignment;
 import funkin.play.components.Subtitles;
 import funkin.play.GameOverSubState;
 import funkin.modding.module.Module;
-import funkin.Preferences;
-import flixel.FlxG;
 import funkin.play.PlayState;
-import funkin.save.Save;
-import funkin.util.ReflectUtil;
 
 class GameOverSubtitles extends Module
 {
-  private var subtitles:Subtitles = null;
-  private var pending:Bool = false;
-  private var randomIntValue:Int = 0;
+  /**
+   * Singleton instance for this module.
+   */
+  public static var instance:GameOverSubtitles;
+
+  public var subtitles:Subtitles;
+
+  var queuedQuote:String = null;
 
   public function new()
   {
-    super('GameOverSubtitles', 999, {
-      state: GameOverSubState
-    });
+    super('GameOverSubtitles', 999);
   }
 
-  override function onSubStateOpenEnd(event:ScriptEvent)
+  override public function onCreate(event:ScriptEvent):Void
+  {
+    super.onCreate(event);
+    GameOverSubtitles.instance = this;
+  }
+
+  override public function onSubStateOpenEnd(event:SubStateScriptEvent):Void
   {
     super.onSubStateOpenEnd(event);
-    pending = true;
-  }
 
-  override function onUpdate(event:UpdateScriptEvent)
-  {
-    super.onUpdate(event);
-    if (GameOverSubState.instance.isEnding) GameOverSubState.instance.remove(subtitles);
-
-    if (!pending) return;
+    if (event.targetState != GameOverSubState.instance) return;
     if (!Preferences.subtitles) return;
-    if (GameOverSubState.instance == null) return;
-    if (GameOverSubState.instance.deathQuoteSound == null) return;
 
-    pending = false;
-
-    randomIntValue = GameOverSubState.instance.boyfriend.randomInt;
-
-    subtitles = PlayState.instance.subtitles;
-
-    var subtitlesPath =
-      'subtitles/'
-      + Save.instance.modOptions.get(QtOptionsCategory.SAVE_KEY_LANG_QT)
-      + '/gameover/'
-      + GameOverSubState.instance.boyfriend.characterId
-      + '/gameover-line-'
-      + randomIntValue;
-
-    subtitles.assignSubtitles(subtitlesPath, GameOverSubState.instance.deathQuoteSound);
-    GameOverSubState.instance.deathQuoteSound.onComplete = function()
-    {
-      GameOverSubState.instance.remove(subtitles);
-    }
-
+    subtitles = new Subtitles(0, 139 + (FlxG.onMobile ? 410.8 : 0), SubtitlesAlignment.SUBTITLES_BOTTOM);
+    subtitles.setText([''], true);
+    subtitles.cameras = [PlayState.instance?.camSubtitles];
     GameOverSubState.instance.add(subtitles);
   }
 
-  function onSubStateCloseBegin(event):Void
+  override public function onUpdate(event:UpdateScriptEvent):Void
   {
-    super.onSubStateCloseBegin(event);
-    if (GameOverSubState.instance == null || subtitles == null) return;
+    super.onUpdate(event);
+    if (subtitles == null) return;
 
-    GameOverSubState.instance.remove(subtitles);
-    pending = true;
+    if (GameOverSubState.instance?.deathQuoteSound != null && queuedQuote != null)
+    {
+      subtitles.assignSubtitles(queuedQuote, GameOverSubState.instance.deathQuoteSound);
+      queuedQuote = null;
+
+      // Please stop crashing thank you
+      final quoteSound = GameOverSubState.instance.deathQuoteSound;
+      final previousOnComplete = quoteSound.onComplete;
+      quoteSound.onComplete = function() {
+        if (previousOnComplete != null) previousOnComplete();
+        if (subtitles != null && subtitles.exists) subtitles.kill();
+      };
+    }
+  }
+
+  override public function onSubStateCloseEnd(event:SubStateScriptEvent):Void
+  {
+    super.onSubStateCloseEnd(event);
+    if (event.targetState != GameOverSubState.instance) return;
+
+    subtitles = null;
+    queuedQuote = null;
+  }
+
+  public static function assignToQuote(filePath:String):Void
+  {
+    if (instance?.subtitles == null) return;
+    instance.subtitles.revive();
+    instance.subtitles.setText([], true);
+    instance.queuedQuote = filePath;
   }
 }
